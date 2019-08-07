@@ -1,0 +1,11 @@
+const path = require('path');
+
+module.exports = {
+  entry: './src/demo_slerp.js',
+  output: {
+    filename: 'bundle.js',
+    path: path.resolve(__dirname, 'dist')
+  },
+  mode: 'production'
+};
+
