@@ -15,7 +15,7 @@ scene.add(cube);
 
 let renderer = new THREE.WebGLRenderer();
 renderer.setSize(w, h);
-document.body.appendChild(renderer.domElement);
+document.getElementById('demo1').appendChild(renderer.domElement);
 
 function animate() {
 	cube.rotation.x += 0.05;
