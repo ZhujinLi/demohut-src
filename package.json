@@ -1,7 +1,7 @@
 {
   "name": "funwithrtt",
   "version": "1.0.0",
-  "description": "",
+  "description": "Some interesting RTT demos",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack"
@@ -9,10 +9,17 @@
   "author": "zjli",
   "license": "ISC",
   "dependencies": {
+    "bootstrap": "^4.3.1",
+    "jquery": "^3.4.1",
     "lodash": "^4.17.15",
+    "popper.js": "^1.15.0",
     "three": "^0.107.0"
   },
   "devDependencies": {
+    "clean-webpack-plugin": "^3.0.0",
+    "css-loader": "^3.2.0",
+    "html-webpack-plugin": "^3.2.0",
+    "style-loader": "^1.0.0",
     "webpack": "^4.39.1",
     "webpack-cli": "^3.3.6"
   }
