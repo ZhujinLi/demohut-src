@@ -11,5 +11,5 @@ function onNavItemClicked(event, item, html) {
 }
 
 $(document).ready(function () {
-    $('#item-slerp').click((event) => { onNavItemClicked(event, $(this), 'demo_slerp.html'); })
+    $('#item-quaternions').click((event) => { onNavItemClicked(event, $(this), 'subj-quaternions.html'); })
 });
