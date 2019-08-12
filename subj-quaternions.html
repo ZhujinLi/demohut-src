@@ -2,7 +2,7 @@
 <html>
 
 <body>
-    <h3> Why use Quaternions </h3>
+    <h3>Why use Quaternions</h3>
 
     <p> Quaternion is a tool for performing rotation. There are already two other techniques that can do the job: Euler
         angles and rotation matrix. So why do we need quaternions? </p>
@@ -20,17 +20,17 @@
         too complicated (9 numbers). The construction is complicated as well. </p>
 
     <p> Compared to the other two, quaternion is more elegant in its representation (x, y, z, w), and it avoids the
-        issue of gimble lock. Besides, it could be more convenient when it comes to tasks like slerp. </p>
+        issue of gimble lock. Besides, it is more handy when it comes to tasks like slerp. </p>
 
     <p> Although quaternions were invented in 1843 as an extension to the complex numbers, it was not until
         1985 that it was introduced to computer graphics. Note that only unit quaternions are able to do rotations. So
         make sure they are normalized when you use them. </p>
 
-    <h3> A simple demo </h3>
+    <h3>A simple demo</h3>
 
     <div id="view-simple"></div>
 
-    <h3> Spherical linear interpolation </h3>
+    <h3>Spherical linear interpolation</h3>
 
     <p> Spherical linear interpolation (slerp) is an operation that, given two unit quaternions, q and r, and a
         parameter t in the range[0, 1], computes an interpolated quaternion. Unlike conventional linear interpolation,
