@@ -1,5 +1,5 @@
-import './jquery.min.js';
-import './bootstrap.min.js';
+import '/jquery/dist/jquery.js';
+import '/bootstrap/dist/js/bootstrap.min.js';
 
 function onNavItemClicked(event, item, html) {
     event.preventDefault();

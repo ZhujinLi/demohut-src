@@ -1,0 +1,18 @@
+doctype html
+html
+  head
+    title= title
+    link(rel='stylesheet', href='/bootstrap/dist/css/bootstrap.min.css')
+  body
+    div(class='jumbotron jumbotron-fluid')
+      div(class='container')
+        h1 Fun with RTT
+        p Here are some interesting demos I've created during my learning RTT
+    div(class='container')
+      div(class='row')
+        div(class='col-sm-2')
+          ul(class="nav nav-pills flex-column", id="demo-list")
+            li(class="nav-item")
+              a(class="nav-link", id="item-quaternions", href="#") Quaternions
+        div(class='col-sm-10', id='content')
+    script(src='/javascripts/index.js', type='module')
