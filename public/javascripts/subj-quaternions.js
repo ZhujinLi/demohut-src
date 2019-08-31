@@ -3,8 +3,42 @@ import '/three/examples/js/loaders/GLTFLoader.js';
 
 /* global THREE */
 
+class World {
+	constructor(w, h, renderCallback) {
+		this._scene = new THREE.Scene();
+
+		this._camera = new THREE.PerspectiveCamera(60, w / h, 0.1, 1000);
+		this._camera.position.set(5, 5, 5);
+		this._camera.lookAt(0, 0, 0);
+		this._camera.up.set(0, 1, 0);
+
+		const ambientLight = new THREE.AmbientLight(0xffffff, 1.0);
+		this._scene.add(ambientLight);
+
+		const axesHelper = new THREE.AxesHelper(5);
+		this._scene.add(axesHelper);
+
+		const loader = new THREE.GLTFLoader();
+		loader.load(
+			'/models/Jet/Jet.gltf',
+			(gltf) => {
+				this._obj = gltf.scene;
+				this._scene.add(gltf.scene);
+				requestAnimationFrame(renderCallback);
+			},
+			null,
+			(error) => { console.log(error); }
+		);
+	}
+
+	scene() { return this._scene; }
+	camera() { return this._camera; }
+	obj() { return this._obj; }
+}
+
 function showDemoQuat() {
-	let renderer, scene, camera;
+	let renderer;
+	let world;
 	let rotateAxis, quat;
 
 	initView();
@@ -12,11 +46,14 @@ function showDemoQuat() {
 	onParamsChanged();
 
 	function render() {
+		const scene = world.scene();
+		const camera = world.camera();
 		renderer.render(scene, camera);
 	}
 
 	function updateScene() {
 		// Update axis
+		const scene = world.scene();
 		let rotateAxisMesh = scene.getObjectByName('rotateAxis');
 		if (!rotateAxisMesh) {
 			const material = new THREE.LineDashedMaterial({
@@ -36,7 +73,7 @@ function showDemoQuat() {
 		rotateAxisMesh.geometry.verticesNeedUpdate = true;
 
 		// Update object rotation
-		const jet = scene.getObjectByName('obj');
+		const jet = world.obj();
 		jet && jet.setRotationFromQuaternion(quat);
 
 		requestAnimationFrame(render);
@@ -78,30 +115,7 @@ function showDemoQuat() {
 		renderer.setSize(w, h);
 		document.getElementById('view-quat').appendChild(renderer.domElement);
 
-		scene = new THREE.Scene();
-
-		camera = new THREE.PerspectiveCamera(60, w / h, 0.1, 1000);
-		camera.position.set(5, 5, 5);
-		camera.lookAt(0, 0, 0);
-		camera.up.set(0, 1, 0);
-
-		const ambientLight = new THREE.AmbientLight(0xffffff, 1.0);
-		scene.add(ambientLight);
-
-		const axesHelper = new THREE.AxesHelper(5);
-		scene.add(axesHelper);
-
-		const loader = new THREE.GLTFLoader();
-		loader.load(
-			'/models/Jet/Jet.gltf',
-			(gltf) => {
-				gltf.scene.name = 'obj';
-				scene.add(gltf.scene);
-				requestAnimationFrame(render);
-			},
-			null,
-			(error) => { console.log(error); }
-		);
+		world = new World(w, h, render.bind(this));
 	}
 
 	function initGUI() {
