@@ -7,7 +7,7 @@ function onNavItemClicked(event, item, html) {
     item.parent().addClass('active');
     item.parent().siblings().removeClass('active');
 
-    $(content).load(html);
+    $('#content').load(html);
 }
 
 $(document).ready(function () {
