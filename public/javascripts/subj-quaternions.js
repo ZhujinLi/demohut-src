@@ -1,5 +1,6 @@
 import '/three/build/three.min.js';
 import { GLTFLoader } from '/three/examples/jsm/loaders/GLTFLoader.js';
+import { OrbitControls } from '/three/examples/jsm/controls/OrbitControls.js';
 
 class DemoQuat {
 	render() {
@@ -8,8 +9,8 @@ class DemoQuat {
 
 	updateScene() {
 		// Update axis
-		let rotateAxisMesh;
-		if (!this.rotateAxisMesh) {
+		let rotateAxisMesh = this.scene.getObjectByName('rotateAxis');
+		if (!rotateAxisMesh) {
 			const material = new THREE.LineDashedMaterial({
 				color: 0xffffff,
 				dashSize: 0.2,
@@ -19,8 +20,6 @@ class DemoQuat {
 			rotateAxisMesh = new THREE.Line(geometry, material);
 			rotateAxisMesh.name = 'rotateAxis';
 			this.scene.add(rotateAxisMesh);
-		} else {
-			rotateAxisMesh = this.scene.getObjectByName('rotateAxis');
 		}
 		const vertices = [new THREE.Vector3(0, 0, 0), this.rotateAxis];
 		vertices[1].multiplyScalar(5);
@@ -29,7 +28,7 @@ class DemoQuat {
 		rotateAxisMesh.geometry.verticesNeedUpdate = true;
 
 		// Update object rotation
-		const jet = this.scene.getObjectByName('jet');
+		const jet = this.scene.getObjectByName('obj');
 		jet && jet.setRotationFromQuaternion(this.quat);
 
 		requestAnimationFrame(this.render.bind(this));
@@ -49,8 +48,10 @@ class DemoQuat {
 
 		document.getElementById('label-angle').innerHTML = angle;
 
-		const quat = this.quat = new THREE.Quaternion();
+		const quat = new THREE.Quaternion();
 		quat.setFromAxisAngle(new THREE.Vector3(x, y, z), THREE.Math.degToRad(angle));
+		quat.normalize();
+		this.quat = quat;
 
 		document.getElementById('label-quat-res').innerHTML =
 			"x: " + quat.x.toFixed(2) + "<br>" +
@@ -70,14 +71,17 @@ class DemoQuat {
 		this.renderer.setSize(w, h);
 		document.getElementById('view-quat').appendChild(this.renderer.domElement);
 
+		this.scene = new THREE.Scene();
+
 		this.camera = new THREE.PerspectiveCamera(60, w / h, 0.1, 1000);
 		this.camera.position.set(5, 5, 5);
 		this.camera.lookAt(0, 0, 0);
 		this.camera.up.set(0, 1, 0);
 
-		this.scene = new THREE.Scene();
+		this.ctrl = new OrbitControls(this.camera, this.renderer.domElement);
+		this.ctrl.target.set(0, 0, 0);
 
-		// new THREE.PlaneGeometry(10, 10);
+		new THREE.PlaneGeometry(10, 10);
 
 		const ambientLight = new THREE.AmbientLight(0xffffff, 1.0);
 		this.scene.add(ambientLight);
@@ -89,10 +93,12 @@ class DemoQuat {
 		loader.load(
 			'/models/Jet/Jet.gltf',
 			(gltf) => {
-				gltf.scene.name = 'jet';
+				gltf.scene.name = 'obj';
 				this.scene.add(gltf.scene);
 				requestAnimationFrame(this.render.bind(this));
-			}
+			},
+			null,
+			(error) => { console.log(error); }
 		);
 	}
 
