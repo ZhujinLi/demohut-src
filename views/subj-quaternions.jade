@@ -4,11 +4,11 @@ html
 body
     h3 Quaternions
 
-    p Quaternion is a tool for rotation around an arbitrary axis. Compared with rotation matrix, it is more compact in representation and more efficient when it comes to tasks like slerp. And it avoids the dreaded gimbal lock issue with Euler Angle.
+    p Quaternion is a tool for rotation around an arbitrary axis. Compared with rotation matrix, it is more compact in representation and more efficient when it comes to tasks like slerp. Moreover, it avoids the dreaded gimbal lock issue with Euler Angle.
     
     p Although quaternions were invented in 1843 as an extension to the complex numbers, it was not until 1985 that it was introduced to computer graphics.
     
-    p Note that only with unit quaternions are we able to perform rotations, so make sure they are normalized when you use them.
+    p Note that only with unit quaternions are we able to perform rotations. Make sure they are normalized before you use them.
 
     p Following is a demo:
 
@@ -16,6 +16,11 @@ body
         div(class="row" class="text-monospace")
             div(class="col-md-6 px-0", id="view-quat")
             div(class="col-md-3")
+                h6 Angle
+                div(class="row")
+                    div(class="col-md")
+                        input(type="range", class="custom-range", id="slider-angle")
+                    div(class="col-md", id="label-angle")
                 h6 Axis
                 div(class="row")
                     div(class="col-md")
@@ -29,11 +34,6 @@ body
                     div(class="col-md")
                         input(type="range", class="custom-range", id="slider-axis-z")
                     div(class="col-md", id="label-axis-z")
-                h6 Angle
-                div(class="row")
-                    div(class="col-md")
-                        input(type="range", class="custom-range", id="slider-angle")
-                    div(class="col-md", id="label-angle")
             div(class="col-md-3")
                 h6 Unit Quaternion
                 div(id="label-quat-res")

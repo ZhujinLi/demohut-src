@@ -1,6 +1,5 @@
 import '/three/build/three.min.js';
-import { GLTFLoader } from '/three/examples/jsm/loaders/GLTFLoader.js';
-import { OrbitControls } from '/three/examples/jsm/controls/OrbitControls.js';
+import '/three/examples/js/loaders/GLTFLoader.js';
 
 class DemoQuat {
 	render() {
@@ -46,7 +45,7 @@ class DemoQuat {
 		document.getElementById('label-axis-y').innerHTML = 'y: ' + y.toFixed(2);
 		document.getElementById('label-axis-z').innerHTML = 'z: ' + z.toFixed(2);
 
-		document.getElementById('label-angle').innerHTML = angle;
+		document.getElementById('label-angle').innerHTML = angle + '°';
 
 		const quat = new THREE.Quaternion();
 		quat.setFromAxisAngle(new THREE.Vector3(x, y, z), THREE.Math.degToRad(angle));
@@ -78,18 +77,13 @@ class DemoQuat {
 		this.camera.lookAt(0, 0, 0);
 		this.camera.up.set(0, 1, 0);
 
-		this.ctrl = new OrbitControls(this.camera, this.renderer.domElement);
-		this.ctrl.target.set(0, 0, 0);
-
-		new THREE.PlaneGeometry(10, 10);
-
 		const ambientLight = new THREE.AmbientLight(0xffffff, 1.0);
 		this.scene.add(ambientLight);
 
 		const axesHelper = new THREE.AxesHelper(5);
 		this.scene.add(axesHelper);
 
-		const loader = new GLTFLoader();
+		const loader = new THREE.GLTFLoader();
 		loader.load(
 			'/models/Jet/Jet.gltf',
 			(gltf) => {
