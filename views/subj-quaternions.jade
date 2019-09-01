@@ -38,12 +38,23 @@ body
 
     h3 Spherical linear interpolation
 
-    p Spherical linear interpolation (slerp) is an operation that, given two unit quaternions, q and r, and a parameter t in the range[0, 1], computes an interpolated quaternion. Unlike conventional linear interpolation, it produces evenly distributed samples along the arc, which is rather important for animations.
+    p Spherical linear interpolation (slerp) is an operation that, given two unit quaternions, q and r, and a parameter t in the range[0, 1], computes an interpolated quaternion. Unlike conventional linear interpolation, it produces evenly distributed samples along the arc on the hypersphere, which is important for animations.
     
     div(class="container")
     div(class="row")
         div(class="col-md", id="view-slerp-world")
         div(class="col-md", id="view-slerp-sphere")
+        div(class="col-md")
+            div(class="container")
+                form
+                    div(class="radio")
+                        label
+                            input(type="radio", id="radio-slerp")
+                            | slerp
+                    div(class="radio")
+                        label
+                            input(type="radio", id="radio-lerp")
+                            | lerp
 
     script(src="/javascripts/subj-quaternions.js", type="module")
 

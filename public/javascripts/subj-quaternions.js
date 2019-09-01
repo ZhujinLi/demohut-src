@@ -4,6 +4,10 @@ import '/three/examples/js/controls/OrbitControls.js';
 
 /* global THREE */
 
+function _Quaternion_distance(l, r) {
+	return new THREE.Quaternion(l.x - r.x, l.y - r.y, l.z - r.z, l.w - r.w).length();
+}
+
 class World {
 	constructor(w, h, renderCallback) {
 		this._scene = new THREE.Scene();
@@ -48,8 +52,9 @@ class Sphere {
 		this._camera.lookAt(0, 0, 0);
 		this._camera.up.set(0, 1, 0);
 
-		const targetGeometry = new THREE.SphereBufferGeometry(0.1);
+		const targetGeometry = new THREE.SphereBufferGeometry(0.02);
 		const targetMaterial = new THREE.MeshBasicMaterial({ color: 0x0000ff });
+
 		this._target = new THREE.Mesh(targetGeometry, targetMaterial);
 		this._scene.add(this._target);
 
@@ -58,7 +63,7 @@ class Sphere {
 		this._scene.add(this._sphereOld);
 
 		const sphereMaterialNew = new THREE.MeshBasicMaterial({ color: 0xff8080, wireframe: true, transparent: true, opacity: 0.3 });
-		this._sphereNew = new THREE.Mesh(new THREE.Geometry(), sphereMaterialNew);
+		this._sphereNew = new THREE.Mesh(new THREE.SphereBufferGeometry(1, 32, 32), sphereMaterialNew);
 		this._scene.add(this._sphereNew);
 
 		// Since the geometry in a mesh could not be resized, I gave up the attempt of using a dynamic line
@@ -69,30 +74,30 @@ class Sphere {
 	camera() { return this._camera; }
 
 	setTarget(quat) {
-		const radius = Sphere._radiusFromW(quat.w);
+		const pos = new THREE.Vector3(quat.x, quat.y, quat.z);
+		const radius = pos.length();
+
 		this._sphereOld.geometry = this._sphereNew.geometry;
 		this._sphereNew.geometry = new THREE.SphereBufferGeometry(radius, 32, 32);
 
-		const v = Sphere._positionFromQuat(quat);
-		this._target.position.set(v.x, v.y, v.z);
-
-		this._tracePoints.forEach((mesh) => { this._scene.remove(mesh); })
+		this._target.position.copy(pos);
 	}
 
 	addTrace(quat) {
-		const v = Sphere._positionFromQuat(quat);
-		const point = new THREE.Mesh(new THREE.SphereGeometry(0.03, 8, 8), new THREE.MeshBasicMaterial({ color: 0x00ff00 }));
-		point.position.copy(v);
+		const pos = new THREE.Vector3(quat.x, quat.y, quat.z);
+		const point = new THREE.Mesh(new THREE.SphereGeometry(0.01, 8, 8), new THREE.MeshBasicMaterial({ color: 0x00ff00 }));
+		point.position.copy(pos);
 		this._tracePoints.push(point);
 		this._scene.add(point);
+
+		this._truncateTraceIfNeeded();
 	}
 
-	static _radiusFromW(w) { return w + 1; }
-
-	static _positionFromQuat(quat) {
-		const v = new THREE.Vector3(quat.x, quat.y, quat.z);
-		v.setLength(Sphere._radiusFromW(quat.w));
-		return v;
+	_truncateTraceIfNeeded() {
+		while (this._tracePoints.length > 500) {
+			this._scene.remove(this._tracePoints[0]);
+			this._tracePoints.shift();
+		}
 	}
 
 }
@@ -214,7 +219,7 @@ function showDemoQuat() {
 showDemoQuat();
 
 function showDemoSlerp() {
-	const INTERVAL_MS = 2000;
+	const INTERVAL_MS = 3000;
 	let rendererL;
 	let rendererR;
 	let world;
@@ -222,8 +227,10 @@ function showDemoSlerp() {
 	let currentQuat;
 	let targetQuat;
 	let clock;
+	let method;
 
 	initView();
+	initGUI();
 	generateTarget();
 	requestAnimationFrame(render);
 
@@ -232,14 +239,23 @@ function showDemoSlerp() {
 		const elapsedMs = elapsedS * 1000;
 		const progress = elapsedMs / INTERVAL_MS;
 
-		const quat = new THREE.Quaternion();
-		THREE.Quaternion.slerp(currentQuat, targetQuat, quat, progress);
-		quat.normalize();
+		let quat = new THREE.Quaternion();
+		if (method === "slerp") {
+			THREE.Quaternion.slerp(currentQuat, targetQuat, quat, progress);
+		} else if (method === "lerp") {
+			const lerp = (x, y, a) => { return x + (y - x) * a; };
 
-		const obj = world.obj();
-		obj && obj.setRotationFromQuaternion(quat);
+			quat.x = lerp(currentQuat.x, targetQuat.x, progress);
+			quat.y = lerp(currentQuat.y, targetQuat.y, progress);
+			quat.z = lerp(currentQuat.z, targetQuat.z, progress);
+			quat.w = lerp(currentQuat.w, targetQuat.w, progress);
+		}
 
 		sphere.addTrace(quat);
+
+		quat.normalize();
+		const obj = world.obj();
+		obj && obj.setRotationFromQuaternion(quat);
 
 		rendererL.render(world.scene(), world.camera());
 		rendererR.render(sphere.scene(), sphere.camera());
@@ -253,8 +269,8 @@ function showDemoSlerp() {
 	}
 
 	function initViewLeft() {
-		const w = 300;
-		const h = 200;
+		const w = 350;
+		const h = 350;
 
 		rendererL = new THREE.WebGLRenderer({ antialias: true });
 		rendererL.setPixelRatio(window.devicePixelRatio);
@@ -265,13 +281,13 @@ function showDemoSlerp() {
 
 		clock = new THREE.Clock(false);
 
-		targetQuat = new THREE.Quaternion();
-		targetQuat.set(1, 0, 0, 0);
+		targetQuat = new THREE.Quaternion(1, 0, 0, 0);
+		currentQuat = new THREE.Quaternion(1, 0, 0, 0);
 	}
 
 	function initViewRight() {
-		const w = 300;
-		const h = 200;
+		const w = 350;
+		const h = 350;
 
 		rendererR = new THREE.WebGLRenderer({ antialias: true });
 		rendererR.setPixelRatio(window.devicePixelRatio);
@@ -283,18 +299,46 @@ function showDemoSlerp() {
 		new THREE.OrbitControls(sphere.camera(), rendererR.domElement);
 	}
 
+	function initGUI() {
+		const radioSlerp = document.getElementById('radio-slerp');
+		radioSlerp.checked = true;
+		method = "slerp";
+
+		const radioLerp = document.getElementById('radio-lerp');
+		radioLerp.checked = false;
+
+		radioSlerp.onclick = () => {
+			radioLerp.checked = false;
+			method = "slerp";
+		}
+
+		radioLerp.onclick = () => {
+			radioSlerp.checked = false;
+			method = "lerp";
+		}
+	}
+
 	function generateTarget() {
 		currentQuat = targetQuat;
 
-		targetQuat = new THREE.Quaternion();
 		const axis = new THREE.Vector3(
 			Math.random() - 0.5,
 			Math.random() - 0.5,
 			Math.random() - 0.5
 		);
+		axis.normalize();
+
 		const angle = Math.random() * Math.PI * 2;
+
+		targetQuat = new THREE.Quaternion();
 		targetQuat.setFromAxisAngle(axis, angle);
-		targetQuat.normalize();
+		// No need to normalize because it already is
+
+		// Choose the shortest arc (slerp does this automatically though)
+		const targetQuatAnti = new THREE.Quaternion(-targetQuat.x, -targetQuat.y, -targetQuat.z, -targetQuat.w);
+		if (_Quaternion_distance(currentQuat, targetQuatAnti) < _Quaternion_distance(currentQuat, targetQuat)) {
+			targetQuat = targetQuatAnti;
+		}
 
 		sphere.setTarget(targetQuat);
 
