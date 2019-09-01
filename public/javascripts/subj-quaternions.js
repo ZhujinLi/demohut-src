@@ -401,7 +401,8 @@ function showDemoSlerp() {
 
 		sphere = new Sphere(w, h);
 
-		new THREE.OrbitControls(sphere.camera(), rendererR.domElement);
+		const ctrl = new THREE.OrbitControls(sphere.camera(), rendererR.domElement);
+		ctrl.enableZoom = false;
 	}
 
 	function initGUI() {
