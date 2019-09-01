@@ -4,8 +4,51 @@ import '/three/examples/js/controls/OrbitControls.js';
 
 /* global THREE */
 
+function _Quaternion_add(l, r) {
+	return new THREE.Quaternion(l.x + r.x, l.y + r.y, l.z + r.z, l.w + r.w);
+}
+
+function _Quaternion_subtract(l, r) {
+	return new THREE.Quaternion(l.x - r.x, l.y - r.y, l.z - r.z, l.w - r.w);
+}
+
 function _Quaternion_distance(l, r) {
-	return new THREE.Quaternion(l.x - r.x, l.y - r.y, l.z - r.z, l.w - r.w).length();
+	return _Quaternion_subtract(l, r).length();
+}
+
+function _Quaternion_scalarMultiply(q, s) {
+	return new THREE.Quaternion(q.x * s, q.y * s, q.z * s, q.w * s);
+}
+
+function _Quaternion_log(q) {
+	const a = Math.acos(q.w);
+	const sin = Math.sin(a);
+	if (sin === 0)
+		return new THREE.Quaternion(0, 0, 0, 0);
+
+	const t = a / sin;
+	return new THREE.Quaternion(t * q.x, t * q.y, t * q.z, 0);
+}
+
+function _Quaternion_exp(q) {
+	const a = q.length();
+	if (a === 0)
+		return new THREE.Quaternion(0, 0, 0, 1);
+
+	const cos = Math.cos(a);
+	const sin = Math.sin(a);
+	const t = sin / a;
+	return new THREE.Quaternion(t * q.x, t * q.y, t * q.z, cos);
+}
+
+function calcQuatTan(q0, q1, q2) {
+	return new THREE.Quaternion().copy(q1).multiply(
+		_Quaternion_exp(_Quaternion_scalarMultiply(
+			_Quaternion_add(
+				_Quaternion_log(new THREE.Quaternion().copy(q1).inverse().multiply(q0)),
+				_Quaternion_log(new THREE.Quaternion().copy(q1).inverse().multiply(q2)))
+			, -0.25))
+	);
 }
 
 class World {
@@ -224,8 +267,10 @@ function showDemoSlerp() {
 	let rendererR;
 	let world;
 	let sphere;
+	let prevQuat;
 	let currentQuat;
 	let targetQuat;
+	let nextQuat;
 	let clock;
 	let method;
 
@@ -237,18 +282,25 @@ function showDemoSlerp() {
 	function render() {
 		const elapsedS = clock.getElapsedTime();
 		const elapsedMs = elapsedS * 1000;
-		const progress = elapsedMs / INTERVAL_MS;
+		const t = elapsedMs / INTERVAL_MS;
 
 		let quat = new THREE.Quaternion();
 		if (method === "slerp") {
-			THREE.Quaternion.slerp(currentQuat, targetQuat, quat, progress);
+			THREE.Quaternion.slerp(currentQuat, targetQuat, quat, t);
 		} else if (method === "lerp") {
 			const lerp = (x, y, a) => { return x + (y - x) * a; };
 
-			quat.x = lerp(currentQuat.x, targetQuat.x, progress);
-			quat.y = lerp(currentQuat.y, targetQuat.y, progress);
-			quat.z = lerp(currentQuat.z, targetQuat.z, progress);
-			quat.w = lerp(currentQuat.w, targetQuat.w, progress);
+			quat.x = lerp(currentQuat.x, targetQuat.x, t);
+			quat.y = lerp(currentQuat.y, targetQuat.y, t);
+			quat.z = lerp(currentQuat.z, targetQuat.z, t);
+			quat.w = lerp(currentQuat.w, targetQuat.w, t);
+		} else if (method === "squad") {
+			const tan0 = calcQuatTan(prevQuat, currentQuat, targetQuat);
+			const tan1 = calcQuatTan(currentQuat, targetQuat, nextQuat);
+
+			const a = new THREE.Quaternion().copy(currentQuat).slerp(targetQuat, t);
+			const b = new THREE.Quaternion().copy(tan0).slerp(tan1, t);
+			THREE.Quaternion.slerp(a, b, quat, 2 * t * (1 - t));
 		}
 
 		sphere.addTrace(quat);
@@ -281,8 +333,10 @@ function showDemoSlerp() {
 
 		clock = new THREE.Clock(false);
 
-		targetQuat = new THREE.Quaternion(1, 0, 0, 0);
+		prevQuat = new THREE.Quaternion(1, 0, 0, 0);
 		currentQuat = new THREE.Quaternion(1, 0, 0, 0);
+		targetQuat = new THREE.Quaternion(1, 0, 0, 0);
+		nextQuat = makeRandomUnitQuat(targetQuat);
 	}
 
 	function initViewRight() {
@@ -302,43 +356,39 @@ function showDemoSlerp() {
 	function initGUI() {
 		const radioSlerp = document.getElementById('radio-slerp');
 		radioSlerp.checked = true;
-		method = "slerp";
 
 		const radioLerp = document.getElementById('radio-lerp');
 		radioLerp.checked = false;
 
+		const radioSquad = document.getElementById('radio-squad');
+		radioSquad.checked = false;
+
+		method = "slerp";
+
 		radioSlerp.onclick = () => {
 			radioLerp.checked = false;
+			radioSquad.checked = false;
 			method = "slerp";
 		}
 
 		radioLerp.onclick = () => {
 			radioSlerp.checked = false;
+			radioSquad.checked = false;
 			method = "lerp";
+		}
+
+		radioSquad.onclick = () => {
+			radioLerp.checked = false;
+			radioSlerp.checked = false;
+			method = "squad";
 		}
 	}
 
 	function generateTarget() {
+		prevQuat = currentQuat;
 		currentQuat = targetQuat;
-
-		const axis = new THREE.Vector3(
-			Math.random() - 0.5,
-			Math.random() - 0.5,
-			Math.random() - 0.5
-		);
-		axis.normalize();
-
-		const angle = Math.random() * Math.PI * 2;
-
-		targetQuat = new THREE.Quaternion();
-		targetQuat.setFromAxisAngle(axis, angle);
-		// No need to normalize because it already is
-
-		// Choose the shortest arc (slerp does this automatically though)
-		const targetQuatAnti = new THREE.Quaternion(-targetQuat.x, -targetQuat.y, -targetQuat.z, -targetQuat.w);
-		if (_Quaternion_distance(currentQuat, targetQuatAnti) < _Quaternion_distance(currentQuat, targetQuat)) {
-			targetQuat = targetQuatAnti;
-		}
+		targetQuat = nextQuat;
+		nextQuat = makeRandomUnitQuat(targetQuat);
 
 		sphere.setTarget(targetQuat);
 
@@ -348,6 +398,28 @@ function showDemoSlerp() {
 		setTimeout(generateTarget, INTERVAL_MS);
 	}
 
+	function makeRandomUnitQuat(lastQ) {
+		const axis = new THREE.Vector3(
+			Math.random() - 0.5,
+			Math.random() - 0.5,
+			Math.random() - 0.5
+		);
+		axis.normalize();
+
+		const angle = Math.random() * Math.PI * 2;
+
+		let q = new THREE.Quaternion();
+		q.setFromAxisAngle(axis, angle);
+		// No need to normalize because it already is
+
+		// Choose the shortest arc (slerp does this automatically though)
+		const qAnti = new THREE.Quaternion(-q.x, -q.y, -q.z, -q.w);
+		if (_Quaternion_distance(lastQ, qAnti) < _Quaternion_distance(lastQ, q)) {
+			q = qAnti;
+		}
+
+		return q;
+	}
 }
 
 showDemoSlerp();

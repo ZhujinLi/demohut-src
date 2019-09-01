@@ -50,18 +50,24 @@ body
                     div(class="radio")
                         label
                             input(type="radio", id="radio-slerp")
-                            | slerp
+                            |  slerp
                     div(class="radio")
                         label
                             input(type="radio", id="radio-lerp")
-                            | lerp
+                            |  lerp
+                    div(class="radio")
+                        label
+                            input(type="radio", id="radio-squad")
+                            |  squad
 
     script(src="/javascripts/subj-quaternions.js", type="module")
 
     h3 References
 
     ul
-        li RTT 3rd ch. 4.3
+        li RTT-3rd ch. 4.3
         li Model is from #[a(href="https://poly.google.com/view/bgUY8zN2Bq9") here]
         li #[a(href="https://threejs.org/examples/webgl_math_orientation_transform.html") A simplified demo]
         li #[a(href="https://en.wikipedia.org/wiki/Quaternions_and_spatial_rotation#The_hypersphere_of_rotations") Wiki - visualization]
+        li #[a(href="https://youtu.be/4mXL751ko0w") Quick understanding]
+        li #[a(href="https://tiborstanko.sk/lerp-vs-slerp.html") A 2D demo]
