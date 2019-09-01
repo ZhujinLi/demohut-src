@@ -285,15 +285,15 @@ function showDemoSlerp() {
 		const t = elapsedMs / INTERVAL_MS;
 
 		let quat = new THREE.Quaternion();
-		if (method === "slerp") {
-			THREE.Quaternion.slerp(currentQuat, targetQuat, quat, t);
-		} else if (method === "lerp") {
+		if (method === "lerp") {
 			const lerp = (x, y, a) => { return x + (y - x) * a; };
 
 			quat.x = lerp(currentQuat.x, targetQuat.x, t);
 			quat.y = lerp(currentQuat.y, targetQuat.y, t);
 			quat.z = lerp(currentQuat.z, targetQuat.z, t);
 			quat.w = lerp(currentQuat.w, targetQuat.w, t);
+		} else if (method === "slerp") {
+			THREE.Quaternion.slerp(currentQuat, targetQuat, quat, t);
 		} else if (method === "squad") {
 			const tan0 = calcQuatTan(prevQuat, currentQuat, targetQuat);
 			const tan1 = calcQuatTan(currentQuat, targetQuat, nextQuat);
@@ -354,27 +354,27 @@ function showDemoSlerp() {
 	}
 
 	function initGUI() {
-		const radioSlerp = document.getElementById('radio-slerp');
-		radioSlerp.checked = true;
-
 		const radioLerp = document.getElementById('radio-lerp');
-		radioLerp.checked = false;
+		radioLerp.checked = true;
+
+		const radioSlerp = document.getElementById('radio-slerp');
+		radioSlerp.checked = false;
 
 		const radioSquad = document.getElementById('radio-squad');
 		radioSquad.checked = false;
 
-		method = "slerp";
-
-		radioSlerp.onclick = () => {
-			radioLerp.checked = false;
-			radioSquad.checked = false;
-			method = "slerp";
-		}
+		method = "lerp";
 
 		radioLerp.onclick = () => {
 			radioSlerp.checked = false;
 			radioSquad.checked = false;
 			method = "lerp";
+		}
+
+		radioSlerp.onclick = () => {
+			radioLerp.checked = false;
+			radioSquad.checked = false;
+			method = "slerp";
 		}
 
 		radioSquad.onclick = () => {
