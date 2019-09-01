@@ -8,16 +8,54 @@ function _Quaternion_add(l, r) {
 	return new THREE.Quaternion(l.x + r.x, l.y + r.y, l.z + r.z, l.w + r.w);
 }
 
-function _Quaternion_subtract(l, r) {
-	return new THREE.Quaternion(l.x - r.x, l.y - r.y, l.z - r.z, l.w - r.w);
-}
-
-function _Quaternion_distance(l, r) {
-	return _Quaternion_subtract(l, r).length();
-}
-
 function _Quaternion_scalarMultiply(q, s) {
 	return new THREE.Quaternion(q.x * s, q.y * s, q.z * s, q.w * s);
+}
+
+// Quaternion.slerp() annoyingly choose the one with shortest angle
+// between original target and its antipodal counterpart, which can
+// cause errors when doing squad. So I implement the standard slerp here.
+// See "Other Issues" in http://www.euclideanspace.com/maths/algebra/realNormedAlgebra/quaternions/slerp/
+function _Quaternion_slerp(l, r, t) {
+	if (t === 0) return new THREE.Quaternion().copy(l);
+	if (t === 1) return new THREE.Quaternion().copy(r);
+
+	var x = l._x, y = l._y, z = l._z, w = l._w;
+
+	var cosHalfTheta = w * r._w + x * r._x + y * r._y + z * r._z;
+
+	if (cosHalfTheta >= 1.0) {
+		return new THREE.Quaternion().copy(l);
+	}
+
+	var res = new THREE.Quaternion();
+	res.copy(r);
+
+	var sqrSinHalfTheta = 1.0 - cosHalfTheta * cosHalfTheta;
+
+	if (sqrSinHalfTheta <= Number.EPSILON) {
+
+		var s = 1 - t;
+		res._w = s * w + t * res._w;
+		res._x = s * x + t * res._x;
+		res._y = s * y + t * res._y;
+		res._z = s * z + t * res._z;
+
+		res.normalize();
+		return res;
+	}
+
+	var sinHalfTheta = Math.sqrt(sqrSinHalfTheta);
+	var halfTheta = Math.atan2(sinHalfTheta, cosHalfTheta);
+	var ratioA = Math.sin((1 - t) * halfTheta) / sinHalfTheta,
+		ratioB = Math.sin(t * halfTheta) / sinHalfTheta;
+
+	res._w = (w * ratioA + res._w * ratioB);
+	res._x = (x * ratioA + res._x * ratioB);
+	res._y = (y * ratioA + res._y * ratioB);
+	res._z = (z * ratioA + res._z * ratioB);
+
+	return res;
 }
 
 function _Quaternion_log(q) {
@@ -293,14 +331,15 @@ function showDemoSlerp() {
 			quat.z = lerp(currentQuat.z, targetQuat.z, t);
 			quat.w = lerp(currentQuat.w, targetQuat.w, t);
 		} else if (method === "slerp") {
-			THREE.Quaternion.slerp(currentQuat, targetQuat, quat, t);
+			quat = _Quaternion_slerp(currentQuat, targetQuat, t);
 		} else if (method === "squad") {
 			const tan0 = calcQuatTan(prevQuat, currentQuat, targetQuat);
 			const tan1 = calcQuatTan(currentQuat, targetQuat, nextQuat);
 
-			const a = new THREE.Quaternion().copy(currentQuat).slerp(targetQuat, t);
-			const b = new THREE.Quaternion().copy(tan0).slerp(tan1, t);
-			THREE.Quaternion.slerp(a, b, quat, 2 * t * (1 - t));
+			quat = _Quaternion_slerp(
+				_Quaternion_slerp(currentQuat, targetQuat, t),
+				_Quaternion_slerp(tan0, tan1, t),
+				2 * t * (1 - t));
 		}
 
 		sphere.addTrace(quat);
@@ -336,7 +375,7 @@ function showDemoSlerp() {
 		prevQuat = new THREE.Quaternion(1, 0, 0, 0);
 		currentQuat = new THREE.Quaternion(1, 0, 0, 0);
 		targetQuat = new THREE.Quaternion(1, 0, 0, 0);
-		nextQuat = makeRandomUnitQuat(targetQuat);
+		nextQuat = makeRandomUnitQuat();
 	}
 
 	function initViewRight() {
@@ -388,7 +427,7 @@ function showDemoSlerp() {
 		prevQuat = currentQuat;
 		currentQuat = targetQuat;
 		targetQuat = nextQuat;
-		nextQuat = makeRandomUnitQuat(targetQuat);
+		nextQuat = makeRandomUnitQuat();
 
 		sphere.setTarget(targetQuat);
 
@@ -398,7 +437,7 @@ function showDemoSlerp() {
 		setTimeout(generateTarget, INTERVAL_MS);
 	}
 
-	function makeRandomUnitQuat(lastQ) {
+	function makeRandomUnitQuat() {
 		const axis = new THREE.Vector3(
 			Math.random() - 0.5,
 			Math.random() - 0.5,
@@ -411,12 +450,6 @@ function showDemoSlerp() {
 		let q = new THREE.Quaternion();
 		q.setFromAxisAngle(axis, angle);
 		// No need to normalize because it already is
-
-		// Choose the shortest arc (slerp does this automatically though)
-		const qAnti = new THREE.Quaternion(-q.x, -q.y, -q.z, -q.w);
-		if (_Quaternion_distance(lastQ, qAnti) < _Quaternion_distance(lastQ, q)) {
-			q = qAnti;
-		}
 
 		return q;
 	}
