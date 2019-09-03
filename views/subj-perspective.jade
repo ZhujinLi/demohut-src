@@ -1,0 +1,28 @@
+doctype html
+html
+
+body
+    h1(class="display-3 bg-light") Perspective
+
+    p I thought I had known enough about the perspective projection. I was wrong.
+
+    h3 FOV and speed
+
+    p There is an interesting fact about video games: when an object (like a car or a person) starts to accelerate, the FOV increases.
+
+    div(class="row")
+        div(class="col-md")
+            video(class="video-fluid z-depth-1" autoplay loop muted width="100%" height="auto")
+                source(src="videos/fov-gta.mp4" type="video/mp4")
+        div(class="col-md")
+            video(class="video-fluid z-depth-1" autoplay loop muted width="100%" height="auto")
+                source(src="videos/fov-spiderman.mp4" type="video/mp4")
+
+    p It seems that increasing FOV creates a sense of speed. Or does it?
+
+    //-script(src="/javascripts/subj-perspective.js", type="module")
+
+    h3 References
+
+    ul
+        li RTR-3rd ch. 4.6

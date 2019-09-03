@@ -2,7 +2,9 @@ doctype html
 html
 
 body
-    h3 Quaternions
+    h1(class="display-3 bg-light") Quaternions
+
+    h3 What is it
 
     p Quaternion is a tool for rotation around an arbitrary axis. Compared with rotation matrix, it is more compact in representation and more efficient when it comes to tasks like slerp. Moreover, it avoids the dreaded gimbal lock issue with Euler Angle.
     
@@ -35,6 +37,8 @@ body
             div(class="col-md-3")
                 h6 Unit Quaternion
                 div(id="label-quat-res")
+
+    p
 
     h3 Interpolation
 
@@ -72,6 +76,8 @@ body
                         label
                             input(type="radio", id="radio-squad")
                             |  squad
+
+    p
 
     p Although we cannot visualize the 4-D unit hypersphere, here is a workaround: projecting (x, y, z) entries directly into 3-D space, and indicating the magnitude of w by the 3-D sphere's radius. The larger the radius, the lesser the w.
 

@@ -12,4 +12,5 @@ function onNavItemClicked(event, item, html) {
 
 $(document).ready(function () {
     $('#item-quaternions').click((event) => { onNavItemClicked(event, $(this), 'subj-quaternions.html'); })
+    $('#item-perspective').click((event) => { onNavItemClicked(event, $(this), 'subj-perspective.html'); })
 });

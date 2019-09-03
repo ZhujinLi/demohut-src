@@ -6,6 +6,7 @@ var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
 var quatRouter = require('./routes/subj-quaternions');
+var perspRouter = require('./routes/subj-perspective');
 
 var app = express();
 
@@ -22,6 +23,7 @@ app.use(express.static(path.join(__dirname, 'node_modules')));
 
 app.use('/', indexRouter);
 app.use('/subj-quaternions.html', quatRouter);
+app.use('/subj-perspective.html', perspRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
