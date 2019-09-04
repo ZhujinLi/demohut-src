@@ -198,7 +198,7 @@ class Sphere {
 function showDemoQuat() {
 	let renderer;
 	let world;
-	let rotateAxis, quat;
+	let rotateAxis, quat, quatRaw;
 
 	initView();
 	initGUI();
@@ -252,11 +252,19 @@ function showDemoQuat() {
 
 		document.getElementById('label-angle').innerHTML = angle + '°';
 
-		quat = new THREE.Quaternion();
-		quat.setFromAxisAngle(new THREE.Vector3(x, y, z), THREE.Math.degToRad(angle));
+		quatRaw = new THREE.Quaternion();
+		quatRaw.setFromAxisAngle(new THREE.Vector3(x, y, z), THREE.Math.degToRad(angle));
+
+		document.getElementById('label-quat-raw').innerHTML =
+			"x: " + quatRaw.x.toFixed(2) + "<br>" +
+			"y: " + quatRaw.y.toFixed(2) + "<br>" +
+			"z: " + quatRaw.z.toFixed(2) + "<br>" +
+			"w: " + quatRaw.w.toFixed(2);
+
+		quat = new THREE.Quaternion().copy(quatRaw);
 		quat.normalize();
 
-		document.getElementById('label-quat-res').innerHTML =
+		document.getElementById('label-quat-unit').innerHTML =
 			"x: " + quat.x.toFixed(2) + "<br>" +
 			"y: " + quat.y.toFixed(2) + "<br>" +
 			"z: " + quat.z.toFixed(2) + "<br>" +

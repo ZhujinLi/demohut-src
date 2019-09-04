@@ -1,21 +1,10 @@
-doctype html
-html
-  head
-    title= title
-    link(rel='stylesheet', href='/bootstrap/dist/css/bootstrap.min.css')
-    link(rel='stylesheet', href='/stylesheets/style.css')
-  body
-    div(class='jumbotron jumbotron-fluid text-monospace')
-      div(class='container')
-        h1 fun_with_rtr
-        p Here are some thoughts and demos I've written along my path of learning Real-Time Rendering.
-    div(class='container')
-      div(class='row')
-        div(class='col-sm-2')
-          ul(class="nav nav-pills flex-column", id="demo-list")
-            li(class="nav-item")
-              a(class="nav-link", id="item-quaternions", href="#") Quaternions
-            li(class="nav-item")
-              a(class="nav-link", id="item-perspective", href="#") Perspective
-        div(class='col-sm-10', id='content')
-    script(src='/javascripts/index.js', type='module')
+extends layout
+
+block content
+  div.text-secondary
+    ul
+      li
+        p Most of the topics here refer to the book #[em Real-Time Rendering(3rd edition)].
+
+      li
+        p Most of the demos are written in Three.js. Check the source code in the developer mode of the browser if you are interested in the implementation.
