@@ -11,8 +11,8 @@ block content
     p Note that only with unit quaternions are we able to perform rotations. Make sure they are normalized before you use them.
 
     div.row.text-monospace
-        div.col-md-6#view-quat
-        div.col-md-3
+        div.col-lg#view-quat
+        div.col-lg
             h6 Angle
             div.row
                 div.col-md
@@ -31,7 +31,7 @@ block content
                 div.col-md
                     input.custom-range#slider-axis-z(type="range")
                 div.col-md#label-axis-z
-        div.col-md-3
+        div.col-lg
             h6 Quaternion(raw)
             p#label-quat-raw
             h6 Quaternion(unit)
@@ -46,7 +46,7 @@ block content
     dl
         dt Linear interpolation (lerp)
 
-        dd This is the simplest and most efficient one of the three. As you can see from the demo below, it produces a straight trace. The downside is that the rotation speed is not constant (as it is then projected to the hypersphere), generally faster in the middle.
+        dd This is the simplest and the most efficient one of the three. As you can see from the demo below, it produces a straight trace. The downside is that the rotation speed is not constant (as it is then projected to the hypersphere), generally faster in the middle.
     
         dt Spherical linear interpolation (slerp)
 
@@ -57,9 +57,9 @@ block content
         dd As you can see from the demo, with lerp or slerp there are sudden jerks when a new animation begins. This is because the trace direction is not continuous, even though the trace itself is. Using some sort of spline it can be solved, and the trace gets really smooth at the turns. Note that this method requires the knowledge of the next animation target's position in advance.
     
     div.row
-        div(class="col-md", id="view-slerp-world")
-        div(class="col-md", id="view-slerp-sphere")
-        div(class="col-md")
+        div(class="col-lg", id="view-slerp-world")
+        div(class="col-lg", id="view-slerp-sphere")
+        div(class="col-lg")
             div(class="container")
                 form
                     div(class="radio")

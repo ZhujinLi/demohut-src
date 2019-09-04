@@ -5,19 +5,20 @@ html
     link(rel='stylesheet', href='/bootstrap/dist/css/bootstrap.min.css')
     link(rel='stylesheet', href='/stylesheets/style.css')
   body
-    div.jumbotron.jumbotron-fluid.text-monospace
+    div.jumbotron.jumbotron-fluid.text-monospace(style={'padding-top': '40px', 'padding-bottom': '40px'})
+ 
       div.container
         h1#[a(href="/" style={color: '#000000'}) fun_with_rtr]
         p Here are some thoughts and demos I've written along my path of learning Real-Time Rendering.
     div.container
       div.row
-        div.col-sm-2
+        div.col-md-2
           ul.nav.nav-pills.flex-column
             li.nav-item
               a.nav-link(href="/subj-quaternions.html") Quaternions
             li.nav-item
               a.nav-link(href="/subj-perspective.html") Perspective
-        div.col-sm-10
-          h1.display-4.bg-light
+        div.col-md-10
+          h1.display-4.text-light.bg-secondary
             block subj-title
           block content
