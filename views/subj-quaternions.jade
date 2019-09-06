@@ -77,7 +77,9 @@ block content
 
     p
 
-    p Although we cannot visualize the 4-D unit hypersphere, here is a workaround: projecting (x, y, z) entries directly into 3-D space, then indicating the magnitude of w by the 3-D sphere's radius. The larger the radius, the lesser the w.
+    p Although we cannot visualize the 4-D unit hypersphere, here is a workaround: projecting (x, y, z) components directly into the 3-D space, and indicating the magnitude of w by the 3-D sphere's radius. The larger the radius, the lesser the w.
+    
+    p It is noteworthy that every quaternion has its antipodal counterpart (by negating all its components), which produces the same rotation, but may take a shorter path of interpolation, thus preventing an unnecessary sudden turn. Here for simplicity, I ignore this optimization and just use any randomly generated unit quaternion.
 
     script(src="/js/subj-quaternions.js", type="module")
 
