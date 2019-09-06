@@ -20,7 +20,19 @@ block content
 
     p
 
-    p It seems that increasing FOV creates a sense of speed. Or does it?
+    p It seems that increasing FOV creates a sense of speed.
+    
+    p Or does it?
+
+    p I'll write a demo to find out...
+
+    div(style={"position": "relative"})
+        div#gui-fov-cmp(style={"position": "absolute", "top": "10px", "left": "10px"})
+        canvas#view-fov-cmp
+
+    p
+
+    p Here the car speed is at constant 120 km/h, and the camera keeps the same pose, so FOV is the only thing that changes. The conclusion is obvious.
 
     script(src="/js/subj-perspective.js", type="module")
 
