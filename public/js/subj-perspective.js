@@ -1,9 +1,15 @@
 'use strict';
 
 import '/three/build/three.min.js';
+import '/three/examples/js/loaders/GLTFLoader.js';
+import '/three/examples/js/loaders/OBJLoader.js';
+import '/three/examples/js/controls/OrbitControls.js';
 import { GUI } from '/dat.gui/build/dat.gui.module.js';
 
-/* global THREE, dat */
+/* global THREE */
+
+showDemoFovCmp();
+showDemoOrtho();
 
 // Here we use ENU coordinate system, in the unit meter
 function showDemoFovCmp() {
@@ -20,8 +26,6 @@ function showDemoFovCmp() {
     let lastUpdateDistance = 0;
     let units = [];
 
-    let options = { fov: 45 };
-
     initView();
     initGUI();
 
@@ -32,7 +36,7 @@ function showDemoFovCmp() {
 
         camera.position.set(CAMERA_X, -10, 1);
         camera.up.set(0, 1, 0);
-        camera.lookAt(CAMERA_X, 0, 0);
+        camera.lookAt(CAMERA_X, 0, 1);
 
         const groundGeo = new THREE.PlaneGeometry(100000, 100000);
         const groundMtl = new THREE.MeshBasicMaterial({ color: 0xb0b0b0, depthWrite: false });
@@ -49,18 +53,17 @@ function showDemoFovCmp() {
 
     function initGUI() {
         const gui = new GUI({ autoPlace: false });
-        gui.add(options, 'fov').min(20).max(90);
+        gui.add(camera, 'fov').min(30).max(120);
         document.getElementById('gui-fov-cmp').appendChild(gui.domElement);
     }
 
     function animate() {
         const dist = clock.getElapsedTime() * msFromKmh(speedKmh);
-        if (dist - lastUpdateDistance > UNIT_LENGTH) {
-            lastUpdateDistance = dist;
+        while (dist - lastUpdateDistance >= UNIT_LENGTH) {
+            lastUpdateDistance += UNIT_LENGTH;
             addUnit();
         }
 
-        camera.fov = options.fov;
         camera.position.y = dist;
         camera.updateProjectionMatrix();
 
@@ -131,8 +134,105 @@ function showDemoFovCmp() {
         root.translateY(UNIT_LENGTH * offset);
         return root;
     }
-
-
 }
 
-showDemoFovCmp();
+function showDemoOrtho() {
+    const W = 800, H = 400;
+    const renderer = new THREE.WebGLRenderer({ antialias: true, canvas: document.getElementById('view-ortho') });
+    const scene = new THREE.Scene();
+    const perspCamera = new THREE.PerspectiveCamera(60, W / H / 2);
+    const orthoCamera = new THREE.OrthographicCamera();
+
+    initView();
+    requestAnimationFrame(render);
+
+    function initView() {
+        renderer.setSize(W, H);
+        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.setScissorTest(true);
+        renderer.shadowMap.enabled = true;
+
+        perspCamera.position.set(25, 25, 25);
+
+        const objTex = new THREE.TextureLoader().load('/models/HouseWithDriveway/HouseWithDriveway_BaseColor.png');
+        new THREE.OBJLoader().load(
+            '/models/HouseWithDriveway/HouseWithDriveway.obj',
+            (obj) => {
+                obj.traverse(function (child) {
+                    if (child.isMesh) {
+                        child.castShadow = true;
+                        child.receiveShadow = true;
+                        child.material.map = objTex;
+                    }
+                });
+
+                scene.add(obj);
+            },
+            null,
+            (error) => { console.log(error); }
+        );
+
+        new THREE.GLTFLoader().load(
+            '/models/jap_girl/asian-girl_anime-clean.gltf',
+            (gltf) => {
+                gltf.scene.traverse(function (child) {
+                    if (child.isMesh) {
+                        child.castShadow = true;
+                        child.receiveShadow = true;
+                    }
+                });
+
+                gltf.scene.scale.set(0.007, 0.007, 0.007);
+                gltf.scene.position.set(0, 3.1, 10);
+                scene.add(gltf.scene);
+            },
+            null,
+            (error) => { console.log(error); }
+        );
+
+        scene.add(new THREE.AmbientLight(0xffffff, 1));
+
+        const dirLight = new THREE.DirectionalLight(0xffffff, 0.5);
+        dirLight.position.set(-100, 100, -100);
+        dirLight.target.position.set(0, 0, 0);
+        dirLight.castShadow = true;
+        dirLight.shadow.camera.left = -20;
+        dirLight.shadow.camera.right = 20;
+        dirLight.shadow.camera.bottom = -20;
+        dirLight.shadow.camera.top = 20;
+        scene.add(dirLight);
+
+        new THREE.OrbitControls(perspCamera, renderer.domElement);
+    }
+
+    function render() {
+        updateOrthoParams();
+
+        const leftArea = new THREE.Vector4(0, 0, W / 2, H);
+        renderer.setViewport(leftArea);
+        renderer.setScissor(leftArea);
+        renderer.setClearColor(new THREE.Color(0xbfe3dd));
+        renderer.render(scene, perspCamera);
+
+        const rightArea = new THREE.Vector4(W / 2, 0, W / 2, H);
+        renderer.setViewport(rightArea);
+        renderer.setScissor(rightArea);
+        renderer.setClearColor(new THREE.Color(0xabb3d4));
+        renderer.render(scene, orthoCamera);
+
+        requestAnimationFrame(render);
+    }
+
+    function updateOrthoParams() {
+        const d = perspCamera.position.length() * Math.tan(perspCamera.fov / 180 * Math.PI / 2);
+        orthoCamera.left = -d;
+        orthoCamera.right = d;
+        orthoCamera.bottom = -d;
+        orthoCamera.top = d;
+        orthoCamera.near = -2 * d;
+        orthoCamera.far = 2 * d;
+        orthoCamera.position.copy(orthoCamera.position);
+        orthoCamera.rotation.copy(perspCamera.rotation);
+        orthoCamera.updateProjectionMatrix();
+    }
+}
