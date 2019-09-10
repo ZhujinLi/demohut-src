@@ -36,6 +36,21 @@ block content
     
     p Mathematically, a lane close to the camera in the real world is stretched more on the screen with the FOV increasing, so the speed seems to be faster.
     
+    h3 FOV and zooming
+
+    p At the first time I played around with FOV, I found that turning it smaller felt just like zooming in. But are the really the same?
+    
+    div(style={"position": "relative", "color": "white"})
+        canvas#view-zoom
+        p#label-left-params(style={"position": "absolute", "bottom": "0px", "left": "10px"})
+        p#label-right-params(style={"position": "absolute", "bottom": "0px", "left": "410px"})
+
+    p
+    
+    p Indeed they feel very much the same in the beginning. But as you keep zooming in, objects (especially those with some height) start to show some differences, while the planes and shadow are still identical for both views. The taller the object is, the more obvious it becomes.
+    
+    p This phenomenon occurs when looking down. If you are viewing with an oblique angle, the scene will look very strange.
+    
     h3 Perspective vs. orthographic
 
     p 西洋画派采用科学的焦点透视原理，画作显得真实自然。而中国画不遵循标准的透视规律，存在多个观察点，移步换景，最终集成一体，因此称之为散点透视，相当于图形学中的正交投影。这种方式形成的画作，尽管与实际的效果相差甚远，但其超脱了个人空间的限制，可以表现更为辽阔壮丽的景象。见《#[a(href="/images/清明上河图.jpg") 清明上河图]》。
@@ -46,12 +61,14 @@ block content
     
     canvas#view-ortho
 
+    p
+
     p 左边是透视，右边是非透视。其实没有我想象中那么大差别。另外，右边的横平竖直给人一种复古风的感觉，可能因为早期的伪3D游戏（例如红白机卡带，以及90年代经典的《仙剑奇侠传一》），采用的就是正交投影来展示3D画面。
 
     h3 References
 
     ul
         li RTR-3rd ch. 4.6
-        li Model is from #[a(href="https://poly.google.com/view/bEqHUxdaJHB") here] and #[a(href="https://github.com/mrdoob/three.js/blob/master/examples/models/gltf/LittlestTokyo.glb") here]
+        li Model is from #[a(href="https://poly.google.com/view/bEqHUxdaJHB") here] and #[a(href="https://poly.google.com/view/bnZkUs4qEdG") here]
 
     script(src="/js/subj-perspective.js", type="module")
