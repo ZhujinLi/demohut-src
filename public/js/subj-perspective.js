@@ -6,11 +6,12 @@ import '/three/examples/js/loaders/OBJLoader.js';
 import '/three/examples/js/controls/OrbitControls.js';
 import { GUI } from '/dat.gui/build/dat.gui.module.js';
 
-/* global THREE */
+/* global THREE, Chart */
 
 showDemoFovCmp();
 showDemoOrtho();
 showDemoZoom();
+showDemoNdc();
 
 // Here we use ENU coordinate system, in the unit meter
 function showDemoFovCmp() {
@@ -339,5 +340,179 @@ function showDemoZoom() {
     function formatCameraParams(camera) {
         return 'distance: ' + Math.round(camera.position.length()) + '<br>'
             + 'fov: ' + Math.round(camera.fov);
+    }
+}
+
+function showDemoNdc() {
+    const W = 600, H = 300;
+    const renderer = new THREE.WebGLRenderer({ antialias: true, canvas: document.getElementById('view-ndc') });
+    const scene = new THREE.Scene();
+    const mainCamera = new THREE.PerspectiveCamera(45, W / H / 2);
+    const auxCamera = new THREE.PerspectiveCamera(45, W / H / 2);
+    let cameraHelper;
+    let lineChart;
+
+    initView();
+    initGUI();
+    update();
+    requestAnimationFrame(render);
+
+    function initView() {
+        renderer.setSize(W, H);
+        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.setScissorTest(true);
+
+        mainCamera.position.set(10, 10, 30);
+        mainCamera.lookAt(0, 0, 0);
+        mainCamera.updateProjectionMatrix();
+
+        auxCamera.position.set(200, 200, -50);
+        auxCamera.near = 0.1;
+        auxCamera.far = 10000;
+        auxCamera.lookAt(0, 0, -50);
+        auxCamera.updateProjectionMatrix();
+
+        {
+            const color = 0xFFFFFF;
+            const intensity = 1;
+            const light = new THREE.DirectionalLight(color, intensity);
+            light.position.set(0, 10, 0);
+            light.target.position.set(-5, 0, 0);
+            scene.add(light);
+            scene.add(light.target);
+        }
+
+        {
+            const sphereRadius = 3;
+            const sphereWidthDivisions = 32;
+            const sphereHeightDivisions = 16;
+            const sphereGeo = new THREE.SphereBufferGeometry(sphereRadius, sphereWidthDivisions, sphereHeightDivisions);
+            const numSpheres = 20;
+            for (let i = 0; i < numSpheres; ++i) {
+                const sphereMat = new THREE.MeshPhongMaterial();
+                sphereMat.color.setHSL(i * .73, 1, 0.5);
+                const mesh = new THREE.Mesh(sphereGeo, sphereMat);
+                mesh.position.set(-sphereRadius - 1, sphereRadius + 2, i * sphereRadius * -2.2);
+                scene.add(mesh);
+            }
+        }
+
+        {
+            const planeSize = 400;
+
+            const loader = new THREE.TextureLoader();
+            const texture = loader.load('/images/checker.png');
+            texture.wrapS = THREE.RepeatWrapping;
+            texture.wrapT = THREE.RepeatWrapping;
+            texture.magFilter = THREE.NearestFilter;
+            const repeats = planeSize / 2;
+            texture.repeat.set(repeats, repeats);
+
+            const planeGeo = new THREE.PlaneBufferGeometry(planeSize, planeSize);
+            const planeMat = new THREE.MeshPhongMaterial({
+                map: texture,
+                side: THREE.DoubleSide,
+            });
+            const mesh = new THREE.Mesh(planeGeo, planeMat);
+            mesh.rotation.x = Math.PI * -.5;
+            scene.add(mesh);
+        }
+
+        cameraHelper = new THREE.CameraHelper(mainCamera);
+        cameraHelper.material.depthTest = false;
+        scene.add(cameraHelper);
+
+    }
+
+    function update() {
+        const value = document.getElementById('slider-near').value;
+        const near = 10 ** value;
+        mainCamera.near = near;
+        mainCamera.far = near + 100;
+        mainCamera.updateProjectionMatrix();
+
+        cameraHelper.update();
+
+        document.getElementById('label-near').innerHTML = 'near: ' + near.toFixed(5);
+
+        const points = [];
+        const n = mainCamera.near;
+        const f = mainCamera.far;
+        for (let z = mainCamera.near; z <= mainCamera.far; z += 1)
+            points.push({ x: z - mainCamera.near, y: -(2 * f * n / (f - n)) * (1 / z) + (f + n) / (f - n) });
+        lineChart.data.datasets[0].data = points;
+        lineChart.update();
+    }
+
+    function initGUI() {
+        const sliderNear = document.getElementById('slider-near');
+        sliderNear.min = -5;    // log
+        sliderNear.max = 2;
+        sliderNear.value = 0;
+        sliderNear.step = 0.01;
+        sliderNear.oninput = update;
+
+        const ctx = document.getElementById('plot-ndc').getContext('2d');
+
+        const dists = [];
+        for (let i = 0; i <= 100; i += 10)
+            dists.push(i);
+
+        lineChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: dists,
+                datasets: [
+                    { data: [], fill: false, pointRadius: 0 }
+                ]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            min: -1,
+                            max: 1
+                        },
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'z_ndc'
+                        }
+                    }],
+                    xAxes: [{
+                        type: 'linear',
+                        position: 'bottom',
+                        ticks: {
+                            min: 0,
+                            max: 100,
+                            stepSize: 10,
+                            fixedStepSize: 1,
+                        },
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'z-near'
+                        }
+                    }]
+                },
+                legend: {
+                    display: false
+                }
+            }
+        });
+    }
+
+    function render() {
+        const leftArea = new THREE.Vector4(0, 0, W / 2, H);
+        cameraHelper.visible = false;
+        renderer.setViewport(leftArea);
+        renderer.setScissor(leftArea);
+        renderer.render(scene, mainCamera);
+
+        const rightArea = new THREE.Vector4(W / 2, 0, W / 2, H);
+        cameraHelper.visible = true;
+        renderer.setViewport(rightArea);
+        renderer.setScissor(rightArea);
+        renderer.render(scene, auxCamera);
+
+        requestAnimationFrame(render);
     }
 }

@@ -320,7 +320,7 @@ function showDemoQuat() {
 showDemoQuat();
 
 function showDemoSlerp() {
-	const INTERVAL_MS = 3000;
+	const INTERVAL_MS = 2000;
 	let rendererL;
 	let rendererR;
 	let world;
