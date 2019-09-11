@@ -1,0 +1,103 @@
+extends layout
+
+block subj-title
+    p Perspective
+
+block content
+    p I thought I was familiar with perspective projection. I was wrong.
+
+    h3 FOV and speed
+
+    p Here is an interesting fact about video games: when an object (like a car or a person) starts to accelerate, the FOV normally increases.
+
+    .row
+        .col-md
+            video.video-fluid.z-depth-1(autoplay loop muted width="100%" height="auto")
+                source(src="videos/fov-gta.mp4" type="video/mp4")
+        .col-md
+            video.video-fluid.z-depth-1(autoplay loop muted width="100%" height="auto")
+                source(src="videos/fov-spiderman.mp4" type="video/mp4")
+
+    p
+
+    p It seems that increasing FOV enhances the sense of speed.
+    
+    p Or does it?
+
+    p I'll write a demo to find out...
+
+    div(style={"position": "relative"})
+        div#gui-fov-cmp(style={"position": "absolute", "top": "10px", "left": "10px"})
+        canvas#view-fov-cmp
+
+    p
+
+    p Here the car speed is at constant 120 km/h, and the camera keeps the same pose, so FOV is the only thing that changes. The conclusion is obvious.
+    
+    p Mathematically, a lane close to the camera in the real world is stretched more on the screen with the FOV increasing, so the speed seems to be faster.
+    
+    h3 FOV and zooming
+
+    p At the first time I played around with FOV, I found that turning it smaller felt just like zooming in. But are the really the same?
+    
+    div(style={"position": "relative", "color": "white"})
+        canvas#view-zoom
+        p#label-left-params(style={"position": "absolute", "bottom": "0px", "left": "10px"})
+        p#label-right-params(style={"position": "absolute", "bottom": "0px", "left": "410px"})
+
+    p
+    
+    p Indeed they feel very much the same in the beginning. But as you keep zooming in, objects (especially those of certain height) start to show some differences, though the planes and shadow are still identical for both views. The taller the object is, the more obvious it becomes.
+    
+    p This phenomenon occurs when looking down. If you are viewing with an oblique angle, the scene will look very strange.
+    
+    h3 Z curve
+
+    p The z value in NDC (stored in depth buffer) is not linear to the original z value:
+
+    p.text-center.text-monospace z_ndc = -(2*f*n/(f-n)) * (1/z) + (f+n)/(f-n)
+
+    p where n is the near plane, and f is the far plane.
+
+    .row
+        .col-lg
+            div(style={"position": "relative", "color": "white"})
+                canvas#view-ndc
+                div(style={"position": "absolute", "bottom": "20px", "left": "20px"})
+                    div
+                        input.custom-range#slider-near(type="range")
+                    div#label-near
+        .col-lg
+            .row
+                canvas#plot-ndc(style="width:300px;height:300px;")
+
+    p
+
+    p Here I keep the distance between the near plane and the far plane constant at 100. When the near plane is set very small, all the z values fall in a small range close to 1. In particular, z-fighting would appear dramatically if near plane is set 0.00001. Notice this is a double precision camera. A solution is to use a non-linear (like logarithmic) z buffer. Anyway one should consider setting a reasonable range for the frustum in the first place.
+    
+    h3 Perspective vs. orthographic
+
+    p 西洋画派采用科学的焦点透视原理，画作显得真实自然。而中国画不遵循标准的透视规律，存在多个观察点，移步换景，最终集成一体，因此称之为散点透视，相当于图形学中的正交投影。这种方式形成的画作，尽管与实际的效果相差甚远，但其超脱了个人空间的限制，可以表现更为辽阔壮丽的景象。见《#[a(href="/images/清明上河图.jpg") 清明上河图]》。
+    
+    p 科幻作品《三体》中有段#[a(href="https://www.douban.com/note/700607820/") 情节]，描述了现实世界中出现了一个非透视投影人物的故事。这个人站在一个小岛上，如果从岸边看过去，会以为到这是一个巨人。然后不断靠近这个人，会发现这人越来越小，最后和真实大小一样了。这个场景其实很容易脑补，想象这是个游戏，这个人就相当于是贴在屏幕上的一张贴纸，不管你前后怎么移动，这个人在屏幕上（眼睛中）都是一样大的，因此在近大远小的世界中就造成了远大近小的假象。
+    
+    p 抛开这种离奇设定不谈，透视世界和非透视世界差异有多大呢？
+    
+    div(style={"position": "relative"})
+        canvas#view-ortho
+        p(style={"position": "absolute", "top": "10px", "left": "10px"}) Perspective
+        p(style={"position": "absolute", "top": "10px", "left": "410px"}) Orthographic
+
+    p
+
+    p 其实没有我想象中那么大差别。另外，右边的横平竖直给人一种复古风的感觉，可能因为早期的伪3D游戏（例如红白机卡带，以及90年代经典的《仙剑奇侠传一》），采用的就是正交投影来展示3D画面。
+
+    h3 References
+
+    ul
+        li RTR-3rd ch. 4.6
+        li Model is from #[a(href="https://poly.google.com/view/bEqHUxdaJHB") here] and #[a(href="https://poly.google.com/view/bnZkUs4qEdG") here]
+        li Some demos refer to #[a(href="https://threejsfundamentals.org/threejs/lessons/threejs-cameras.html") this tutorial]
+
+    script(src="/js/Chart.min.js")
+    script(src="/js/subj-perspective.js", type="module")

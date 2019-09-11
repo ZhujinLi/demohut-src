@@ -1,40 +1,43 @@
-doctype html
-html
+extends layout
 
-body
-    h3 Quaternions
+block subj-title
+    p Quaternions
 
+block content
     p Quaternion is a tool for rotation around an arbitrary axis. Compared with rotation matrix, it is more compact in representation and more efficient when it comes to tasks like slerp. Moreover, it avoids the dreaded gimbal lock issue with Euler Angle.
     
     p Although quaternions were invented in 1843 as an extension to the complex numbers, it was not until 1985 that it was introduced to computer graphics.
     
     p Note that only with unit quaternions are we able to perform rotations. Make sure they are normalized before you use them.
 
-    div(class="container")
-        div(class="row" class="text-monospace")
-            div(class="px-0", id="view-quat")
-            div(class="col-md-3")
-                h6 Angle
-                div(class="row")
-                    div(class="col-md")
-                        input(type="range", class="custom-range", id="slider-angle")
-                    div(class="col-md", id="label-angle")
-                h6 Axis
-                div(class="row")
-                    div(class="col-md")
-                        input(type="range", class="custom-range", id="slider-axis-x")
-                    div(class="col-md", id="label-axis-x")
-                div(class="row")
-                    div(class="col-md")
-                        input(type="range", class="custom-range", id="slider-axis-y")
-                    div(class="col-md", id="label-axis-y")
-                div(class="row")
-                    div(class="col-md")
-                        input(type="range", class="custom-range", id="slider-axis-z")
-                    div(class="col-md", id="label-axis-z")
-            div(class="col-md-3")
-                h6 Unit Quaternion
-                div(id="label-quat-res")
+    div.row.text-monospace
+        div.col-lg#view-quat
+        div.col-lg
+            h6 Angle
+            div.row
+                div.col-md
+                    input.custom-range#slider-angle(type="range")
+                div.col-md#label-angle
+            h6 Axis
+            div.row
+                div.col-md
+                    input.custom-range#slider-axis-x(type="range")
+                div.col-md#label-axis-x
+            div.row
+                div.col-md
+                    input.custom-range#slider-axis-y(type="range")
+                div.col-md#label-axis-y
+            div.row
+                div.col-md
+                    input.custom-range#slider-axis-z(type="range")
+                div.col-md#label-axis-z
+        div.col-lg
+            h6 Quaternion(raw)
+            p#label-quat-raw
+            h6 Quaternion(unit)
+            p#label-quat-unit
+
+    p
 
     h3 Interpolation
 
@@ -43,7 +46,7 @@ body
     dl
         dt Linear interpolation (lerp)
 
-        dd This is the simplest and most efficient one of the three. As you can see from the demo below, it produces a straight trace. The downside is that the rotation speed is not constant (as it is then projected to the hypersphere), generally faster in the middle.
+        dd This is the simplest and the most efficient one of the three. As you can see from the demo below, it produces a straight trace. The downside is that the rotation speed is not constant (as it is then projected to the hypersphere), generally faster in the middle.
     
         dt Spherical linear interpolation (slerp)
 
@@ -53,11 +56,10 @@ body
 
         dd As you can see from the demo, with lerp or slerp there are sudden jerks when a new animation begins. This is because the trace direction is not continuous, even though the trace itself is. Using some sort of spline it can be solved, and the trace gets really smooth at the turns. Note that this method requires the knowledge of the next animation target's position in advance.
     
-    div(class="container")
-    div(class="row")
-        div(class="col-md", id="view-slerp-world")
-        div(class="col-md", id="view-slerp-sphere")
-        div(class="col-md")
+    div.row
+        div(class="col-lg", id="view-slerp-world")
+        div(class="col-lg", id="view-slerp-sphere")
+        div(class="col-lg")
             div(class="container")
                 form
                     div(class="radio")
@@ -73,9 +75,14 @@ body
                             input(type="radio", id="radio-squad")
                             |  squad
 
-    p Although we cannot visualize the 4-D unit hypersphere, here is a workaround: projecting (x, y, z) entries directly into 3-D space, and indicating the magnitude of w by the 3-D sphere's radius. The larger the radius, the lesser the w.
+    p
 
-    script(src="/javascripts/subj-quaternions.js", type="module")
+    p Although we cannot visualize the 4-D unit hypersphere, here is a workaround: projecting (x, y, z) components directly into the 3-D space, and indicating the magnitude of w by the 3-D sphere's radius. The larger the radius, the lesser the w.
+    
+    p It is noteworthy that every quaternion has its antipodal counterpart (by negating all its components), which produces the same rotation, but may take a shorter path of interpolation, thus preventing an unnecessary sudden turn. Here for simplicity, I ignore this optimization and just use any randomly generated unit quaternion.
+
+    script(src="/js/plotly.min.js")
+    script(src="/js/subj-quaternions.js", type="module")
 
     h3 References
 
