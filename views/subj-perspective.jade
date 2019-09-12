@@ -59,21 +59,19 @@ block content
 
     p where n is the near plane, and f is the far plane.
 
-    .row
-        .col-lg
-            div(style={"position": "relative", "color": "white"})
-                canvas#view-ndc
-                div(style={"position": "absolute", "bottom": "20px", "left": "20px"})
-                    div
-                        input.custom-range#slider-near(type="range")
-                    div#label-near
-        .col-lg
-            .row
-                canvas#plot-ndc(style="width:300px;height:300px;")
+    div(style={"position": "relative", "color": "white"})
+        canvas#view-ndc
+        div(style={"position": "absolute", "bottom": "20px", "left": "20px"})
+            div
+                input.custom-range#slider-near(type="range")
+            div#label-near
+
+    div(style="position: relative; margin-top: 20px; height:200px; width:900px")
+        canvas#plot-ndc
 
     p
 
-    p Here I keep the distance between the near plane and the far plane constant at 100. When the near plane is set very small, all the z values fall in a small range close to 1. In particular, z-fighting would appear dramatically if near plane is set 0.00001. Notice this is a double precision camera. A solution is to use a non-linear (like logarithmic) z buffer. Anyway one should consider setting a reasonable range for the frustum in the first place.
+    p Here I keep the distance between the near plane and the far plane constant at 100. When the near plane is set very small, all the z values fall in a narrow range close to 1. In particular, if the near plane is set 0.00001, z-fighting would appear dramatically. Notice this is a double precision camera. A solution to this is to use a non-linear (like logarithmic) z buffer. Anyway one should consider setting a reasonable range for the frustum in the first place.
     
     h3 Perspective vs. orthographic
 
@@ -90,7 +88,7 @@ block content
 
     p
 
-    p 其实没有我想象中那么大差别。另外，右边的横平竖直给人一种复古风的感觉，可能因为早期的伪3D游戏（例如红白机卡带，以及90年代经典的《仙剑奇侠传一》），采用的就是正交投影来展示3D画面。
+    p 其实没有我想象中那么大差别。另外，右边的横平竖直给人一种复古风的感觉，可能因为早期的伪3D游戏（例如小霸王卡带，以及90年代经典的《仙剑奇侠传一》），采用的就是正交投影来展示3D画面。
 
     h3 References
 
