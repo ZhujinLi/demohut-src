@@ -370,10 +370,10 @@ function showDemoNdc() {
         mainCamera.lookAt(0, 0, 0);
         mainCamera.updateProjectionMatrix();
 
-        auxCamera.position.set(200, 200, -50);
+        auxCamera.position.set(200, 200, 0);
         auxCamera.near = 0.1;
         auxCamera.far = 10000;
-        auxCamera.lookAt(0, 0, -50);
+        auxCamera.lookAt(0, 0, 0);
         auxCamera.updateProjectionMatrix();
 
         {
@@ -448,6 +448,9 @@ function showDemoNdc() {
         const unitBoxMtl = new THREE.MeshBasicMaterial({ color: "#ff0", wireframe: true });
         const unitBox = new THREE.Mesh(unitBoxGeo, unitBoxMtl);
         scene2.add(unitBox);
+
+        new THREE.OrbitControls(auxCamera, document.getElementById("area-ndc-middle"));
+        new THREE.OrbitControls(auxCamera2, document.getElementById("area-ndc-right"));
     }
 
     function update() {

@@ -4,7 +4,7 @@ block subj-title
     p Perspective
 
 block content
-    p I thought I was familiar with perspective projection. I was wrong.
+    p I thought I knew perspective projection well. I was wrong.
 
     h3 FOV and speed
 
@@ -61,6 +61,12 @@ block content
 
     div(style={"position": "relative", "color": "white"})
         canvas#view-ndc
+        div(style={"position": "absolute", "left": "0px", "top": "0px", "width": "300px", "height": "100%"})
+            p Camera view
+        div#area-ndc-middle(style={"position": "absolute", "left": "300px", "top": "0px", "width": "300px", "height": "100%"})
+            p External view
+        div#area-ndc-right(style={"position": "absolute", "left": "600px", "top": "0px", "width": "300px", "height": "100%"})
+            p NDC cube
         div(style={"position": "absolute", "bottom": "20px", "left": "20px"})
             div
                 input.custom-range#slider-near(type="range")
@@ -71,7 +77,7 @@ block content
 
     p
 
-    p Here I keep the distance between the near plane and the far plane constant at 100. When the near plane is set very small, all the z values fall in a narrow range close to 1. In particular, if the near plane is set 0.00001, z-fighting would appear dramatically. Notice this is a double precision camera. A solution to this is to use a non-linear (like logarithmic) z buffer. Anyway one should consider setting a reasonable range for the frustum in the first place.
+    p Here I keep the distance between the near plane and the far plane constant at 100. When the near plane is set very small, all the z values fall in a narrow range close to 1. In particular, if the near plane is set 0.00001, z-fighting would appear dramatically. A solution to this is to use a non-linear (like logarithmic) z buffer. Anyway one should consider setting a reasonable range for the frustum in the first place.
     
     h3 Perspective vs. orthographic
 
