@@ -187,6 +187,8 @@ function showDemoOrtho() {
                 gltf.scene.scale.set(0.007, 0.007, 0.007);
                 gltf.scene.position.set(0, 3.1, 10);
                 scene.add(gltf.scene);
+
+                requestAnimationFrame(render);
             },
             null,
             (error) => { console.log(error); }
@@ -205,6 +207,7 @@ function showDemoOrtho() {
         scene.add(dirLight);
 
         new THREE.OrbitControls(perspCamera, renderer.domElement);
+        renderer.domElement.onmousemove = renderer.domElement.onwheel = () => { requestAnimationFrame(render) };
     }
 
     function render() {
@@ -221,8 +224,6 @@ function showDemoOrtho() {
         renderer.setScissor(rightArea);
         renderer.setClearColor(new THREE.Color(0xabb3d4));
         renderer.render(scene, orthoCamera);
-
-        requestAnimationFrame(render);
     }
 
     function updateOrthoParams() {
@@ -293,23 +294,30 @@ function showDemoZoom() {
         sphere.position.set(-20, 20, 10);
         scene.add(sphere);
 
-        const planeTex = new THREE.TextureLoader().load('/images/checker.png');
-        planeTex.wrapS = THREE.RepeatWrapping;
-        planeTex.wrapT = THREE.RepeatWrapping;
-        planeTex.magFilter = THREE.NearestFilter;
-        planeTex.repeat.set(50, 50);
+        new THREE.TextureLoader().load('/images/checker.png', (planeTex) => {
+            planeTex.wrapS = THREE.RepeatWrapping;
+            planeTex.wrapT = THREE.RepeatWrapping;
+            planeTex.magFilter = THREE.NearestFilter;
+            planeTex.repeat.set(50, 50);
 
-        const planeGeo = new THREE.PlaneBufferGeometry(500, 500);
-        const planeMat = new THREE.MeshPhongMaterial({
-            map: planeTex,
-            side: THREE.DoubleSide,
+            const planeGeo = new THREE.PlaneBufferGeometry(500, 500);
+            const planeMat = new THREE.MeshPhongMaterial({
+                map: planeTex,
+                side: THREE.DoubleSide,
+            });
+            const plane = new THREE.Mesh(planeGeo, planeMat);
+            plane.receiveShadow = true;
+            scene.add(plane);
+
+            requestAnimationFrame(render);
         });
-        const plane = new THREE.Mesh(planeGeo, planeMat);
-        plane.receiveShadow = true;
-        scene.add(plane);
 
         const ctrl = new THREE.OrbitControls(zoomCamera, renderer.domElement);
         ctrl.enableRotate = false;
+        ctrl.enablePan = false;
+        renderer.domElement.onwheel = () => {
+            requestAnimationFrame(render);
+        };
     }
 
     function render() {
@@ -333,8 +341,6 @@ function showDemoZoom() {
 
         document.getElementById('label-left-params').innerHTML = formatCameraParams(fovCamera);
         document.getElementById('label-right-params').innerHTML = formatCameraParams(zoomCamera);
-
-        requestAnimationFrame(render);
     }
 
     function formatCameraParams(camera) {
@@ -411,11 +417,10 @@ function showDemoNdc() {
             }
         }
 
-        {
+        const loader = new THREE.TextureLoader();
+        loader.load('/images/checker.png', (texture) => {
             const planeSize = 400;
 
-            const loader = new THREE.TextureLoader();
-            const texture = loader.load('/images/checker.png');
             texture.wrapS = THREE.RepeatWrapping;
             texture.wrapT = THREE.RepeatWrapping;
             texture.magFilter = THREE.NearestFilter;
@@ -430,12 +435,15 @@ function showDemoNdc() {
             const mesh = new THREE.Mesh(planeGeo, planeMat);
             mesh.rotation.x = Math.PI * -.5;
             scene.add(mesh);
-        }
+
+            requestAnimationFrame(render);
+        });
 
         scene.add(new THREE.AxesHelper(100));
 
         cameraHelper = new THREE.CameraHelper(mainCamera);
         cameraHelper.material.depthTest = false;
+        cameraHelper.renderOrder = 10;
         scene.add(cameraHelper);
 
         auxCamera2.position.set(1, 1.5, 0.5);
@@ -449,8 +457,13 @@ function showDemoNdc() {
         const unitBox = new THREE.Mesh(unitBoxGeo, unitBoxMtl);
         scene2.add(unitBox);
 
-        new THREE.OrbitControls(auxCamera, document.getElementById("area-ndc-middle"));
-        new THREE.OrbitControls(auxCamera2, document.getElementById("area-ndc-right"));
+        const domMid = document.getElementById("area-ndc-middle");
+        new THREE.OrbitControls(auxCamera, domMid);
+        domMid.onmousemove = domMid.onwheel = () => { requestAnimationFrame(render) };
+
+        const domRight = document.getElementById("area-ndc-right");
+        new THREE.OrbitControls(auxCamera2, domRight);
+        domRight.onmousemove = domRight.onwheel = () => { requestAnimationFrame(render) };
     }
 
     function update() {
@@ -492,7 +505,9 @@ function showDemoNdc() {
                 projSphere.geometry.vertices[j].set(v4.x, v4.y, -v4.z);
             })
             projSphere.geometry.verticesNeedUpdate = true;
-        })
+        });
+
+        requestAnimationFrame(render);
     }
 
     function initGUI() {
@@ -570,7 +585,5 @@ function showDemoNdc() {
         renderer.setViewport(rightArea);
         renderer.setScissor(rightArea);
         renderer.render(scene2, auxCamera2);
-
-        requestAnimationFrame(render);
     }
 }
