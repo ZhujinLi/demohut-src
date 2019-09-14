@@ -344,13 +344,17 @@ function showDemoZoom() {
 }
 
 function showDemoNdc() {
-    const W = 600, H = 300;
+    const W = 900, H = 300;
     const renderer = new THREE.WebGLRenderer({ antialias: true, canvas: document.getElementById('view-ndc') });
     const scene = new THREE.Scene();
-    const mainCamera = new THREE.PerspectiveCamera(45, W / H / 2);
-    const auxCamera = new THREE.PerspectiveCamera(45, W / H / 2);
+    const scene2 = new THREE.Scene();
+    const mainCamera = new THREE.PerspectiveCamera(45, W / H / 3);
+    const auxCamera = new THREE.PerspectiveCamera(45, W / H / 3);
+    const auxCamera2 = new THREE.OrthographicCamera(-2, 2, 2, -2, -10, 10);
     let cameraHelper;
     let lineChart;
+    const normalSpheres = new Array();
+    const projSpheres = new Array();
 
     initView();
     initGUI();
@@ -366,10 +370,10 @@ function showDemoNdc() {
         mainCamera.lookAt(0, 0, 0);
         mainCamera.updateProjectionMatrix();
 
-        auxCamera.position.set(200, 200, -50);
+        auxCamera.position.set(200, 200, 0);
         auxCamera.near = 0.1;
         auxCamera.far = 10000;
-        auxCamera.lookAt(0, 0, -50);
+        auxCamera.lookAt(0, 0, 0);
         auxCamera.updateProjectionMatrix();
 
         {
@@ -380,20 +384,30 @@ function showDemoNdc() {
             light.target.position.set(-5, 0, 0);
             scene.add(light);
             scene.add(light.target);
+
+            const light2 = new THREE.DirectionalLight().copy(light);
+            scene2.add(light2);
+            scene2.add(light2.target);
         }
 
         {
             const sphereRadius = 3;
             const sphereWidthDivisions = 32;
             const sphereHeightDivisions = 16;
-            const sphereGeo = new THREE.SphereBufferGeometry(sphereRadius, sphereWidthDivisions, sphereHeightDivisions);
-            const numSpheres = 20;
-            for (let i = 0; i < numSpheres; ++i) {
+            const sphereGeo = new THREE.SphereGeometry(sphereRadius, sphereWidthDivisions, sphereHeightDivisions);
+            for (let i = 0; i < 20; ++i) {
                 const sphereMat = new THREE.MeshPhongMaterial();
                 sphereMat.color.setHSL(i * .73, 1, 0.5);
                 const mesh = new THREE.Mesh(sphereGeo, sphereMat);
                 mesh.position.set(-sphereRadius - 1, sphereRadius + 2, i * sphereRadius * -2.2);
+                mesh.updateMatrix();
                 scene.add(mesh);
+                normalSpheres.push(mesh);
+
+                const projGeo = new THREE.SphereGeometry().copy(sphereGeo);
+                const projMesh = new THREE.Mesh(projGeo, sphereMat);
+                projSpheres.push(projMesh);
+                scene2.add(projMesh);
             }
         }
 
@@ -408,7 +422,7 @@ function showDemoNdc() {
             const repeats = planeSize / 2;
             texture.repeat.set(repeats, repeats);
 
-            const planeGeo = new THREE.PlaneBufferGeometry(planeSize, planeSize);
+            const planeGeo = new THREE.PlaneGeometry(planeSize, planeSize);
             const planeMat = new THREE.MeshPhongMaterial({
                 map: texture,
                 side: THREE.DoubleSide,
@@ -418,10 +432,25 @@ function showDemoNdc() {
             scene.add(mesh);
         }
 
+        scene.add(new THREE.AxesHelper(100));
+
         cameraHelper = new THREE.CameraHelper(mainCamera);
         cameraHelper.material.depthTest = false;
         scene.add(cameraHelper);
 
+        auxCamera2.position.set(1, 1.5, 0.5);
+        auxCamera2.lookAt(0, 0, 0);
+        auxCamera2.updateProjectionMatrix();
+
+        scene2.add(new THREE.AxesHelper(2));
+
+        const unitBoxGeo = new THREE.BoxBufferGeometry(2, 2, 2);
+        const unitBoxMtl = new THREE.MeshBasicMaterial({ color: "#ff0", wireframe: true });
+        const unitBox = new THREE.Mesh(unitBoxGeo, unitBoxMtl);
+        scene2.add(unitBox);
+
+        new THREE.OrbitControls(auxCamera, document.getElementById("area-ndc-middle"));
+        new THREE.OrbitControls(auxCamera2, document.getElementById("area-ndc-right"));
     }
 
     function update() {
@@ -438,10 +467,32 @@ function showDemoNdc() {
         const points = [];
         const n = mainCamera.near;
         const f = mainCamera.far;
-        for (let z = mainCamera.near; z <= mainCamera.far; z += 1)
-            points.push({ x: z - mainCamera.near, y: -(2 * f * n / (f - n)) * (1 / z) + (f + n) / (f - n) });
+        const step = n < 1 ? 0.1 : 1;
+        for (let z = mainCamera.near; z <= mainCamera.far; z += step)
+            points.push({
+                x: z - mainCamera.near,
+                y: -(2 * f * n / (f - n)) * (1 / z) + (f + n) / (f - n)
+            });
         lineChart.data.datasets[0].data = points;
         lineChart.update();
+
+        const translateVec = new THREE.Vector3().copy(mainCamera.position).negate();
+        const translateMat = new THREE.Matrix4().makeTranslation(translateVec.x, translateVec.y, translateVec.z);
+        const lookAtMat = new THREE.Matrix4().makeRotationFromQuaternion(mainCamera.quaternion);
+        lookAtMat.getInverse(lookAtMat);
+        const viewMat = new THREE.Matrix4().copy(lookAtMat).multiply(translateMat);
+        projSpheres.forEach((projSphere, i) => {
+            const mvp = new THREE.Matrix4().copy(mainCamera.projectionMatrix)
+                .multiply(viewMat)
+                .multiply(normalSpheres[i].matrix);
+            normalSpheres[i].geometry.vertices.forEach((v3, j) => {
+                const v4 = new THREE.Vector4(v3.x, v3.y, v3.z, 1);
+                v4.applyMatrix4(mvp);
+                v4.multiplyScalar(1 / v4.w);
+                projSphere.geometry.vertices[j].set(v4.x, v4.y, -v4.z);
+            })
+            projSphere.geometry.verticesNeedUpdate = true;
+        })
     }
 
     function initGUI() {
@@ -452,13 +503,11 @@ function showDemoNdc() {
         sliderNear.step = 0.01;
         sliderNear.oninput = update;
 
-        const ctx = document.getElementById('plot-ndc').getContext('2d');
-
         const dists = [];
         for (let i = 0; i <= 100; i += 10)
             dists.push(i);
 
-        lineChart = new Chart(ctx, {
+        lineChart = new Chart('plot-ndc', {
             type: 'line',
             data: {
                 labels: dists,
@@ -467,6 +516,10 @@ function showDemoNdc() {
                 ]
             },
             options: {
+                maintainAspectRatio: false,
+                animation: {
+                    duration: 0
+                },
                 scales: {
                     yAxes: [{
                         ticks: {
@@ -501,17 +554,22 @@ function showDemoNdc() {
     }
 
     function render() {
-        const leftArea = new THREE.Vector4(0, 0, W / 2, H);
+        const leftArea = new THREE.Vector4(0, 0, W / 3, H);
         cameraHelper.visible = false;
         renderer.setViewport(leftArea);
         renderer.setScissor(leftArea);
         renderer.render(scene, mainCamera);
 
-        const rightArea = new THREE.Vector4(W / 2, 0, W / 2, H);
+        const middleArea = new THREE.Vector4(W / 3, 0, W / 3, H);
         cameraHelper.visible = true;
+        renderer.setViewport(middleArea);
+        renderer.setScissor(middleArea);
+        renderer.render(scene, auxCamera);
+
+        const rightArea = new THREE.Vector4(W * 2 / 3, 0, W / 3, H);
         renderer.setViewport(rightArea);
         renderer.setScissor(rightArea);
-        renderer.render(scene, auxCamera);
+        renderer.render(scene2, auxCamera2);
 
         requestAnimationFrame(render);
     }
