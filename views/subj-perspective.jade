@@ -27,8 +27,8 @@ block content
     p I'll write a demo to find out...
 
     div(style={"position": "relative"})
-        div#gui-fov-cmp(style={"position": "absolute", "top": "10px", "left": "10px"})
-        canvas#view-fov-cmp
+        div#gui-fov(style={"position": "absolute", "top": "10px", "left": "10px"})
+        canvas#view-fov
 
     p
 
@@ -104,4 +104,4 @@ block content
         li Some demos refer to #[a(href="https://threejsfundamentals.org/threejs/lessons/threejs-cameras.html") this tutorial]
 
     script(src="/js/Chart.min.js")
-    script(src="/js/subj-perspective.js", type="module")
+    script(src="/js/subj-perspective/main.js", type="module")
