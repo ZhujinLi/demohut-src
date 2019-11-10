@@ -30,11 +30,11 @@ block content
             else:
                 return fib(x - 1) + fib(x - 2)
 
-    p If we treat an addition as the basic calculation unit, we get an interesting conclusion: time complexity O(n) = fib(n - 1). Considering function call overheads in addition, this method is rather inefficient.
+    p If we treat an addition as the basic calculation unit, we get an interesting conclusion: time complexity T(n) = O(fib(n - 1)) = O(1.618^n). Considering function call overheads in addition, this method is rather inefficient.
     
     h3 Iteration
 
-    p If we simply transform the recursion to iteration, the time complexity reduces to linear O(n) = n:
+    p If we simply transform the recursion to iteration, the time complexity reduces to linear T(n) = O(n):
 
     pre.snippet.
         def fib(x):
@@ -56,15 +56,15 @@ block content
             sqrt5 = 5 ** 0.5
             return int(1 / sqrt5 * (((1+sqrt5) / 2) ** x - ((1-sqrt5)/2) ** x))
 
-    p It seems to be a O(1) solution, since pow(x, y) is of O(1) on modern CPU architectures. But if the number is too large, we have to implement the exponentiation manually. Luckily, there is a method called "exponentiation by squaring"（快速幂）, based on a divide-and-conquer strategy, that we can use to achieve log(n) complexity. 
+    p It seems to be a O(1) solution, since pow(x, y) is of O(1) on modern CPU architectures. But if the number is too large, we have to implement the exponentiation manually. Luckily, there is a method called "exponentiation by squaring"（快速幂）, based on a divide-and-conquer strategy, that we can use to achieve O(log(n)) complexity. 
     
     h3 Matrix
 
-    p Can we avoid floating point calculation, while keeping the log(n) time complexity? The answer is yes:
+    p Can we avoid floating point calculation, while keeping the O(log(n)) time complexity? The answer is yes:
 
     img(src='images/fib_matrix.png', width='60%')
 
-    p To get the value of f(n), we need to perform exponentiation on the matrix, and obtain the first element of the result. With the same divide-and-conquer idea, this can be optimized to log(n) as well.
+    p To get the value of f(n), we need to perform exponentiation on the matrix, and obtain the first element of the result. With the same divide-and-conquer idea, this can be optimized to O(log(n)) as well.
     
     p Code:
 
