@@ -1,0 +1,101 @@
+extends layout
+
+block subj-title
+    p Fibonacci number
+
+block content
+    style(type='text/css').
+        .snippet {
+            color: #f0f0f0;
+            background-color: #404040
+        }
+
+    p How can we solve Fibonacci number as fast as possible?
+
+    pre.alert-info.
+        Note:
+        - The content is taken from my colleague's internal lecture.
+        - Code examples here are written in Python.
+    
+    h3 Recursion
+
+    p The most natural way to do this is using recursive function calls:
+
+    pre.snippet.
+        def fib(x):
+            if x == 0:
+                return 0
+            elif x == 1:
+                return 1
+            else:
+                return fib(x - 1) + fib(x - 2)
+
+    p If we treat an addition as the basic calculation unit, we get an interesting conclusion: time complexity O(n) = fib(n - 1). Considering function call overheads in addition, this method is rather inefficient.
+    
+    h3 Iteration
+
+    p If we simply transform the recursion to iteration, the time complexity reduces to linear O(n) = n:
+
+    pre.snippet.
+        def fib(x):
+            a = 0
+            b = 1
+            for i in range(2, x + 1):
+                b = a + b
+                a = b - a
+            return b
+
+    p Can it be even faster?
+    
+    h3 Formula
+
+    p There is a general formula for Fibonacci number calculation, and it's easy to write the code:
+
+    pre.snippet.
+        def fib(x):
+            sqrt5 = 5 ** 0.5
+            return int(1 / sqrt5 * (((1+sqrt5) / 2) ** x - ((1-sqrt5)/2) ** x))
+
+    p It seems to be a O(1) solution, since pow(x, y) is of O(1) on modern CPU architectures. But if the number is too large, we have to implement the exponentiation manually. Luckily, there is a method called "exponentiation by squaring"（快速幂）, based on a divide-and-conquer strategy, that we can use to achieve log(n) complexity. 
+    
+    h3 Matrix
+
+    p Can we avoid floating point calculation, while keeping the log(n) time complexity? The answer is yes:
+
+    img(src='images/fib_matrix.png', width='60%')
+
+    p To get the value of f(n), we need to perform exponentiation on the matrix, and obtain the first element of the result. With the same divide-and-conquer idea, this can be optimized to log(n) as well.
+    
+    p Code:
+
+    pre.snippet.
+        def fib(x):
+            class M:
+                x00 = x01 = x10 = x11 = 0
+
+            MAT_UNIT = M()
+            MAT_UNIT.x00 = 1
+            MAT_UNIT.x10 = 1
+            MAT_UNIT.x01 = 1
+            MAT_UNIT.x11 = 0
+
+            def mult(m1, m2):
+                m = M()
+                m.x00 = m1.x00 * m2.x00 + m1.x01 * m2.x10
+                m.x01 = m1.x00 * m2.x01 + m1.x01 * m2.x11
+                m.x10 = m1.x10 * m2.x00 + m1.x11 * m2.x10
+                m.x11 = m1.x10 * m2.x01 + m1.x11 * m2.x11
+                return m
+
+            def mat(x):
+                if x == 1:
+                    return MAT_UNIT
+                else:
+                    m_sub = mat(x / 2)
+                    m = mult(m_sub, m_sub)
+                    if (x & 1):
+                        m = mult(m, MAT_UNIT)
+                    return m
+
+            m = mat(x - 1)
+            return m.x00
