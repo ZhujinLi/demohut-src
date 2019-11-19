@@ -2,11 +2,12 @@ import '/three/build/three.min.js';
 import '/three/examples/js/controls/OrbitControls.js';
 
 export function showDemoZoom() {
-    const W = 800, H = 400;
+    const W = 900, H = 300;
     const renderer = new THREE.WebGLRenderer({ antialias: true, canvas: document.getElementById('view-zoom') });
     const scene = new THREE.Scene();
-    const zoomCamera = new THREE.PerspectiveCamera(60, W / H / 2);
+    const zoomCamera = new THREE.PerspectiveCamera(60, W / H / 3);
     const fovCamera = new THREE.PerspectiveCamera();
+    const fovZoomCamera = new THREE.PerspectiveCamera();
 
     initView();
     requestAnimationFrame(render);
@@ -19,6 +20,7 @@ export function showDemoZoom() {
 
         zoomCamera.position.set(0, 0, 100);
         fovCamera.copy(zoomCamera);
+        fovZoomCamera.copy(fovCamera);
 
         scene.add(new THREE.AmbientLight(0xffffff, 0.5));
 
@@ -82,26 +84,37 @@ export function showDemoZoom() {
     }
 
     function render() {
-        const leftArea = new THREE.Vector4(0, 0, W / 2, H);
-        renderer.setViewport(leftArea);
-        renderer.setScissor(leftArea);
         const d = zoomCamera.position.length();
         const halfWidth = Math.tan(zoomCamera.fov / 2 / 180 * Math.PI) * d;
         const fov = Math.atan(halfWidth / fovCamera.position.z) / Math.PI * 180 * 2;
         fovCamera.fov = fov;
-        const pos = new THREE.Vector3().copy(zoomCamera.position);
-        pos.setLength(fovCamera.position.length());
-        fovCamera.position.copy(pos);
         fovCamera.updateProjectionMatrix();
+
+        fovZoomCamera.fov = fov;
+        const pos = new THREE.Vector3().copy(zoomCamera.position);
+        pos.setLength(fovCamera.position.length() / Math.sqrt(3) / Math.tan(fov / 2 / 180 * Math.PI));
+        fovZoomCamera.position.copy(pos);
+        fovZoomCamera.updateWorldMatrix();
+        fovZoomCamera.updateProjectionMatrix();
+
+        const leftArea = new THREE.Vector4(0, 0, W / 3, H);
+        renderer.setViewport(leftArea);
+        renderer.setScissor(leftArea);
         renderer.render(scene, fovCamera);
 
-        const rightArea = new THREE.Vector4(W / 2, 0, W / 2, H);
-        renderer.setViewport(rightArea);
-        renderer.setScissor(rightArea);
+        const middleArea = new THREE.Vector4(W / 3, 0, W / 3, H);
+        renderer.setViewport(middleArea);
+        renderer.setScissor(middleArea);
         renderer.render(scene, zoomCamera);
 
+        const rightArea = new THREE.Vector4(W / 3 * 2, 0, W / 3, H);
+        renderer.setViewport(rightArea);
+        renderer.setScissor(rightArea);
+        renderer.render(scene, fovZoomCamera);
+
         document.getElementById('label-left-params').innerHTML = formatCameraParams(fovCamera);
-        document.getElementById('label-right-params').innerHTML = formatCameraParams(zoomCamera);
+        document.getElementById('label-middle-params').innerHTML = formatCameraParams(zoomCamera);
+        document.getElementById('label-right-params').innerHTML = formatCameraParams(fovZoomCamera);
     }
 
     function formatCameraParams(camera) {

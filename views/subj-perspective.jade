@@ -33,24 +33,23 @@ block content
     p
 
     p Here the car speed is at constant 120 km/h, and the camera keeps the same pose, so FOV is the only thing that changes. The conclusion is obvious.
-    
+
     p Mathematically, a lane close to the camera in the real world is stretched more on the screen with the FOV increasing, so the speed seems to be faster.
-    
+
     h3 FOV and zooming
 
-    p At the first time I played around with FOV, I found that turning it smaller felt just like zooming in. But are the really the same?
-    
+    p At the first time I played around with FOV, I found that turning it smaller felt just like zooming in. See the first two demos below.
+
     div(style={"position": "relative", "color": "white"})
         canvas#view-zoom
         p#label-left-params(style={"position": "absolute", "bottom": "0px", "left": "10px"})
-        p#label-right-params(style={"position": "absolute", "bottom": "0px", "left": "410px"})
+        p#label-middle-params(style={"position": "absolute", "bottom": "0px", "left": "310px"})
+        p#label-right-params(style={"position": "absolute", "bottom": "0px", "left": "610px"})
 
     p
-    
-    p Indeed they feel very much the same in the beginning. But as you keep zooming in, objects (especially those of certain height) start to show some differences, though the planes and shadow are still identical for both views. The taller the object is, the more obvious it becomes.
-    
-    p This phenomenon occurs when looking down. If you are viewing with an oblique angle, the scene will look very strange.
-    
+
+    p But it is not what I expected. In some movie footage, the lens' angle widens slowly, while the scene maintains the same range. To achieved this effect, we need to adjust the camera's position according to the FOV. See the right most demo.
+
     h3 Z curve
 
     p The z value in NDC (stored in depth buffer) is not linear to the original z value:
