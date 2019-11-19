@@ -1,0 +1,116 @@
+extends layout
+
+block subj-title
+    p 《思考的乐趣》复现
+
+block content
+    p #[a(href="https://book.douban.com/subject/10779597/" target='_blank') 《思考的乐趣》]这本书我已经买了多年，但直到最近才读完。书中不乏有趣的数学发现和精彩的证明，不过作为程序员的我，其实更感兴趣的是用代码去复现这些现象、规律。尽管没有什么技术含量，但是将一些抽象的问题可视化，也是一种乐趣。
+
+    h3 黄金分割
+
+    a(href='images/skdlq/golden.jpg' target="_blank")
+        img.img-thumbnail.img-fluid(src="images/skdlq/golden.jpg" style="height: 150px")
+
+    p 这里额外做个笔记，黄金分割数=(sqrt(5) +- 1) / 2，大约是1.618或者0.618，两种表示是等价的。
+    
+    p 随机生成前两个数，画出这个数列的前N项，能看出其收敛十分迅速：
+
+    div(style="position: relative; width:80%")
+        canvas#plot-golden
+        div.col-md-12.text-center
+            button.btn.btn-primary#button-regenerate-golden 重新生成
+    p
+
+    h3 心电图数列
+
+    a(href='images/skdlq/ekg.jpg' target="_blank")
+        img.img-thumbnail.img-fluid(src="images/skdlq/ekg.jpg" style="height: 150px")
+
+    a(href='images/skdlq/ekg1.jpg' target="_blank")
+        img.img-thumbnail.img-fluid(src="images/skdlq/ekg1.jpg" style="height: 150px")
+
+    div(style="position: relative; width:80%")
+        canvas#plot-ekg
+        div.col-md-12.text-center
+            button.btn.btn-primary#button-restart-ekg 重来
+    
+    p 就是有点心律不齐……
+    
+    h3 欧拉线
+
+    a(href='images/skdlq/eulerline.jpg' target="_blank")
+        img.img-thumbnail.img-fluid(src="images/skdlq/eulerline.jpg" style="height: 150px")
+
+    a(href='images/skdlq/eulerline1.jpg' target="_blank")
+        img.img-thumbnail.img-fluid(src="images/skdlq/eulerline1.jpg" style="height: 150px")
+
+    canvas#view-triangle(width=700 height=400 style="border: solid 1px #ccc;")
+
+    p 代码实现我稍微作弊了一下，因为垂心不能用简单的解析式求解，需要求直线交点，比较繁琐，因此我直接利用定理的结论计算出垂心（反正它是对的）。
+    
+    p 为了和书中的图案更像，我简单初始化了三个点的位置，不料到外接圆直接就居中了，这巧合让我有点害怕。
+
+    h3 曼德尔布罗特集
+
+    a(href='images/skdlq/mandelbrot.jpg' target="_blank")
+        img.img-thumbnail.img-fluid(src="images/skdlq/mandelbrot.jpg" style="height: 150px")
+
+    a(href='images/skdlq/mandelbrot1.jpg' target="_blank")
+        img.img-thumbnail.img-fluid(src="images/skdlq/mandelbrot1.jpg" style="height: 150px")
+
+    a(href='images/skdlq/mandelbrot2.jpg' target="_blank")
+        img.img-thumbnail.img-fluid(src="images/skdlq/mandelbrot2.jpg" style="height: 150px")
+
+    p
+
+    canvas#view-mandelbrot
+
+    p 代码实现并不复杂，这里我参照了#[a(href="https://www.codingame.com/playgrounds/2358/how-to-plot-the-mandelbrot-set/mandelbrot-set" target='_blank') 此处]的教程。另外，由于每个像素的计算互相独立，非常适合采用shader并行化加速，因此我实际上用的是WebGL下的3D绘图。
+    
+    p 虽然分形在数学上是无限的，但计算机是有限的，受到浮点数精度限制，图案并不能无限放大。尽管可以利用某些数值优化方法解决这一问题，不过目前的精度已经足以复现书上的现象了。
+    
+    p 最后想再吐槽一下，这真的"漂亮"吗？我调试的时候直起鸡皮疙瘩...
+
+    h4 定宽曲线
+
+    a(href='images/skdlq/cwidth.jpg' target="_blank")
+        img.img-thumbnail.img-fluid(src="images/skdlq/cwidth.jpg" style="height: 150px")
+
+    a(href='images/skdlq/cwidth1.jpg' target="_blank")
+        img.img-thumbnail.img-fluid(src="images/skdlq/cwidth1.jpg" style="height: 150px")
+
+    canvas#view-cwidth(width=800 height=400)
+
+    p 不试不知道，试了才发现更多违背直觉的事实：
+
+    ol
+        li 真正的车没法用这样的轮胎，因为没有固定的转轴
+        li 像这么滚着走，上表面和下表面的线速度是不一样的
+        li 轮胎看着一快一慢的，是因为角速度不匀速
+
+    h4 蒲丰投针实验
+
+    a(href='images/skdlq/buffon.jpg' target="_blank")
+        img.img-thumbnail.img-fluid(src="images/skdlq/buffon.jpg" style="height: 150px")
+
+    p 如果我们让电脑帮我们投针，要投多少次才能达到“山顶一寺一壶酒”呢？
+
+    .row.text-monospace
+        .col-md-6
+            ul.list-group
+                li.list-group-item#li-buffon-total-count
+                li.list-group-item#li-buffon-intersect-count
+                li.list-group-item#li-buffon-pi
+                li.list-group-item.text-center
+                    button.btn.btn-primary#button-buffon
+
+    p
+
+    p 计算机的生成的都是伪随机数，但这是否意味着达到某个精度后就不再收敛了呢？我也不知道。上面的实验需要跑上大半天的时间，才能到达3.14159的精度。
+    
+    p #[a(href='https://www.wikihow.com/Calculate-Pi' target='_blank') 这里]提供了更多脑洞大开的PI求解方法。
+
+    h3 未完待续...
+
+    script(src="/js/Chart.min.js")
+    script(src="/js/subj-skdlq/main.js", type="module")
