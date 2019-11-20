@@ -4,6 +4,9 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
+var fs = require('fs')
+var https = require('https')
+
 var indexRouter = require('./routes/index');
 
 var app = express();
@@ -21,7 +24,13 @@ app.use(express.static(path.join(__dirname, 'node_modules')));
 
 app.use('/', indexRouter);
 
-app.listen(80);
+// start https server
+let sslOptions = {
+   key: fs.readFileSync('server.key'),
+   cert: fs.readFileSync('server.cert')
+};
+
+let serverHttps = https.createServer(sslOptions, app).listen(443);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
