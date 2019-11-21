@@ -3,7 +3,6 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-
 var fs = require('fs')
 var https = require('https')
 
@@ -30,7 +29,13 @@ let sslOptions = {
    cert: fs.readFileSync('zhujin_li.crt')
 };
 
-let serverHttps = https.createServer(sslOptions, app).listen(443);
+app.listen(80);
+
+https.createServer(sslOptions, app).listen(443);
+
+app.get('*', function(req, res) {  
+    res.redirect('https://' + req.headers.host + req.url);
+})
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
