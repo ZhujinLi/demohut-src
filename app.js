@@ -26,8 +26,8 @@ app.use('/', indexRouter);
 
 // start https server
 let sslOptions = {
-   key: fs.readFileSync('server.key'),
-   cert: fs.readFileSync('server.cert')
+   key: fs.readFileSync('zhujin_li_key.txt'),
+   cert: fs.readFileSync('zhujin_li.crt')
 };
 
 let serverHttps = https.createServer(sslOptions, app).listen(443);
