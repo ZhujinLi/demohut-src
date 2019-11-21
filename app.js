@@ -5,10 +5,14 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var fs = require('fs')
 var https = require('https')
+var redirectToHTTPS = require('express-http-to-https').redirectToHTTPS
 
 var indexRouter = require('./routes/index');
 
 var app = express();
+
+// Don't redirect if the hostname is `localhost:port` or the route is `/insecure`
+app.use(redirectToHTTPS([/localhost:(\d{4})/], [/\/insecure/], 301));
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -25,17 +29,13 @@ app.use('/', indexRouter);
 
 // start https server
 let sslOptions = {
-   key: fs.readFileSync('zhujin_li_key.txt'),
-   cert: fs.readFileSync('zhujin_li.crt')
+  key: fs.readFileSync('zhujin_li_key.txt'),
+  cert: fs.readFileSync('zhujin_li.crt')
 };
 
 app.listen(80);
 
 https.createServer(sslOptions, app).listen(443);
-
-app.get('*', function(req, res) {  
-    res.redirect('https://' + req.headers.host + req.url);
-})
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
