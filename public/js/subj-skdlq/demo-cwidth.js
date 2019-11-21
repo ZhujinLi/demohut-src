@@ -55,8 +55,8 @@ export function showDemoCWidth() {
 
         ctx.stroke();
 
-        drawWheel(x1, y2);
-        drawWheel(x4, y2);
+        drawWheel(x1, y2, true);
+        drawWheel(x4, y2, false);
 
         ctx.strokeStyle = '#f88';
         ctx.beginPath();
@@ -66,7 +66,7 @@ export function showDemoCWidth() {
         ctx.lineTo(x4, y3);
         ctx.stroke();
 
-        function drawWheel(baseX, baseY) {
+        function drawWheel(baseX, baseY, showInner) {
             ctx.beginPath();
 
             const unitCircum = circumference / 3;
@@ -96,14 +96,16 @@ export function showDemoCWidth() {
             let H = reflect(B, A);
             let I = reflect(B, C);
 
-            ctx.moveTo(D.x, D.y);
-            ctx.lineTo(G.x, G.y);
-            ctx.moveTo(F.x, F.y);
-            ctx.lineTo(I.x, I.y);
-            ctx.moveTo(E.x, E.y);
-            ctx.lineTo(H.x, H.y);
+            if (showInner) {
+                ctx.moveTo(D.x, D.y);
+                ctx.lineTo(G.x, G.y);
+                ctx.moveTo(F.x, F.y);
+                ctx.lineTo(I.x, I.y);
+                ctx.moveTo(E.x, E.y);
+                ctx.lineTo(H.x, H.y);
 
-            ctx.stroke();
+                ctx.stroke();
+            }
 
             drawArc(C, D, side * 2);
             drawArc(B, I, side);
