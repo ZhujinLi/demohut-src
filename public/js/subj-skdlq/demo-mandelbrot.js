@@ -68,6 +68,7 @@ export function showDemoMandelbrot() {
     scene.add(mesh);
 
     const controls = new THREE.MapControls(camera, renderer.domElement);
+    controls.enableRotate = false;
 
     // Limit the render rate to avoid stutter
     let needsRefresh = false;
