@@ -63,6 +63,14 @@ block content
 
     p
 
+    p 原博客：
+
+    ul
+        li
+            a(href="http://www.matrix67.com/blog/archives/6231" target='_blank') 一些分形动画
+        li
+            a(href="http://www.matrix67.com/blog/archives/292" target='_blank') CPU代码实现
+
     canvas#view-mandelbrot
 
     p 代码实现并不复杂，这里我参照了#[a(href="https://www.codingame.com/playgrounds/2358/how-to-plot-the-mandelbrot-set/mandelbrot-set" target='_blank') 此处]的教程。另外，由于每个像素的计算互相独立，非常适合采用shader并行化加速，因此我实际上用的是WebGL下的3D绘图。
