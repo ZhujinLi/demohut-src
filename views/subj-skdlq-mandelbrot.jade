@@ -1,0 +1,34 @@
+extends layout
+
+block subj-title
+    p 《思考的乐趣》复现4. Mandelbrot集
+
+block content
+    a(href='images/skdlq/mandelbrot.jpg' target="_blank")
+        img.img-thumbnail.img-fluid(src="images/skdlq/mandelbrot.jpg" style="height: 150px")
+
+    a(href='images/skdlq/mandelbrot1.jpg' target="_blank")
+        img.img-thumbnail.img-fluid(src="images/skdlq/mandelbrot1.jpg" style="height: 150px")
+
+    a(href='images/skdlq/mandelbrot2.jpg' target="_blank")
+        img.img-thumbnail.img-fluid(src="images/skdlq/mandelbrot2.jpg" style="height: 150px")
+
+    p
+
+    p 原博客：
+
+    ul
+        li
+            a(href="http://www.matrix67.com/blog/archives/6231" target='_blank') 一些分形动画
+        li
+            a(href="http://www.matrix67.com/blog/archives/292" target='_blank') CPU代码实现
+
+    canvas#view-mandelbrot
+
+    p 代码实现并不复杂，这里我参照了#[a(href="https://www.codingame.com/playgrounds/2358/how-to-plot-the-mandelbrot-set/mandelbrot-set" target='_blank') 此处]的教程。另外，由于每个像素的计算互相独立，非常适合采用shader并行化加速，因此我实际上用的是WebGL下的3D绘图。
+    
+    p 虽然分形在数学上是无限的，但计算机是有限的，受到浮点数精度限制，图案并不能无限放大。尽管可以利用某些数值优化方法解决这一问题，不过目前的精度已经足以复现书上的现象了。
+    
+    p 最后想再吐槽一下，这真的"漂亮"吗？我调试的时候直起鸡皮疙瘩...
+
+    script(src="/js/subj-skdlq-mandelbrot/main.js", type="module")

@@ -1,0 +1,19 @@
+extends layout
+
+block subj-title
+    p 《思考的乐趣》复现3. 欧拉线
+
+block content
+    a(href='images/skdlq/eulerline.jpg' target="_blank")
+        img.img-thumbnail.img-fluid(src="images/skdlq/eulerline.jpg" style="height: 150px")
+
+    a(href='images/skdlq/eulerline1.jpg' target="_blank")
+        img.img-thumbnail.img-fluid(src="images/skdlq/eulerline1.jpg" style="height: 150px")
+
+    canvas#view-triangle(width=700 height=400 style="border: solid 1px #ccc;")
+
+    p 代码实现我稍微作弊了一下，因为垂心不能用简单的解析式求解，需要求直线交点，比较繁琐，因此我直接利用定理的结论计算出垂心（反正它是对的）。
+    
+    p 为了和书中的图案更像，我简单初始化了三个点的位置，不料到外接圆直接就居中了，这巧合让我有点害怕。
+
+    script(src="/js/subj-skdlq-eulerline/main.js", type="module")

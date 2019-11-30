@@ -1,0 +1,22 @@
+extends layout
+
+block subj-title
+    p 《思考的乐趣》复现5. 定宽曲线
+
+block content
+    a(href='images/skdlq/cwidth.jpg' target="_blank")
+        img.img-thumbnail.img-fluid(src="images/skdlq/cwidth.jpg" style="height: 150px")
+
+    a(href='images/skdlq/cwidth1.jpg' target="_blank")
+        img.img-thumbnail.img-fluid(src="images/skdlq/cwidth1.jpg" style="height: 150px")
+
+    canvas#view-cwidth(width=800 height=400)
+
+    p 不试不知道，试了才发现更多违背直觉的事实：
+
+    ol
+        li 真正的车没法用这样的轮胎，因为没有固定的转轴
+        li 像这么滚着走，上表面和下表面的线速度是不一样的
+        li 左边轮胎看着一快一慢的，是因为角速度不匀速
+
+    script(src="/js/subj-skdlq-cwidth/main.js", type="module")
