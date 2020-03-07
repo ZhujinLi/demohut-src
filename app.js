@@ -15,8 +15,14 @@ var app = express();
 app.use(redirectToHTTPS([/localhost:(\d{4})/], [/\/insecure/], 301));
 
 // view engine setup
-app.set('views', path.join(__dirname, 'views'));
+var viewPaths = [path.join(__dirname, 'views')];
+fs.readdirSync(path.join(__dirname, 'public/subjs/')).forEach((f) => {
+  if (f.startsWith('subj-'))
+    viewPaths.push(path.join(__dirname, 'public/subjs/', f));
+});
+app.set('views', viewPaths);
 app.set('view engine', 'jade');
+app.locals.basedir = path.join(__dirname, 'views');
 
 app.use(logger('dev'));
 app.use(express.json());

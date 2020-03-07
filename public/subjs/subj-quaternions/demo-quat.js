@@ -1,5 +1,5 @@
 import '/three/build/three.min.js';
-import { World } from '../util/plane-obj/world.js';
+import { World } from '../../js/util/plane-obj/world.js';
 
 export function showDemoQuat() {
     let renderer;
