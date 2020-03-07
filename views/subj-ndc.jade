@@ -28,7 +28,7 @@ block content
 
     p
 
-    p Here I keep the distance between the near plane and the far plane constant at 100. When the near plane is set very small, all the z values fall in a narrow range close to 1. In particular, if the near plane is set 0.00001, z-fighting would appear dramatically. A solution to this is to use a non-linear (like logarithmic) z buffer. Anyway one should consider setting a reasonable range for the frustum in the first place.
+    p Here I keep the distance between the near plane and the far plane constant at 100. When the near plane is set very small, almost all the z values fall into a narrow range close to 1, and the balls are squashed onto the far plane. In particular, if the near plane is set 0.00001, z-fighting would appear distinctly. A solution to this is using a non-linear (like logarithmic) z buffer. Anyway one should consider setting a reasonable range for the frustum in the first place.
     
     script(src="/js/Chart.min.js")
     script(src="/js/subj-ndc/main.js", type="module")

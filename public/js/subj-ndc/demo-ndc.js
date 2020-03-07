@@ -213,7 +213,7 @@ export function showDemoNdc() {
                         },
                         scaleLabel: {
                             display: true,
-                            labelString: 'z-near'
+                            labelString: 'real-world distance from near plane'
                         }
                     }]
                 },

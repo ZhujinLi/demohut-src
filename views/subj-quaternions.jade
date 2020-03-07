@@ -4,11 +4,11 @@ block subj-title
     p Quaternion
 
 block content
-    p Quaternion is a tool for rotation around an arbitrary axis. Compared with rotation matrix, it is more compact in representation and more efficient when it comes to tasks like slerp. Moreover, it avoids the dreaded gimbal lock issue with Euler Angle.
+    p Quaternion is a tool for rotation around an arbitrary axis. Compared with rotation matrix, it is more compact in representation and more efficient when it comes to tasks like slerp. Moreover, it avoids the dreaded gimbal lock issue of Euler Angle.
     
     p Although quaternions were invented in 1843 as an extension to the complex numbers, it was not until 1985 that it was introduced to computer graphics.
     
-    p Note that only with unit quaternions are we able to perform rotations. Make sure they are normalized before you use them.
+    p Note that only with unit quaternions are we able to perform rotations correctly. Make sure they are normalized before you use them.
 
     div.row.text-monospace
         div.col-lg#view-quat
