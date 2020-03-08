@@ -1,0 +1,39 @@
+extends /layout
+
+block subj-title
+    p Frame synchronization issues
+
+block content
+    p A normal motion looks like this:
+
+    canvas#view-normal
+
+    p Most PC gamers know a fact: if V-sync is off, tearing may occur in some frames:
+
+    div(style="position: relative; margin-top: 20px; margin-bottom: 20px; height:300px; width:1000px")
+        canvas#plot-v-sync
+
+    canvas#view-v-sync
+
+    p The tearing artifact is caused by framebuffer swapping. If the monitor happens to read the front framebuffer during the swapping, the old content mixed with new one is present onto the screen, and tearing occurs.
+    
+    p Recently I've encountered another type of syncrhonization problem in my work project. I was developing animation module for mobile map apps, which involves these steps:
+    
+    ol
+        li C++ animation timer callbacks at 100HZ, and the map camera's state is updated
+        li iOS app adaption-layer also receives the callback and set a variable for refreshing
+        li iOS app 60HZ-fixed-rate render method of CADisplayLink checks the variable and refresh a new map frame
+    
+    p When degugging I found the animation a little bit stuttering, just like the above example without tearing:
+
+    div(style="position: relative; margin-top: 20px; margin-bottom: 20px; height:300px; width:1000px")
+        canvas#plot-timer-sync
+
+    canvas#view-timer-sync
+
+    p The problem is that the timer in step 1 and rendering in step 3 are not synchronized, so at the time the map is rendered, the camera state is out of date. To fix this, simply update the camera at render-time, and the animation becomes really smooth.
+    
+    p Similarly, if the V-sync is turned on in games, there will be lagging as well. It is the place where techniques like Nvidia G-sync come in handy.
+
+    script(src="/js/Chart.min.js")
+    script(src="/subjs/subj-frame-sync/main.js", type="module")
