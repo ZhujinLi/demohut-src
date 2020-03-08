@@ -1,7 +1,7 @@
 import '/three/build/three.min.js';
 import '/three/examples/js/controls/OrbitControls.js';
 import * as _Quaternion from './quaternion_calc.js';
-import { World } from '../../js/util/plane-obj/world.js';
+import { World } from './world.js';
 import { Sphere } from './sphere.js';
 
 function calcQuatTan(q0, q1, q2) {
