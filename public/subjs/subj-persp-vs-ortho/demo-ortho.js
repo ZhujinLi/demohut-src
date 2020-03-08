@@ -21,9 +21,9 @@ export function showDemoOrtho() {
 
         perspCamera.position.set(25, 25, 25);
 
-        const objTex = new THREE.TextureLoader().load('/models/HouseWithDriveway/HouseWithDriveway_BaseColor.png');
+        const objTex = new THREE.TextureLoader().load('/public/subjs/subj-persp-vs-ortho/HouseWithDriveway/HouseWithDriveway_BaseColor.png');
         new THREE.OBJLoader().load(
-            '/models/HouseWithDriveway/HouseWithDriveway.obj',
+            '/public/subjs/subj-persp-vs-ortho/HouseWithDriveway/HouseWithDriveway.obj',
             (obj) => {
                 obj.traverse(function (child) {
                     if (child.isMesh) {
@@ -40,7 +40,7 @@ export function showDemoOrtho() {
         );
 
         new THREE.GLTFLoader().load(
-            '/models/jap_girl/asian-girl_anime-clean.gltf',
+            '/public/subjs/subj-persp-vs-ortho/jap_girl/asian-girl_anime-clean.gltf',
             (gltf) => {
                 gltf.scene.traverse(function (child) {
                     if (child.isMesh) {

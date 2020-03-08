@@ -18,7 +18,7 @@ export class World {
 
         const loader = new THREE.GLTFLoader();
         loader.load(
-            '/models/Jet/Jet.gltf',
+            '/public/subjs/subj-quaternions/Jet/Jet.gltf',
             (gltf) => {
                 this._obj = gltf.scene;
                 this._scene.add(gltf.scene);

@@ -3,7 +3,7 @@ html
   head
     title a coder's view
     link(rel='stylesheet', href='/bootstrap/dist/css/bootstrap.min.css')
-    link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel='stylesheet', href='/public/common/style.css')
   body
     div#jumbotron.jumbotron.jumbotron-fluid.text-monospace
       div.container
@@ -15,9 +15,10 @@ html
         block subj-title
       block content
 
+      a.text-right(href= srcLink, target='_blank')
+        p → view src
+
       hr
     
       ul.text-secondary.font-weight-light.list-unstyled
-        li - Most of the demos are written in JavaScript. To see the implementation, use the developer tool of your   web browser.
-
         li - My #[a(href="https://github.com/ZhujinLi") Github]

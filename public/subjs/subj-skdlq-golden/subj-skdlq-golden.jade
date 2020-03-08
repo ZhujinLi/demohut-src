@@ -8,8 +8,8 @@ block content
     
     p 我挑了几个比较有趣（并且简单）的主题，用JavaScript写了一些小demo。这是第一节。
 
-    a(href='images/skdlq/golden.jpg' target="_blank")
-        img.img-thumbnail.img-fluid(src="images/skdlq/golden.jpg" style="height: 150px")
+    a(href='/public/subjs/subj-skdlq-golden/golden.jpg' target="_blank")
+        img.img-thumbnail.img-fluid(src="/public/subjs/subj-skdlq-golden/golden.jpg" style="height: 150px")
 
     p 这里额外做个笔记，黄金分割数=(sqrt(5) +- 1) / 2，大约是1.618或者0.618，两种表示是等价的。
     
@@ -20,5 +20,5 @@ block content
         div.col-md-12.text-center
             button.btn.btn-primary#button-regenerate-golden 重新生成
 
-    script(src="/js/Chart.min.js")
-    script(src="/subjs/subj-skdlq-golden/main.js", type="module")
+    script(src="/public/common/Chart.min.js")
+    script(src="/public/subjs/subj-skdlq-golden/main.js", type="module")
