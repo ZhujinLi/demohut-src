@@ -15,8 +15,9 @@ html
         block subj-title
       block content
 
-      a.text-right(href= srcLink, target='_blank')
-        p → view src
+      if srcLink
+        a.text-right(href= srcLink, target='_blank')
+          p → view src
 
       hr
     
