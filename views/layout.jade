@@ -11,6 +11,10 @@ html
           a(href="/") a coder's view
 
     div.container
+      if backLink
+        form(action= backLink).text-right
+          button.btn.btn-outline-primary(type='submit') ← all posts
+
       h2
         block subj-title
       block content

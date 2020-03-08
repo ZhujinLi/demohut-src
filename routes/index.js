@@ -8,6 +8,7 @@ router.get('/', function (req, res) {
 
 router.get('/:page', function (req, res) {
   res.locals.srcLink = 'subjs/' + req.params.page;
+  res.locals.backLink = '/';
   res.render(req.params.page);
 });
 
