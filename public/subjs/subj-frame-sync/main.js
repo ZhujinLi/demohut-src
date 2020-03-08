@@ -81,8 +81,8 @@ function showVSync() {
                         display: false
                     },
                     scaleLabel: {
-                        display: false,
-                        labelString: ''
+                        display: true,
+                        labelString: 'position'
                     }
                 }],
                 xAxes: [{
@@ -96,8 +96,8 @@ function showVSync() {
                         display: false
                     },
                     scaleLabel: {
-                        display: false,
-                        labelString: ''
+                        display: true,
+                        labelString: 'time'
                     }
                 }]
             },
@@ -161,8 +161,8 @@ function showTimerSync() {
                         display: false
                     },
                     scaleLabel: {
-                        display: false,
-                        labelString: ''
+                        display: true,
+                        labelString: 'position'
                     }
                 }],
                 xAxes: [{
@@ -176,8 +176,8 @@ function showTimerSync() {
                         display: false
                     },
                     scaleLabel: {
-                        display: false,
-                        labelString: ''
+                        display: true,
+                        labelString: 'time'
                     }
                 }]
             },

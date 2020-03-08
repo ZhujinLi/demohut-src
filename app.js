@@ -1,5 +1,6 @@
 var createError = require('http-errors');
 var express = require('express');
+var favicon = require('express-favicon');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
@@ -10,6 +11,8 @@ var redirectToHTTPS = require('express-http-to-https').redirectToHTTPS
 var indexRouter = require('./routes/index');
 
 var app = express();
+
+app.use(favicon(__dirname + '/public/favicon.jpg'));
 
 // Don't redirect if the hostname is `localhost:port` or the route is `/insecure`
 app.use(redirectToHTTPS([/localhost:(\d{4})/], [/\/insecure/], 301));
