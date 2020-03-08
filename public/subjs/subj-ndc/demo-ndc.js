@@ -74,7 +74,7 @@ export function showDemoNdc() {
         }
 
         const loader = new THREE.TextureLoader();
-        loader.load('public/common/checker.png', (texture) => {
+        loader.load('common/checker.png', (texture) => {
             const planeSize = 400;
 
             texture.wrapS = THREE.RepeatWrapping;

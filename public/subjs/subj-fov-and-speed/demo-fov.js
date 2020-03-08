@@ -93,7 +93,7 @@ export function showDemoFov() {
 
         const ROAD_WIDTH = 25;
         const roadGeo = new THREE.PlaneGeometry(ROAD_WIDTH, UNIT_LENGTH);
-        const roadTex = new THREE.TextureLoader().load('public/subjs/subj-fov-and-speed/road.jpg');
+        const roadTex = new THREE.TextureLoader().load('subjs/subj-fov-and-speed/road.jpg');
         roadTex.wrapS = THREE.RepeatWrapping;
         roadTex.wrapT = THREE.RepeatWrapping;
         roadTex.repeat.set(1, UNIT_LENGTH / ROAD_WIDTH);
