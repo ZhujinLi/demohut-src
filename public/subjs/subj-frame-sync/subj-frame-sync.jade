@@ -31,7 +31,7 @@ block content
 
     canvas#view-timer-sync
 
-    p The problem is that the timer in step 1 and rendering in step 3 are not synchronized, so at the time the map is rendered, the camera state is out of date. To fix this, simply update the camera at render-time, and the animation becomes really smooth.
+    p The problem is that the timer in step 1 and rendering in step 3 are not synchronized, so at the time the map is rendered, the camera state is out of date. To fix this, simply delay the update of the camera to render-time, and the animation would become really smooth.
     
     p Similarly, if the V-sync is turned on in games, there will be lagging as well. It is the place where techniques like Nvidia G-sync come in handy.
 

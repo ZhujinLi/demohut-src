@@ -17,7 +17,7 @@ block content
         - The content is taken from my colleague's internal lecture.
         - Code examples here are written in Python.
     
-    h3 Recursion
+    .sub-title Recursion
 
     p The most natural way to do this is using recursive function calls:
 
@@ -32,7 +32,7 @@ block content
 
     p If we treat an addition as the basic calculation unit, we get an interesting conclusion: time complexity T(n) = O(fib(n - 1)) = O(1.618^n). Considering function call overheads in addition, this method is rather inefficient.
     
-    h3 Iteration
+    .sub-title Iteration
 
     p If we simply transform the recursion to iteration, the time complexity reduces to linear T(n) = O(n):
 
@@ -47,7 +47,7 @@ block content
 
     p Can it be even faster?
     
-    h3 Formula
+    .sub-title Formula
 
     p There is a general formula for Fibonacci number calculation, and it's easy to write the code:
 
@@ -58,7 +58,7 @@ block content
 
     p It seems to be a O(1) solution, since pow(x, y) is of O(1) on modern CPU architectures. But if the number is too large, we have to implement the exponentiation manually. Luckily, there is a method called "exponentiation by squaring"（快速幂）, based on a divide-and-conquer strategy, that we can use to achieve O(log(n)) complexity. 
     
-    h3 Matrix
+    .sub-title Matrix
 
     p Can we avoid floating point calculation, while keeping the O(log(n)) time complexity? The answer is yes:
 
