@@ -61,15 +61,15 @@ block content
 
     p.text-center 0.5*(1,0,0,1) + 0.5*(0,1,0,0.1) = (0.5,0.5,0,0.55)
 
-    p The biggest problem here is the resulting green shares the same weight as the red channel, even if it comes from such a trivial source. It's natural for us to consider giving less weight of tinge to texels with smaller alpha. What if we multiply RGB with A, and represent the color from (R,G,B,A) to (RA,GA,BA,A)?
+    p The biggest problem here is the resulting green shares the same weight as the red channel, even if it comes from such a trivial source. It's natural for us to consider giving less weight of tinge to texels with smaller alpha. What if we multiply RGB by A, and represent the color with (RA,GA,BA,A) instead of (R,G,B,A)?
 
     p.text-center 0.5*(1,0,0,1) + 0.5*(0,0.1,0,0.1) = (0.5,0.05,0,0.55)
 
-    p Okay, now the green is significantly reduced, which is good. However, the red component seems to be incorrect—it should be 1. Note the above representation is based on (RA,GA,BA,A), so we need to restore to (R,G,B,A) by dividing RGB by A, which is (0.91,0.09,0,0.55). Seems right now.
+    p Okay, now the green is significantly reduced, which is good. However, the red component seems incorrect—it should be 1. Note the above representation is based on (RA,GA,BA,A), so we need to restore it to (R,G,B,A) by dividing RGB by A, which turns out to be (0.91,0.09,0,0.55). Seems right now.
     
     p This representation is called "premultiplied alpha", in contrast to "straight alpha", "unassociated alpha", "separate alpha"... whatever you call it.
 
-    p To convert to premultiplied space, we need to alter the texels in PNG, or process them when reading them into memory. But how do we convert them back to normal (R,G,B,A) representation in the end?
+    p To enter the premultiplied space, we need to alter the texels in PNG, or process them when reading them into memory. But how do we convert them back to normal (R,G,B,A) representation in the end?
     
     p In rendering pipeline, the final color of a pixel is to be blended with the one already in the framebuffer. This process is called blending. In OpenGL, the default blending function (we only discuss RGB here) is:
     
