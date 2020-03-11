@@ -31,7 +31,7 @@ block content
     
     img(src='/public/subjs/subj-transparent-color/mush_bad.png', width='200')
     
-    p Is the graphics pipeline to be blame? No, it's just doing its job, although some software implementations could handle this perfectly. So how do we avoid this problem without touching the graphics driver? There are two mainstream methods.
+    p Is the graphics pipeline to be blame? No, it's just doing its job, though some software implementations might handle this well. So how do we avoid this problem without touching the graphics driver? Here are two mainstream methods.
     
     .sub-title Method 1: texture bleeding
 
@@ -39,16 +39,16 @@ block content
 
     p.text-center 0.5*(1,0,0,1) + 0.5*(1,0,0,0) = (1,0,0,0.5)
 
-    p Experiment with WebGL, it's indeed working:
+    p Experiment with WebGL, it's working indeed:
 
     div(style="position: relative;")
         canvas#view-bleeding(width='200', height='200')
 
-    p 'Bleeding' means spreading the RGB of the object's solid-color edge texels to nearby transparent ones, while maintaining their alpha 0. This can be done with some image processing tools like Photoshop, here's an example:
+    p 'Bleeding' means spreading the RGB of the object's solid-color edge texels to nearby transparent ones, while maintaining their alpha 0. This can be done with some image processing software like Photoshop. Here's an example:
     
     img(src='/public/subjs/subj-transparent-color/bleeding-demo.png', width='300')
 
-    p The original icon area is expanded by 1 texel, and these expanded texels are assigned corresponding RGB values. Here for illurstration purpose I make these texels visible, though in reality they are fully transparent. If you are going to use the texture's mipmaps, make the bleeding range as large as possible. Otherwise this 1 texel border is sufficient.
+    p The original icon areas are expanded by 1 texel, and these expanded texels are assigned corresponding RGB values. Here for illurstration purpose I make these texels visible, yet in reality they are fully transparent. If you are going to use the texture's mipmaps, make the bleeding range as large as possible. Otherwise a 1-texel border as the above example is sufficient.
 
     .sub-title Method 2: premultiplied alpha
 
@@ -75,7 +75,7 @@ block content
 
     p To enter the premultiplied space, we need to alter the texels in PNG, or process them when reading them into memory. But how do we convert them back to straight (R,G,B,A) representation in the end?
     
-    p In rendering pipeline, the final color of a pixel is to be blended with the one already in the framebuffer. In OpenGL, the default blending function is (we only discuss RGB here):
+    p In rendering pipeline, the final color of a pixel is to be blended with the one already in the framebuffer. The default blending function of OpenGL is (we only discuss RGB here):
     
     p.text-center d_RGB = (s_RGB * GL_SRC_ALPHA) + (d_RGB * GL_ONE_MINUS_SRC_ALPHA)
 
@@ -96,7 +96,7 @@ block content
 
     p Perfect. Dark fringes disappeared.
 
-    p To sum up, the premultiplied alpha approach involves two operations:
+    p All in all, the premultiplied alpha approach involves two key operations:
 
     ol
         li Premultiply texels in the texture file
