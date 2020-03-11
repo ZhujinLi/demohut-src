@@ -57,7 +57,7 @@ export function showDemoZoom() {
         sphere.position.set(-20, 20, 10);
         scene.add(sphere);
 
-        new THREE.TextureLoader().load('/common/checker.png', (planeTex) => {
+        new THREE.TextureLoader().load('/public/common/checker.png', (planeTex) => {
             planeTex.wrapS = THREE.RepeatWrapping;
             planeTex.wrapT = THREE.RepeatWrapping;
             planeTex.magFilter = THREE.NearestFilter;

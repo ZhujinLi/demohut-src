@@ -32,8 +32,7 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use('/common', express.static(path.join(__dirname, 'public/common')), serveIndex(path.join(__dirname, 'public/common')));
-app.use('/subjs', express.static(path.join(__dirname, 'public/subjs')), serveIndex(path.join(__dirname, 'public/subjs')));
+app.use('/public', express.static(path.join(__dirname, 'public')), serveIndex(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'node_modules')));
 
 app.use('/', indexRouter);
