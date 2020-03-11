@@ -71,7 +71,7 @@ block content
 
     p Okay, now the green is significantly reduced, which is good. However, the red component seems incorrect—it should be 1 or something. Note the above representation is based on (RA,GA,BA,A), so we need to restore it to (R,G,B,A) by dividing RGB by A, which turns out to be (0.91,0.09,0,0.55). Seems right now.
     
-    p This representation is called "premultiplied alpha", in contrast to "straight alpha", "unassociated alpha", "separate alpha"... whatever you call it.
+    p The representation (RA,GA,BA,A) is called "premultiplied alpha", in contrast to "straight alpha", "unassociated alpha", or "separate alpha"... Whatever you call it.
 
     p To enter the premultiplied space, we need to alter the texels in PNG, or process them when reading them into memory. But how do we convert them back to straight (R,G,B,A) representation in the end?
     
