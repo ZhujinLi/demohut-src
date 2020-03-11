@@ -33,13 +33,14 @@ function find_title(page) {
 
 /* GET home page. */
 router.get('/', function (req, res) {
-  res.locals.title = MAIN_TITLE;
+  res.locals.head_title = MAIN_TITLE;
   res.locals.subjs = subjs;
   res.render('index');
 });
 
 router.get('/:page', function (req, res) {
-  res.locals.title = find_title(req.params.page);
+  res.locals.subj_title = find_title(req.params.page);
+  res.locals.head_title = res.locals.subj_title + " - " + MAIN_TITLE;
   res.locals.srcLink = 'public/subjs/' + req.params.page;
   res.locals.backLink = '/';
   res.render(req.params.page);

@@ -1,7 +1,7 @@
 doctype html
 html
   head
-    title= title
+    title= head_title
     link(rel='stylesheet', href='/bootstrap/dist/css/bootstrap.min.css')
     link(rel='stylesheet', href='/public/common/style.css')
   body
@@ -16,7 +16,7 @@ html
           button.btn.btn-outline-primary(type='submit') ← all posts
 
       .display-4
-        p= title
+        p= subj_title
 
       block content
 
