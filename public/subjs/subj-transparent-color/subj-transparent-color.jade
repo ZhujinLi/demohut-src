@@ -28,8 +28,8 @@ block content
     
     img(src='/public/subjs/subj-transparent-color/mush_bad.png', width='200')
     
-    p Is the graphics pipeline to be blame? No, it's just doing its job, though some software implementations might handle this well. So how do we avoid this problem without touching the graphics driver? Here are two mainstream methods.
-    
+    p Although some software implementations can do the sampling correctly, graphics cards generally just couldn't get it right. Fortunately, there are methods to address this problem without touching the graphics driver, among which the two most mainstream ones are:
+
     .sub-title Method 1: texture bleeding
 
     p Since the black comes from texels whose alpha is 0, we can simply modify the texture and turn these texels' RGB to red, and the resulting RGB would be red anyway:
