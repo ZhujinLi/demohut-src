@@ -16,7 +16,7 @@ const subjs = [
   { url: "subj-skdlq-golden", title: "《思考的乐趣》复现1. 黄金分割" },
   { url: "subj-fib", title: "Fibonacci number" },
   { url: "subj-oblique-text", title: "斜着看的文字" },
-  { url: "subj-persp-vs-ortho", title: "Perspective vs. orthographic" },
+  { url: "subj-persp-vs-ortho", title: "透视与正交" },
   { url: "subj-ndc", title: "NDC curve" },
   { url: "subj-fov-and-zoom", title: "FOV and zoom" },
   { url: "subj-fov-and-speed", title: "FOV and speed" },
