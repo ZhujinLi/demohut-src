@@ -6,7 +6,6 @@ let startImg;
 let endImg;
 let chart;
 
-document.getElementById("opencv-content").style.display = "none";
 document.getElementById("slider-start-time").oninput = onStartTimeChanged;
 document.getElementById("slider-end-time").oninput = onEndTimeChanged;
 document.getElementById("slider-roi-l").oninput = onRoiChanged;
