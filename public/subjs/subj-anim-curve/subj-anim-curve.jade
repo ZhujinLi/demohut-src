@@ -71,6 +71,8 @@ block content
         canvas#plot-curve
     hr
 
+    p The key algorithm is ECC, and after the 2*3 homogeneous transformation matrix is evaluated, I extract the translation, rotation and scaling components, independently. All the codes are run in the browser, so it might take a while before OpenCV.js is loaded. The default example works well with my Opera/Mac, and the result shows the translation animation curve is indeed a Bezier one. You can try with your own recording (don't worry, only your browser can see the content).
+
     script(src="/public/common/Chart.min.js")
     script(src='/public/common/opencv.2a52e44bc6.js')
     script(src="#{dir}/main.js" type="module")
