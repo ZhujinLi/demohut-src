@@ -67,11 +67,13 @@ block content
                 canvas#canvas-end-time
                 p End frame
 
-    div(style="position: relative; margin-top: 20px; margin-bottom: 20px; height:200px; width:100%")
+    div(style="position: relative; margin-top: 20px; margin-bottom: 20px; height:300px; width:100%")
         canvas#plot-curve
     hr
 
-    p The key algorithm is ECC, and after the 2*3 homogeneous transformation matrix is evaluated, I extract the translation, rotation and scaling components, independently. All the codes are run in the browser, so it might take a while before OpenCV.js is loaded. The default example works well with my Opera/Mac, and the result shows the translation animation curve is indeed a Bezier one. You can try with your own recording (don't worry, only your browser can see the content).
+    p The idea is quite simple. For every pair of consecutive frames, <strong>cv.findTransformECC()</strong> is called to evaluate a 2*3 affine transformation matrix. I then extract the translation, rotation and scaling components from it, independently.
+    
+    p All the codes are run on the browser, so it might take a while before OpenCV.js is loaded. The default example works well on my Opera/Mac, and the result shows the translation animation curve is indeed a Bezier one. You can try with your own recording videos (only your browser can see the content).
 
     script(src="/public/common/Chart.min.js")
     script(src='/public/common/opencv.2a52e44bc6.js')
