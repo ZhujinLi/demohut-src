@@ -1,0 +1,76 @@
+extends /layout
+
+block content
+    p Animation is not necessarily being linear. With the help of Bezier curve, we can create more vibrant transitions like this one from #[a(href="https://material.io/design/motion/speed.html" target="_blank") Google Material Design]:
+    
+    video.video-fluid.z-depth-1(autoplay loop muted height="300")
+        source(src="#{dir}/material_standard_curve.mp4" type="video/mp4")
+
+    p Modern Web languages have built-in support for these curves. Try it out #[a(href="https://cubic-bezier.com/" target="_blank") here].
+    
+    p Recently a sudden thought came to me: how commonly are these curve used in real world UI designs? To find out, I have to 1) make some screen recordings, and then 2) reverse-engineer the original animation curve out.
+    
+    p The first step is easy, since most mobile phones have embedded screen recording function. For the second part, which is a bit tricky, I'll seek a little help from OpenCV's object tracking algorithms.
+
+    hr
+
+    .d-flex.justify-content-center
+        #loading-ico.spinner-border(role="status")
+            span.sr-only Loading...
+
+    #opencv-content
+        .row
+            .col-lg
+                h6 File: (default is #[a(href="#{dir}/example.mp4", target="_blank") example.mp4])
+                input#input-video-file.form-control-file(type="file")
+                br
+
+                h6 ROI:
+                div.row
+                    div.col-md
+                        input.custom-range#slider-roi-l(type="range", min="0", max="1", step="0.01")
+                    div.col-md#label-roi-l
+                div.row
+                    div.col-md
+                        input.custom-range#slider-roi-t(type="range", min="0", max="1", step="0.01")
+                    div.col-md#label-roi-t
+                div.row
+                    div.col-md
+                        input.custom-range#slider-roi-r(type="range", min="0", max="1", step="0.01")
+                    div.col-md#label-roi-r
+                div.row
+                    div.col-md
+                        input.custom-range#slider-roi-b(type="range", min="0", max="1", step="0.01")
+                    div.col-md#label-roi-b
+                br
+
+                h6 Start time:
+                div.row
+                    div.col-md
+                        input.custom-range#slider-start-time(type="range", min="0", max="1", step="0.02")
+                    div.col-md#label-start-time
+                br
+
+                h6 End time:
+                div.row
+                    div.col-md
+                        input.custom-range#slider-end-time(type="range", min="0", max="1", step="0.02")
+                    div.col-md#label-end-time
+                br
+
+                button#btn-analyze.btn.btn-primary Analyze!
+
+            .col-lg
+                canvas#canvas-start-time
+                p Start frame
+            .col-lg
+                canvas#canvas-end-time
+                p End frame
+
+    div(style="position: relative; margin-top: 20px; margin-bottom: 20px; height:200px; width:100%")
+        canvas#plot-curve
+    hr
+
+    script(src="/public/common/Chart.min.js")
+    script(src='/public/common/opencv.2a52e44bc6.js')
+    script(src="#{dir}/main.js" type="module")

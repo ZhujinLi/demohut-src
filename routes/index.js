@@ -4,6 +4,7 @@ var router = express.Router();
 const MAIN_TITLE = "A CODER'S VIEW";
 
 const subjs = [
+  { url: "subj-anim-curve", title: "Reverse-engineer animation curve" },
   { url: "subj-transparent-color", title: "Transparent color matters" },
   { url: "subj-frame-sync", title: "Frame synchronization issues" },
   { url: "subj-skdlq-linkage", title: "《思考的乐趣》复现7. 连杆系统" },
@@ -43,6 +44,7 @@ router.get('/:page', function (req, res) {
   res.locals.head_title = res.locals.subj_title + " - " + MAIN_TITLE;
   res.locals.srcLink = 'public/subjs/' + req.params.page;
   res.locals.backLink = '/';
+  res.locals.dir = res.locals.srcLink;
   res.render(req.params.page);
 });
 
