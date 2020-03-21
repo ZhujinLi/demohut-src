@@ -4,6 +4,7 @@ var router = express.Router();
 const MAIN_TITLE = "A CODER'S VIEW";
 
 const subjs = [
+  { url: "subj-compression", title: "Compression 101" },
   { url: "subj-anim-curve", title: "Reverse-engineer animation curve" },
   { url: "subj-transparent-color", title: "Transparent color matters" },
   { url: "subj-frame-sync", title: "Frame synchronization issues" },
