@@ -24,7 +24,7 @@
  */
 
 export function magicNumber() {
-    let string = "HfMN";
+    let string = "HFMN";
     let number = 0;
     for (let c of string) {
         number = (number << 8) | c.charCodeAt(0);
