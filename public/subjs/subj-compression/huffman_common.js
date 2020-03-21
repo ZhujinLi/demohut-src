@@ -3,7 +3,7 @@
  * ----Binary format----
  * File
  * {
- *   magicNumber: uint64,
+ *   magicNumber: uint32,
  * 
  *   originalSizeInBytes: uint32,
  * 
