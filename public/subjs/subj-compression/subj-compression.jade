@@ -4,9 +4,9 @@ block content
 
     p Strangely enough, for these many years I've learnt programming, never have I tried compressing a file with hand-written code.
 
-    p Huffman encoding is the most classic lossless compression algorithm. Here I'm implementing it as a coding practice.
+    p <strong>Huffman encoding</strong> is one of the most classic lossless compression algorithms. Here I'm using it to compress/decompress files as a coding practice.
 
-    p It turns out to be more difficult than I expected, as there are a lot of things to consider about:
+    p It turns out more difficult than I expected, as there are quite a lot things to consider about:
 
     ul
         li Binary format design
@@ -14,12 +14,12 @@ block content
         li Binary tree
         li Priority queue (optional, for optimization of codebook generation)
         li Bit stream reader/writer (the most tricky and buggy one)
-        li State machine (not necessarily)
+        li State machine (not necessary)
     
     input#input-file(type="file")
     hr
 
-    #info(style="display: none")
+    #info.text-monospace(style="display: none")
         h5 Original size
         p#text-orig-size
 
