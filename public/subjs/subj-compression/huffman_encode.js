@@ -82,6 +82,10 @@ function initNodes(hist) {
 }
 
 function makeTree(nodes) {
+    if (nodes.length == 1) {
+        return { left: nodes[0] };
+    }
+
     while (nodes.length > 1) {
         // For each round, merge the two nodes with lowest frequencies.
         // This can be further optimized using priority queue (heap).
