@@ -1,4 +1,4 @@
-import '/three/build/three.min.js';
+import '/public/libs/threejs/r108/three.min.js';
 
 export function add(l, r) {
     return new THREE.Quaternion(l.x + r.x, l.y + r.y, l.z + r.z, l.w + r.w);

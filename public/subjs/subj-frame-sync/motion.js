@@ -1,4 +1,4 @@
-import '/three/build/three.min.js';
+import '/public/libs/threejs/r108/three.min.js';
 
 export function motion(canvasId, onRender) {
     const W = 1000, H = 150;
