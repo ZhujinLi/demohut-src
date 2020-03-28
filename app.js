@@ -6,9 +6,8 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var fs = require('fs')
 var https = require('https')
-var redirectToHTTPS = require('express-http-to-https').redirectToHTTPS
+var redirectToHTTPS = require('express-http-to-https').redirectToHTTPS;
 var serveIndex = require('serve-index');
-
 var indexRouter = require('./routes/index');
 
 var app = express();
@@ -32,9 +31,9 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use('/public', express.static(path.join(__dirname, 'public')), serveIndex(path.join(__dirname, 'public')));
-app.use(express.static(path.join(__dirname, 'node_modules')));
 
+app.use(express.static(path.join(__dirname, 'node_modules')));
+app.use('/public', express.static(path.join(__dirname, 'public')), serveIndex(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 
 // start https server
