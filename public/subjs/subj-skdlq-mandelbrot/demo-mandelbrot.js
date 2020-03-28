@@ -1,5 +1,5 @@
-import '/three/build/three.min.js';
-import '/three/examples/js/controls/OrbitControls.js';
+import '/public/libs/threejs/r108/three.min.js';
+import '/public/libs/threejs/r108/examples/js/controls/OrbitControls.js';
 
 // Note: Although all the calculations are within a 2D plane, I have to comply with
 // an assumption that y is upwards in three.js, in order to use interactive controls.

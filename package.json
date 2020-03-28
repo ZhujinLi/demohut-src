@@ -6,20 +6,15 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
-    "bootstrap": "^4.3.1",
     "cookie-parser": "~1.4.4",
-    "dat.gui": "^0.7.6",
     "debug": "~2.6.9",
     "express": "~4.16.1",
     "express-favicon": "^2.0.1",
     "express-http-to-https": "^1.1.4",
     "http-errors": "~1.6.3",
     "jade": "~1.11.0",
-    "jquery": "^3.4.1",
     "morgan": "~1.9.1",
-    "popper.js": "^1.15.0",
-    "serve-index": "^1.9.1",
-    "three": "^0.108.0"
+    "serve-index": "^1.9.1"
   },
   "devDependencies": {
     "eslint": "^6.3.0"

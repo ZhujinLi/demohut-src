@@ -1,5 +1,5 @@
-import '/three/build/three.min.js';
-import { GUI } from '/dat.gui/build/dat.gui.module.js';
+import '/public/libs/threejs/r108/three.min.js';
+import { GUI } from '/public/libs/dat.gui/0.7.6/dat.gui.module.js';
 
 export function showDemoFov() {
     const UNIT_LENGTH = 1000;
