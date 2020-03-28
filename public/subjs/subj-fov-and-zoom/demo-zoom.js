@@ -1,5 +1,5 @@
 import '/public/libs/threejs/r108/three.min.js';
-import '/three/examples/js/controls/OrbitControls.js';
+import '/public/libs/threejs/r108/examples/js/controls/OrbitControls.js';
 
 export function showDemoZoom() {
     const W = 900, H = 300;

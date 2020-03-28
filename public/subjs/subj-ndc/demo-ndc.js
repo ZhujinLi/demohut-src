@@ -1,7 +1,7 @@
 import '/public/libs/threejs/r108/three.min.js';
-import '/three/examples/js/loaders/GLTFLoader.js';
-import '/three/examples/js/loaders/OBJLoader.js';
-import '/three/examples/js/controls/OrbitControls.js';
+import '/public/libs/threejs/r108/examples/js/loaders/GLTFLoader.js';
+import '/public/libs/threejs/r108/examples/js/loaders/OBJLoader.js';
+import '/public/libs/threejs/r108/examples/js/controls/OrbitControls.js';
 
 /* global Chart */
 

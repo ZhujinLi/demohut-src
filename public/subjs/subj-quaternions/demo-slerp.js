@@ -1,5 +1,5 @@
 import '/public/libs/threejs/r108/three.min.js';
-import '/three/examples/js/controls/OrbitControls.js';
+import '/public/libs/threejs/r108/examples/js/controls/OrbitControls.js';
 import * as _Quaternion from './quaternion_calc.js';
 import { World } from './world.js';
 import { Sphere } from './sphere.js';
