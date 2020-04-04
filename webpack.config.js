@@ -5,6 +5,7 @@ const CopyPlugin = require('copy-webpack-plugin');
 const fs = require("fs");
 const webpack = require("webpack");
 const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const MAIN_TITLE = "A CODER'S VIEW";
 
@@ -31,7 +32,7 @@ const subjs = [
 
 function gen_entry() {
     let entry = {
-        index: './src/index.js',
+        main: './src/main.js',
     };
     for (subj of subjs) {
         let filename = './src/subjs/' + subj.name + '/' + subj.name + '.js';
@@ -53,12 +54,13 @@ module.exports = {
                 use: 'pug-loader'
             },
             {
-                test: /\.css$/,
-                use: ['style-loader', 'css-loader']
+                test: /\.css$/i,
+                use: [MiniCssExtractPlugin.loader, 'css-loader'],
             },
         ]
     },
     plugins: [
+        new MiniCssExtractPlugin(),
         new CleanWebpackPlugin(),
         new FaviconsWebpackPlugin('./favicon.jpg'),
         new CopyPlugin([
@@ -107,7 +109,7 @@ module.exports = {
         }))]),
     output: {
         filename: (chunkData) => {
-            return chunkData.chunk.name === 'index' ? '[name].js' : 'subjs/[name]/[name].js';
+            return chunkData.chunk.name === 'main' ? '[name].js' : 'subjs/[name]/[name].js';
         },
         path: path.resolve(__dirname, 'dist'),
     },
