@@ -2,7 +2,6 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
-const WriteFilePlugin = require('write-file-webpack-plugin');
 const fs = require("fs");
 const webpack = require("webpack");
 const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
@@ -47,9 +46,6 @@ module.exports = {
     mode: 'development',
     entry: gen_entry(),
     devtool: 'inline-source-map',
-    devServer: {
-        contentBase: './dist',
-    },
     module: {
         rules: [
             {
@@ -64,7 +60,6 @@ module.exports = {
     },
     plugins: [
         new CleanWebpackPlugin(),
-        new WriteFilePlugin(),
         new FaviconsWebpackPlugin('./favicon.jpg'),
         new CopyPlugin([
             {
@@ -107,7 +102,7 @@ module.exports = {
                 subj_title: subj.title,
                 head_title: subj.title + " - " + MAIN_TITLE,
                 backLink: '/',
-                srcLink: '/_source_code/src/subjs/' + subj.name,
+                srcLink: 'https://github.com/ZhujinLi/ZhujinLi.github.io/tree/master/_source_code/src/subjs/' + subj.name,
             }
         }))]),
     output: {
