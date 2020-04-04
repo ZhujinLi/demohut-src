@@ -5,6 +5,7 @@ const CopyPlugin = require('copy-webpack-plugin');
 const WriteFilePlugin = require('write-file-webpack-plugin');
 const fs = require("fs");
 const webpack = require("webpack");
+const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
 
 const MAIN_TITLE = "A CODER'S VIEW";
 
@@ -64,6 +65,7 @@ module.exports = {
     plugins: [
         new CleanWebpackPlugin(),
         new WriteFilePlugin(),
+        new FaviconsWebpackPlugin('./favicon.jpg'),
         new CopyPlugin([
             {
                 from: 'src/libs',
