@@ -4,7 +4,6 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const fs = require("fs");
 const webpack = require("webpack");
-const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const MAIN_TITLE = "A CODER'S VIEW";
@@ -59,44 +58,8 @@ module.exports = {
             },
         ]
     },
-    plugins: [
-        new MiniCssExtractPlugin(),
-        new CleanWebpackPlugin(),
-        new FaviconsWebpackPlugin('./favicon.jpg'),
-        new CopyPlugin([
-            {
-                from: 'src/libs',
-                to: 'libs/'
-            },
-            {
-                from: 'src/**/*.+(jpg|png|mp4|html|obj|gltf|mtl|bin)',
-                to: '[1]',
-                test: /src\/(.*)/,
-            },
-            // Copy source code
-            {
-                from: '+(webpack.config.js|package.json)',
-                to: '_source_code/',
-            },
-            {
-                from: 'src/**',
-                to: '_source_code/',
-            },
-        ]),
-        new webpack.ProvidePlugin({
-            THREE: 'three',
-        }),
-        new HtmlWebpackPlugin({
-            inject: false,
-            filename: 'index.html',
-            template: './src/index.pug',
-            templateParameters: {
-                subjs: subjs,
-                head_title: MAIN_TITLE
-            },
-        }),
-    ].concat([
-        ...subjs.map(subj => new HtmlWebpackPlugin({
+    plugins:
+        [...subjs.map(subj => new HtmlWebpackPlugin({
             inject: false,
             filename: 'subjs/' + subj.name + '/' + subj.name + '.html',
             template: './src/subjs/' + subj.name + '/' + subj.name + '.pug',
@@ -106,7 +69,42 @@ module.exports = {
                 backLink: '/',
                 srcLink: 'https://github.com/ZhujinLi/ZhujinLi.github.io/tree/master/_source_code/src/subjs/' + subj.name,
             }
-        }))]),
+        }))].concat([
+            new HtmlWebpackPlugin({
+                inject: false,
+                filename: 'index.html',
+                template: './src/index.pug',
+                templateParameters: {
+                    subjs: subjs,
+                    head_title: MAIN_TITLE
+                },
+            }),
+            new MiniCssExtractPlugin(),
+            new CleanWebpackPlugin(),
+            new CopyPlugin([
+                {
+                    from: 'src/libs',
+                    to: 'libs/'
+                },
+                {
+                    from: 'src/**/*.+(jpg|png|mp4|html|obj|gltf|mtl|bin)',
+                    to: '[1]',
+                    test: /src\/(.*)/,
+                },
+                // Copy source code
+                {
+                    from: '+(webpack.config.js|package.json)',
+                    to: '_source_code/',
+                },
+                {
+                    from: 'src/**',
+                    to: '_source_code/',
+                },
+            ]),
+            new webpack.ProvidePlugin({
+                THREE: 'three',
+            }),
+        ]),
     output: {
         filename: (chunkData) => {
             return chunkData.chunk.name === 'main' ? '[name].js' : 'subjs/[name]/[name].js';
