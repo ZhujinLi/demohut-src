@@ -1,0 +1,289 @@
+{
+  "accessors": [
+    {
+      "bufferView": 0,
+      "byteOffset": 0,
+      "componentType": 5123,
+      "count": 3108,
+      "max": [
+        679.0
+      ],
+      "min": [
+        0.0
+      ],
+      "name": "buffer-0-group-0-mesh-0-indices",
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 0,
+      "componentType": 5126,
+      "count": 680,
+      "max": [
+        101.80699920654297,
+        211.07000732421875,
+        93.7073974609375
+      ],
+      "min": [
+        -102.84700012207031,
+        35.14059829711914,
+        -90.62560272216797
+      ],
+      "name": "buffer-0-group-0-mesh-0-position",
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 8160,
+      "componentType": 5126,
+      "count": 680,
+      "max": [
+        1.0,
+        1.0,
+        0.999994695186615
+      ],
+      "min": [
+        -1.0,
+        -1.0,
+        -1.0
+      ],
+      "name": "buffer-0-group-0-mesh-0-normal",
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 0,
+      "componentType": 5126,
+      "count": 680,
+      "max": [
+        0.9994509816169739,
+        -0.012583400122821331
+      ],
+      "min": [
+        0.00980674009770155,
+        -0.9942579865455627
+      ],
+      "name": "buffer-0-group-0-mesh-0-texcoord",
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 0,
+      "byteOffset": 6216,
+      "componentType": 5123,
+      "count": 4638,
+      "max": [
+        1259.0
+      ],
+      "min": [
+        0.0
+      ],
+      "name": "buffer-0-group-1-mesh-0-indices",
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 16320,
+      "componentType": 5126,
+      "count": 1260,
+      "max": [
+        349.79400634765625,
+        190.23599243164062,
+        97.02729797363281
+      ],
+      "min": [
+        -350.10198974609375,
+        -436.7860107421875,
+        -73.73750305175781
+      ],
+      "name": "buffer-0-group-1-mesh-0-position",
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 31440,
+      "componentType": 5126,
+      "count": 1260,
+      "max": [
+        0.999774694442749,
+        0.9988738894462585,
+        0.9989035725593567
+      ],
+      "min": [
+        -0.9998234510421753,
+        -0.9999986886978149,
+        -0.9995901584625244
+      ],
+      "name": "buffer-0-group-1-mesh-0-normal",
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 5440,
+      "componentType": 5126,
+      "count": 1260,
+      "max": [
+        0.9835230112075806,
+        -0.011704400181770325
+      ],
+      "min": [
+        0.01480340026319027,
+        -0.9864609837532043
+      ],
+      "name": "buffer-0-group-1-mesh-0-texcoord",
+      "type": "VEC2"
+    }
+  ],
+  "asset": {
+    "generator": "Obj2GltfConverter",
+    "version": "2.0"
+  },
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteLength": 15492,
+      "byteOffset": 0,
+      "name": "buffer-0-bufferview-ushort",
+      "target": 34963
+    },
+    {
+      "buffer": 0,
+      "byteLength": 46560,
+      "byteOffset": 15492,
+      "byteStride": 12,
+      "name": "buffer-0-bufferview-vec3",
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteLength": 15520,
+      "byteOffset": 62056,
+      "byteStride": 8,
+      "name": "buffer-0-bufferview-vec2",
+      "target": 34962
+    }
+  ],
+  "buffers": [
+    {
+      "byteLength": 77576,
+      "name": "buffer-0",
+      "uri": "asian-girl_anime-clean.bin"
+    }
+  ],
+  "images": [
+    {
+      "mimeType": "image/png",
+      "name": "hair_color_mat-diffuse-image",
+      "uri": "hair_color_mat.png"
+    },
+    {
+      "mimeType": "image/png",
+      "name": "asian_body-diffuse-image",
+      "uri": "asian_body_color_mat.png"
+    }
+  ],
+  "materials": [
+    {
+      "alphaMode": "OPAQUE",
+      "doubleSided": true,
+      "name": "hair_color_mat",
+      "pbrMetallicRoughness": {
+        "baseColorFactor": [
+          0.462366,
+          0.462366,
+          0.462366,
+          1.0
+        ],
+        "baseColorTexture": {
+          "index": 0,
+          "texCoord": 0
+        },
+        "metallicFactor": 0.0,
+        "roughnessFactor": 0.8582186230066646
+      }
+    },
+    {
+      "alphaMode": "OPAQUE",
+      "doubleSided": true,
+      "name": "asian_body",
+      "pbrMetallicRoughness": {
+        "baseColorFactor": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "baseColorTexture": {
+          "index": 1,
+          "texCoord": 0
+        },
+        "metallicFactor": 0.0,
+        "roughnessFactor": 0.8582186230066646
+      }
+    }
+  ],
+  "meshes": [
+    {
+      "name": "buffer-0-mesh-0",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 1,
+            "NORMAL": 2,
+            "TEXCOORD_0": 3
+          },
+          "indices": 0,
+          "material": 0,
+          "mode": 4
+        },
+        {
+          "attributes": {
+            "POSITION": 5,
+            "NORMAL": 6,
+            "TEXCOORD_0": 7
+          },
+          "indices": 4,
+          "material": 1,
+          "mode": 4
+        }
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "mesh": 0,
+      "name": "node-0"
+    }
+  ],
+  "samplers": [
+    {
+      "name": "hair_color_mat-diffuse-sampler",
+      "wrapS": 10497,
+      "wrapT": 10497
+    },
+    {
+      "name": "asian_body-diffuse-sampler",
+      "wrapS": 10497,
+      "wrapT": 10497
+    }
+  ],
+  "scenes": [
+    {
+      "name": "scene-0",
+      "nodes": [
+        0
+      ]
+    }
+  ],
+  "textures": [
+    {
+      "name": "hair_color_mat-diffuse-texture",
+      "sampler": 0,
+      "source": 0
+    },
+    {
+      "name": "asian_body-diffuse-texture",
+      "sampler": 1,
+      "source": 1
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+extends ../../layout
+
+block content
+    p Here is an interesting fact about video games: when an object (like a car or a person) starts to accelerate, the FOV normally increases correspondingly.
+
+    .row
+        .col-md
+            video.video-fluid.z-depth-1(autoplay loop muted width="100%" height="auto")
+                source(src="./fov-gta.mp4" type="video/mp4")
+        .col-md
+            video.video-fluid.z-depth-1(autoplay loop muted width="100%" height="auto")
+                source(src="./fov-spiderman.mp4" type="video/mp4")
+
+    p
+
+    p It seems that increasing FOV enhances the sense of speed.
+    
+    p Or does it?
+
+    p I'll write a demo to find out...
+
+    div(style={"position": "relative"})
+        div#gui-fov(style={"position": "absolute", "top": "10px", "left": "10px"})
+        canvas#view-fov
+
+    p
+
+    p Here the car speed is at constant 120 km/h, and the camera keeps the same pose, so FOV is the only thing that changes. The conclusion is obvious.
+
+    p There's no need to the math: an object close to the camera is stretched more on the screen with larger FOV, so the speed seems to be faster.
+
+    script(src="./subj-fov-and-speed.js", type="module")

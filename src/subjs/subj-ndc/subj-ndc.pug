@@ -1,0 +1,30 @@
+extends ../../layout
+
+block content
+    p The z value in NDC (stored in depth buffer) is not linear to the original z value:
+
+    p.text-center.text-monospace z_ndc = -(2*f*n/(f-n)) * (1/z) + (f+n)/(f-n)
+
+    p where n is the near plane, and f is the far plane.
+
+    div(style={"position": "relative", "color": "white"})
+        canvas#view-ndc
+        div(style={"position": "absolute", "left": "0px", "top": "0px", "width": "300px", "height": "100%"})
+            p Camera view
+        div#area-ndc-middle(style={"position": "absolute", "left": "300px", "top": "0px", "width": "300px", "height": "100%"})
+            p External view
+        div#area-ndc-right(style={"position": "absolute", "left": "600px", "top": "0px", "width": "300px", "height": "100%"})
+            p NDC cube
+        div(style={"position": "absolute", "bottom": "20px", "left": "20px"})
+            div
+                input.custom-range#slider-near(type="range")
+            div#label-near
+
+    div(style="position: relative; margin-top: 20px; height:200px; width:900px")
+        canvas#plot-ndc
+
+    p
+
+    p Here I keep the distance between the near plane and the far plane constant at 100. When the near plane is set very small, almost all the z values fall into a narrow range close to 1, and the balls are squashed onto the far plane. In particular, if the near plane is set 0.00001, z-fighting would appear distinctly. A solution to this is using a non-linear (like logarithmic) z buffer. Anyway one should consider setting a reasonable range for the frustum in the first place.
+    
+    script(src="./subj-ndc.js", type="module")

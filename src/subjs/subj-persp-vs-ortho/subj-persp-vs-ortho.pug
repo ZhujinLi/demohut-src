@@ -1,0 +1,21 @@
+extends ../../layout
+
+block content
+    p 西洋画派采用科学的焦点透视原理，画作显得真实自然。而中国画不遵循标准的透视规律，存在多个观察点，移步换景，最终集成一体，因此称之为散点透视，相当于图形学中的正交投影。这种方式形成的画作，尽管与实际的效果相差甚远，但其超脱了个人空间的限制，可以表现更为辽阔壮丽的景象。见《#[a(href="https://1drv.ms/u/s!Au1VA_3yIoX4iJNnUitCg-JcKbzmmg?e=IaFinm") 清明上河图]》。
+    
+    p 科幻作品《三体》中有段#[a(href="https://www.douban.com/note/700607820/") 情节]，描述了现实世界中出现了一个非透视投影人物的故事。这个人站在一个小岛上，如果从岸边看过去，会以为到这是一个巨人。然后不断靠近这个人，会发现这人越来越小，最后和真实大小一样了。这个场景其实很容易脑补，想象这是个游戏，这个人就相当于是贴在屏幕上的一张贴纸，不管你前后怎么移动，这个人在屏幕上（眼睛中）都是一样大的，因此在近大远小的世界中就造成了远大近小的假象。
+    
+    p 抛开这种离奇设定不谈，透视世界和非透视世界差异有多大呢？
+    
+    div(style={"position": "relative"})
+        canvas#view-ortho
+        p(style={"position": "absolute", "top": "10px", "left": "10px"}) Perspective
+        p(style={"position": "absolute", "top": "10px", "left": "410px"}) Orthographic
+
+    p
+
+    p 其实没有我想象中那么大差别。另外，右边的横平竖直给人一种复古风的感觉，可能因为早期的伪3D游戏（例如小霸王卡带，以及90年代经典的《仙剑奇侠传一》），采用的就是正交投影来展示3D画面。
+
+    p 注：Model is from #[a(href="https://poly.google.com/view/bEqHUxdaJHB") here] and #[a(href="https://poly.google.com/view/bnZkUs4qEdG") here]
+
+    script(src="./subj-persp-vs-ortho.js", type="module")

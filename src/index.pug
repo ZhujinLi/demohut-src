@@ -1,0 +1,8 @@
+extends layout
+
+block content
+  div.text-center
+    ul#subj-list.nav.nav-list.flex-column
+      each subj in subjs
+        li.nav-item
+          a.nav-link.pl-0.pr-0(href='subjs/'+subj.name+'/'+subj.name+'.html')= subj.title

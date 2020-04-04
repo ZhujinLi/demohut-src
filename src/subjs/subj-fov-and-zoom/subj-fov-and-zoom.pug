@@ -1,0 +1,14 @@
+extends ../../layout
+
+block content
+    p At the first time I played around with FOV, I found that turning it smaller felt just like zooming in (see the first two demos below). It's not what I expected.
+    
+    p In some movie footage, the lens' angle widens slowly, while the scene maintains the same range. Also, in map applications, we don't expect the view changed when we adjust the FOV value. To achieved such effects, camera's position needs to be recalculated according to the FOV. See the right most demo.
+
+    div(style={"position": "relative", "color": "white"})
+        canvas#view-zoom
+        p#label-left-params(style={"position": "absolute", "bottom": "0px", "left": "10px"})
+        p#label-middle-params(style={"position": "absolute", "bottom": "0px", "left": "310px"})
+        p#label-right-params(style={"position": "absolute", "bottom": "0px", "left": "610px"})
+
+    script(src="./subj-fov-and-zoom.js", type="module")

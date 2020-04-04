@@ -1,0 +1,32 @@
+doctype html
+html
+  head
+    title= head_title
+  body
+    div#jumbotron.jumbotron.jumbotron-fluid.text-monospace
+      div.container
+        h1
+          a(href="/") a coder's view
+
+    div.container
+      if backLink
+        form(action= backLink).text-right
+          button.btn.btn-outline-primary(type='submit') ← all posts
+
+      .display-4
+        p= subj_title
+
+      block content
+
+      if srcLink
+        a.text-right(href= srcLink, target='_blank')
+          p → view src
+
+      .hr-theme-slash-2
+        .hr-line.l
+        .hr-icon
+          a(href='https://github.com/ZhujinLi')
+            img#img-github(src='/github.png', height='32px')
+        .hr-line.r
+
+    script(src="/index.js", type="module")
