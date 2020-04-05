@@ -47,8 +47,12 @@ export class AStarSolver {
     }
 
     _calcH(i, j) {
-        // Manhattan distance
-        return Math.abs(this._dstChessPos.i - i) + Math.abs(this._dstChessPos.j - j);
+        // Mix Euclidean distance with Manhattan distance for better performance
+        let x = this._dstChessPos.i - i;
+        let y = this._dstChessPos.j - j;
+        let manhattan = Math.abs(x) + Math.abs(y);
+        let euclidean = Math.sqrt(x * x + y * y);
+        return manhattan - 0.001 * 1 / euclidean;
     }
 
     _nextStep() {

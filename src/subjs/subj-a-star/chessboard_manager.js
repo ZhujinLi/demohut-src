@@ -153,7 +153,7 @@ export class ChessboardManager {
                         } else {
                             this._statusScene.addChild(createCloseMark(x, y, this.getGridDim() / 2));
                         }
-                        this._statusScene.addChild(createGridInfo(x, y, this.getGridDim() / 2.3, grid.f(), grid.g, grid.h));
+                        this._statusScene.addChild(createGridInfo(x, y, this.getGridDim() / 2.3, Math.floor(grid.f()), grid.g, Math.floor(grid.h)));
                         if (grid.prev) {
                             this._statusScene.addChild(createArrow(grid, x, y, this.getGridDim() / 5));
                         }
