@@ -9,6 +9,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const MAIN_TITLE = "A CODER'S VIEW";
 
 const subjs = [
+    { name: "subj-a-star", title: "A*" },
     { name: "subj-compression", title: "Compression 101" },
     { name: "subj-anim-curve", title: "Reverse-engineer animation curve" },
     { name: "subj-transparent-color", title: "Transparent color matters" },

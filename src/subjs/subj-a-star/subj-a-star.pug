@@ -1,0 +1,24 @@
+extends ../../layout
+
+block content
+    p While hiking on a #[a(href="https://www.openstreetmap.org/#map=14/40.1042/116.0581" target="_blank") mountain] last winter, I found this peculiar chessboard:
+
+    img(src="./chessboard.jpg" width="40%")
+
+    p The pieces cannot be picked up, rather they can only be moved along horizontal or vertical lines. I wondered how dreadful it world be if someone is actually going to play chess on it.
+
+    p And would it be easier on a computer? Sooner I realized this serves as a nice example to demonstrate how <strong>A*</strong>—one of the fundamental AI algorithms—works:
+
+    #view-chessboard
+
+    button#btn-next.btn.btn-primary(disabled) Search
+
+    hr
+
+    p The objective is to find the shortest path of moving a piece to its destination. G is the actual cost, H is the heuristic (optimistic, as the Manhattan distance I'm using here) cost, and F is the sum of them: F = G + H. Open set consists of grids who are to be further searched and updated, and close set is those whose costs are determined. For every step during search, the algorithm removes the grid with the smallest F value from the open set, add it to the close set, and update its adjacent grids' costs if possible. When the destination is added to the close set, the shortest path is found.
+    
+    ul
+        li If the objective is to simply find an arbitrary path (not necessarily the shortest), then you can stop the algorithm as soon as the destination is added to the open set. Of even, you can set the G to be always 0, so the algorithm becomes totally greedy (faster for simple cases but slower for complicated cases).
+        li If H is always 0, it degrades to Dijkstra algorithm. Since no heuristic information is leveraged, it is invariably outperformed by A* (imagine the search goes the opposite direction half the time).
+
+    script(src="./subj-a-star.js", type="module")
