@@ -6,7 +6,7 @@ const fs = require("fs");
 const webpack = require("webpack");
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
-const MAIN_TITLE = "A CODER'S VIEW";
+const MAIN_TITLE = "DemoHut";
 
 const subjs = [
     { name: "subj-a-star", title: "A*" },
