@@ -17,7 +17,8 @@ html
       .display-4
         p= subj_title
 
-      block content
+      div#content
+        block content
 
       if srcLink
         a.text-right(href= srcLink, target='_blank')
