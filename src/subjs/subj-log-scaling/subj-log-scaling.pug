@@ -1,0 +1,70 @@
+extends ../../layout
+
+block content
+    p In map applications, scale is represented more preferably in logarithmic form, denoted "zoom" here:
+
+    math(display="block")
+        mrow
+            mi zoom
+            mo =
+            msub
+                mi log
+                mn 2
+            mfrac
+                mi scale
+                mi
+                    msub
+                        mi scale
+                        mn 0
+
+    p Where <math><msub><mi>scale</mi><mn>0</mn></msub></math> is the scale when zoom is 0. For example, if <math><msub><mi>scale</mi><mn>0</mn></msub><mo>=</mo><mtext>1:4000</math>, then zoom 3 corresponds to scale 1:500.
+
+    div(style={"position": "relative"})
+        .row
+            .col-lg
+                canvas#canvas-cmp
+            .col-lg
+                .row
+                    button#btn-cmp-zoom-in
+                        img(src="zoom_in.png" height="40px")
+                .row
+                    button#btn-cmp-zoom-out
+                        img(src="zoom_out.png" height="40px")
+            p(style={"position": "absolute", "bottom": "10px", "left": "10px"}) Scale (linear)
+            p(style={"position": "absolute", "bottom": "10px", "left": "310px"}) Zoom (logarithmic)
+    
+    p As is showed in the above comparison, the animation in logarithmic form is more natural to human beings.
+
+    p If the two concepts are confused, unexpected behaviors might occur. Following are some I've found in real-world mobile apps.
+
+    .sub-title 1. Camera Translation
+
+    p Modern map apps support the gesture "zooming at position" in general. This is the composition of panning and zooming, or "translation" of the camera in 3D world, in both horizontal- and vertical- directions. We expect the trace of the translation to be straight. If zooming is applied logarithmically with the panning linearly, the curve is not straight, and it feels somewhat odd. To correct this, we can either
+    
+    ol
+        li use linear zooming (like here), or
+        li use log panning
+
+    div(style={"position": "relative"})
+        canvas#canvas-translation
+        p(style={"position": "absolute", "bottom": "10px", "left": "10px"}) Wrong
+        p(style={"position": "absolute", "bottom": "10px", "left": "310px"}) Correct
+
+    button.btn-primary#btn-translation Zoom in / Zoom out at pos
+
+    p
+
+    .sub-title 2. Screen space animation
+
+    p Likewise, if screen space animation and world space one are combined, we need to pay special attention to ensure consistent zooming effect. In this example, the route overlay is represented in screen space, and the map is drawn in world space. If we simply apply linear interpolation to the screen coordinates of the route while zooming the map, the two would not matched during the animation. I'll try the second solution to fix this.
+
+    div(style={"position": "relative"})
+        canvas#canvas-screen
+        p(style={"position": "absolute", "bottom": "10px", "left": "10px"}) Wrong
+        p(style={"position": "absolute", "bottom": "10px", "left": "310px"}) Correct
+
+    button.btn-primary#btn-screen Zoom in / Zoom out
+
+    script(src="https://polyfill.io/v3/polyfill.min.js?features=es6")
+    script(src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async)
+    script(src="./subj-log-scaling.js", type="module")
