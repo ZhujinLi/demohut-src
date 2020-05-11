@@ -9,11 +9,14 @@
 }
 
 #content {
-    font-family: Lora;
+    font-family: Lora, Simsun;
+}
+
+#content button {
+    font-family: sans-serif;
 }
 
 #subj-list {
-    font-family: Lora;
     font-size: 17px;
 }
 
