@@ -3,22 +3,17 @@
     src: url('./Lora-Regular.ttf');
 }
 
-@font-face {
-    font-family: 'SourceHanSans';
-    src: url('SourceHanSansSC-Light.otf');
-}
-
 #jumbotron {
     padding-top: 20px;
     padding-bottom: 20px;
 }
 
 #content {
-    font-family: Lora, SourceHanSans;
+    font-family: Lora;
 }
 
 #subj-list {
-    font-family: Lora, SourceHanSans;
+    font-family: Lora;
     font-size: 17px;
 }
 
