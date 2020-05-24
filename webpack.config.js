@@ -9,6 +9,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const MAIN_TITLE = "DemoHut";
 
 const subjs = [
+    { name: "subj-basic-shading", title: "Basic shading" },
     { name: "subj-log-scaling", title: "Logarithmic scaling" },
     { name: "subj-a-star", title: "A*" },
     { name: "subj-compression", title: "Compression 101" },

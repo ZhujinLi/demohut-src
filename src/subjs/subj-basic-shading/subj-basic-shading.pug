@@ -1,0 +1,118 @@
+extends ../../layout
+
+block content 
+    p In the simplest shading model, the outgoing radiance on a surface is the combination of diffuse radiance (following Lambert's law) and specular radiance of all light sources:
+
+    math(display="block")
+        mrow
+            msub
+                mi L
+                mi o
+            mfenced
+                mi v
+            mo =
+            munderover
+                mo &Sum;
+                mrow
+                    mi k
+                    mo =
+                    mn 1
+                mi n
+            mfenced
+                mrow
+                    msub
+                        mi L
+                        mi diff(k)
+                    mo +
+                    msub
+                        mi L
+                        mi spec(k)
+            mi ,
+
+    math(display="block")
+        mrow
+            msub
+                mi L
+                mi diff
+            mo =
+            mfrac
+                msub
+                    mi c
+                    mi diff
+                mi &pi;
+            mi &times;
+            msub
+                mi E
+                mi L
+            mover
+                mi cos
+                mo &OverBar;
+            mfenced
+                mi l
+                mi n
+            mi ,
+
+    math(display="block")
+        mrow
+            msub
+                mi L
+                mi spec
+            mo =
+            mfrac
+                mrow
+                    mi m
+                    mo +
+                    mn 8
+                mrow
+                    mn 8
+                    mi &pi;
+            msup
+                mover
+                    mi cos
+                    mo &OverBar;
+                mi m
+            mfenced
+                mi h
+                mi n
+            msub
+                mi c
+                mi spec
+            mo &times;
+            msub
+                mi E
+                mi L
+            mover
+                mi cos
+                mo &OverBar;
+            mfenced
+                mi l
+                mi n
+            mi ,
+
+    p where
+    
+    ul
+        li <math><mi>v</mi></math> is the view ray pointing from surface to eye
+        li <math><mi>n</mi></math> is the number of light sources.
+        li <math><msub><mi>c</mi><mi>diff</mi></msub></math> is the diffuse color
+        li <math><msub><mi>E</mi><mi>L</mi></msub></math> is light irradiance/intensity, in RGB components
+        li <math><mover><mi>cos</mi><mo>&OverBar;</mo></mover></math> is cosine value clamped to [0, 1]
+        li <math><mi>l</mi></math> is the normalized light ray pointing from surface to light source
+        li <math><mi>n</mi></math> is the normalized surface normal
+        li <math><mi>m</mi></math> is the smoothness of the surface
+        li <math><mi>h</mi><mo>=</mo><mfrac><mrow><mi>l</mi><mo>+</mo><mi>v</mi></mrow><mrow><mo>||</mo><mi>l</mi><mo>+</mo><mi>v</mi><mo>||</mo></mrow></mfrac></math> is called half vector
+        li <math><msub><mi>c</mi><mi>spec</mi></msub></math> is the specular color
+
+    p Assume the normal is given per-vertex, only one light source is out there, and the material is uniform across the surface. There are variant implementations of this shading equation, depending on where to put the calculation:
+
+    ul
+        li Gourand (left, faster): calculate per-vertex, interpolate the color to pixel shader
+        li Phong (right, better result): calculate per-pixel, using interpolated normal from vertex shader
+
+    div(style={"position": "relative"})
+        div#gui-cmp(style={"position": "absolute", "top": "10px", "left": "810px"})
+        canvas#canvas-cmp
+
+    script(src="https://polyfill.io/v3/polyfill.min.js?features=es6")
+    script(src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async)
+    script(src="./subj-basic-shading.js", type="module")
