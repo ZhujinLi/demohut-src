@@ -19,7 +19,7 @@ block content
     
     ul
         li In order to find the optimal solution, the heuristic function must be optimistic, i.e., no more expensive than the actual cost. Manhattan distance seems a viable option and it approximates the actual cost best. However it may lead to too many candidates with the same F values all at once. The search may suffer from inefficiency as a result. To solve this problem, I subtract a slight penalty from it: H(x) = Manhattan(x, destination) - k / Euclidean(x, destination), where k is a very small value.
-        li If the objective is to simply find an arbitrary path (not necessarily the shortest), then you can stop the algorithm as soon as the destination is added to the open set. Of even, you can set the G to be always 0, so the algorithm becomes totally greedy (faster for simple cases but slower for complicated cases).
+        li If the objective is to simply find an arbitrary path (not necessarily the shortest), then you can stop the algorithm as soon as the destination is added to the open set. Moreover, you can set the G to be always 0, so the algorithm becomes totally greedy (faster for simple cases but slower for complicated cases).
         li If H is always 0, it degrades to Dijkstra algorithm. Since no heuristic information is leveraged, it is invariably outperformed by A* (imagine the search goes the opposite direction half the time).
 
     script(src="./subj-a-star.js", type="module")
