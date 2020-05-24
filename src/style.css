@@ -1,19 +1,15 @@
 @font-face {
-    font-family: 'Lora';
-    src: url('./Lora-Regular.ttf');
+    font-family: 'Raleway';
+    src: url('./Raleway-Regular.ttf');
+}
+
+body {
+    font-family: Raleway, Helvetica, Simsun;
 }
 
 #jumbotron {
     padding-top: 20px;
     padding-bottom: 20px;
-}
-
-#content {
-    font-family: Lora, Simsun;
-}
-
-#content button {
-    font-family: sans-serif;
 }
 
 #subj-list {
