@@ -104,14 +104,15 @@ block content
         li <math><mi>h</mi><mo>=</mo><mfrac><mrow><mi>l</mi><mo>+</mo><mi>v</mi></mrow><mrow><mo>||</mo><mi>l</mi><mo>+</mo><mi>v</mi><mo>||</mo></mrow></mfrac></math> is called half vector
         li <math><msub><mi>c</mi><mi>spec</mi></msub></math> is the specular color
 
-    p Assume the normal is given per-vertex, only one light source is out there, and the material is uniform across the surface. There are variant implementations of this shading equation, depending on where to put the calculation:
+    p Assume there is only one light source, and the material is uniform across the surface. There are various implementations of this shading equation, depending on where to put the calculation:
 
     ul
-        li Gourand (left, faster): calculate per-vertex, interpolate the color to pixel shader
-        li Phong (right, better result): calculate per-pixel, using interpolated normal from vertex shader
+        li Flat (left): per-primitive normal, per-primitive calculation
+        li Gouraud (middle): per-vertex normal, per-vertex calculation
+        li Phong (right): per-vertex normal, per-pixel calculation
 
     div(style={"position": "relative"})
-        div#gui-cmp(style={"position": "absolute", "top": "10px", "left": "810px"})
+        div#gui-cmp(style={"position": "absolute", "top": "10px", "left": "910px"})
         canvas#canvas-cmp
 
     script(src="https://polyfill.io/v3/polyfill.min.js?features=es6")

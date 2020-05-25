@@ -1,16 +1,25 @@
 import * as THREE from "three";
 import 'three/examples/js/controls/OrbitControls.js';
+import { WEBGL } from 'three/examples/jsm/WebGL.js';
 import * as dat from 'dat.gui';
+import flatVert from './flat.vert';
+import flatFrag from './flat.frag';
 import phongVert from './phong.vert';
 import phongFrag from './phong.frag';
-import gourandVert from './gourand.vert';
-import gourandFrag from './gourand.frag';
+import gouraudVert from './gouraud.vert';
+import gouraudFrag from './gouraud.frag';
 
 // Here I try to use the minimal features of three.js and calculate the shading by myself.
 
-const renderer = new THREE.WebGLRenderer({ antialias: true, canvas: document.getElementById("canvas-cmp") });
+if (WEBGL.isWebGL2Available() === false) {
+    alert("Your browser does not support WebGL 2. Flat shading would not display properly.");
+}
+
+const canvas = document.getElementById("canvas-cmp");
+const ctx = canvas.getContext("webgl2");
+const renderer = new THREE.WebGLRenderer({ antialias: true, canvas: canvas, context: ctx });
 renderer.setPixelRatio(window.devicePixelRatio);
-renderer.setSize(800, 400);
+renderer.setSize(900, 300);
 renderer.setScissorTest(true);
 
 const camera = new THREE.PerspectiveCamera(45, 1);
@@ -53,15 +62,25 @@ function render() {
 
     requestAnimationFrame(render);
 
-    // Gourand
-    const gourandMtl = globeMtl;
-    gourandMtl.vertexShader = gourandVert;
-    gourandMtl.fragmentShader = gourandFrag;
-    const gourandScene = new THREE.Scene();
-    gourandScene.add(new THREE.Mesh(globeGeo, gourandMtl));
-    renderer.setScissor(0, 0, 400, 400);
-    renderer.setViewport(0, 0, 400, 400);
-    renderer.render(gourandScene, camera);
+    // Flat
+    const flatMtl = globeMtl.clone();
+    flatMtl.vertexShader = flatVert;
+    flatMtl.fragmentShader = flatFrag;
+    const flatScene = new THREE.Scene();
+    flatScene.add(new THREE.Mesh(globeGeo, flatMtl));
+    renderer.setScissor(0, 0, 300, 300);
+    renderer.setViewport(0, 0, 300, 300);
+    renderer.render(flatScene, camera);
+
+    // Gouraud
+    const gouraudMtl = globeMtl.clone();
+    gouraudMtl.vertexShader = gouraudVert;
+    gouraudMtl.fragmentShader = gouraudFrag;
+    const gouraudScene = new THREE.Scene();
+    gouraudScene.add(new THREE.Mesh(globeGeo, gouraudMtl));
+    renderer.setScissor(300, 0, 300, 300);
+    renderer.setViewport(300, 0, 300, 300);
+    renderer.render(gouraudScene, camera);
 
     // Phong
     const phongMtl = globeMtl.clone();
@@ -69,8 +88,8 @@ function render() {
     phongMtl.fragmentShader = phongFrag;
     const phongScene = new THREE.Scene();
     phongScene.add(new THREE.Mesh(globeGeo, phongMtl));
-    renderer.setScissor(400, 0, 400, 400);
-    renderer.setViewport(400, 0, 400, 400);
+    renderer.setScissor(600, 0, 300, 300);
+    renderer.setViewport(600, 0, 300, 300);
     renderer.render(phongScene, camera);
 }
 
