@@ -16,9 +16,9 @@ block content
     
     p There are some unwanted black fringes around the red blocks. What happens there?
 
-    .sub-title Texture sampling
+    .sub-title Texture filtering
 
-    p In the rendering pipeline, a magnified texture is sampled (filtered) in a quite straight-forward manner: simply performing a linear combination on the four neighboring texels' RGBA values, one channel at a time. For instance, in the middle between a red texel and a transparent one, the final color will be blended like this:
+    p In the rendering pipeline, a magnified texture is filtered in a quite straight-forward manner: simply performing a linear combination on the four neighboring texels' RGBA values, one channel at a time. For instance, in the middle between a red texel and a transparent one, the final color will be blended like this:
     
     p.text-center.text-monospace 0.5*(1,0,0,1) + 0.5*(0,0,0,0) = (0.5,0,0,0.5)
 
@@ -28,7 +28,7 @@ block content
     
     img(src='./mush_bad.png', width='200')
     
-    p Although some software implementations can do the sampling correctly, graphics cards generally just couldn't get it right. Fortunately, there are methods to address this problem without touching the graphics driver, among which the two most mainstream ones are:
+    p Although some software implementations can do the filtering correctly, graphics cards generally just couldn't get it right. Fortunately, there are methods to address this problem without touching the graphics driver, among which the two most mainstream ones are:
 
     .sub-title Method 1: texture bleeding
 
