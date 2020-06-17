@@ -104,12 +104,12 @@ block content
         li <math><mi>h</mi><mo>=</mo><mfrac><mrow><mi>l</mi><mo>+</mo><mi>v</mi></mrow><mrow><mo>||</mo><mi>l</mi><mo>+</mo><mi>v</mi><mo>||</mo></mrow></mfrac></math> is called half vector
         li <math><msub><mi>c</mi><mi>spec</mi></msub></math> is the specular color
 
-    p There are different implementations of this shading equation, regarding where to put the calculation:
+    p There are different implementations of this shading equation, regarding the frequency of evaluation:
 
     ul
-        li Flat (left): per-primitive normal, per-primitive calculation
-        li Gouraud (middle): per-vertex normal, per-vertex calculation
-        li Phong (right): per-vertex normal, per-pixel calculation
+        li Flat (left): per-primitive normal, per-primitive evaluation
+        li Gouraud (middle): per-vertex normal, per-vertex evaluation
+        li Phong (right): per-vertex normal, per-pixel evaluation
 
     div(style={"position": "relative"})
         div#gui-cmp(style={"position": "absolute", "top": "10px", "left": "910px"})
