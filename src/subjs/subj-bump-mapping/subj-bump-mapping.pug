@@ -1,0 +1,14 @@
+extends ../../layout
+
+block content
+    p Bump mapping is a family of techniques that utilize special textures to present more details on the object surface, in addition to the plain diffuse color. Here I'll implement some most well-known ones with a simple set of assets. Note that some of them can be combined to achieve better results.
+
+    p Since the terminologies might be used differently in other contexts, I'll give some basic clarifications here.
+
+    .row
+        .col
+            canvas#canvas-main
+        .col
+            div#div-gui
+
+    script(src="./subj-bump-mapping.js" type="module")
