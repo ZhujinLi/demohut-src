@@ -18,11 +18,6 @@ varying vec2 v_uv;
 varying vec3 v_lightDir;
 varying vec3 v_viewDir;
 
-vec3 calcDiffuse(vec3 c, vec3 normal, vec3 lightDir)
-{
-	return c * dot(lightDir, normal);
-}
-
 vec2 parallaxMapping(vec2 uv, vec3 viewDir)
 { 
     float height =  texture2D(u_heightfieldTex, uv).r;    
@@ -93,7 +88,7 @@ void main()
 		diffuseColor = texture2D(u_diffTex, uv).rgb;
 	else
 		diffuseColor = vec3(1., 1., 1.);
-	diffuseColor = calcDiffuse(diffuseColor, normal, lightDir);
+	diffuseColor = diffuseColor * dot(normal, lightDir);
 
 	gl_FragColor = vec4(diffuseColor, 1.0);
 }
