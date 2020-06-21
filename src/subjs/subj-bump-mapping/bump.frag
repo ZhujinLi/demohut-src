@@ -66,6 +66,17 @@ vec2 reliefMapping(vec2 uv, vec3 viewDir)
 	return curUv;
 }
 
+vec3 decodeNormal(vec3 v)
+{
+	// Restore xy to [-1, 1]
+	v = vec3(v.xy * 2. - 1., v.z);
+
+	// Transform to world
+	v = vec3(v.x, -v.y, v.z);
+
+	return normalize(v);
+}
+
 void main()
 {
 	vec3 lightDir = normalize(v_lightDir);
@@ -79,7 +90,7 @@ void main()
 
 	vec3 normal;
 	if (u_enableNormal)
-		normal = normalize(texture2D(u_normalTex, uv).rgb);
+		normal = decodeNormal(texture2D(u_normalTex, uv).rgb);
 	else
 		normal = vec3(0., 0., 1.);
 
