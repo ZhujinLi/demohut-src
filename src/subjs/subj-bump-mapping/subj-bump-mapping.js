@@ -1,4 +1,3 @@
-import Stats from "three/examples/jsm/libs/stats.module";
 import * as THREE from "three";
 import * as dat from "dat.gui";
 import vert from "./bump.vert";
@@ -27,10 +26,11 @@ const heightfieldTex = new THREE.TextureLoader().load("./heightfield.png");
 const guiOptions = {
     "diffuse texture": true,
     "normal texture": true,
-    "heightfield texture": "parallax mapping",
+    "heightfield texture": "relief mapping",
     params: {
         "tessellation": 50,
         "offset limiting": true,
+        "layer number": 10,
     },
 };
 
@@ -38,23 +38,16 @@ const gui = new dat.GUI({ autoPlace: false, width: 350 });
 gui.add(guiOptions, "diffuse texture").onChange(updateMesh);
 gui.add(guiOptions, "normal texture").onChange(updateMesh);
 gui.add(guiOptions, "heightfield texture",
-    ["off", "displacement mapping", "parallax mapping", "parallax occlusion mapping", "relief mapping"])
+    ["off", "displacement mapping", "parallax mapping", "relief mapping"])
     .onChange(onHeightfieldMethodChanged);
 let paramsFolder = null;
 document.getElementById('div-gui').appendChild(gui.domElement);
 onHeightfieldMethodChanged();
 
-const stats = new Stats();
-stats.showPanel(0);
-document.body.appendChild(stats.dom);
-
 requestAnimationFrame(render);
 
 function render() {
-    stats.begin();
     renderer.render(scene, camera);
-    stats.end();
-
     requestAnimationFrame(render);
 }
 
@@ -78,8 +71,10 @@ function updateMesh() {
     mtl.uniforms.u_enableNormal = { value: guiOptions["normal texture"] };
     mtl.uniforms.u_enableDisplacement = { value: guiOptions["heightfield texture"] == "displacement mapping" };
     mtl.uniforms.u_enableParallax = { value: guiOptions["heightfield texture"] == "parallax mapping" };
+    mtl.uniforms.u_enableRelief = { value: guiOptions["heightfield texture"] == "relief mapping" };
     mtl.uniforms.u_ratioTexPerWorld = { value: 1 / PLANE_SIZE };
     mtl.uniforms.u_offsetLimiting = { value: guiOptions.params["offset limiting"] };
+    mtl.uniforms.u_nLayers = { value: guiOptions.params["layer number"] };
     plane.material = mtl;
 }
 
@@ -95,6 +90,9 @@ function onHeightfieldMethodChanged() {
             break;
         case "parallax mapping":
             paramsFolder.add(guiOptions.params, "offset limiting").onChange(updateMesh);
+            break;
+        case "relief mapping":
+            paramsFolder.add(guiOptions.params, "layer number").min(1).max(50).onChange(updateMesh);
             break;
     }
 
