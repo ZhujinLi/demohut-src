@@ -1,3 +1,4 @@
+import Stats from "three/examples/jsm/libs/stats.module";
 import * as THREE from "three";
 import * as dat from "dat.gui";
 import vert from "./bump.vert";
@@ -26,8 +27,11 @@ const heightfieldTex = new THREE.TextureLoader().load("./heightfield.png");
 const guiOptions = {
     "diffuse texture": true,
     "normal texture": true,
-    "heightfield texture": "displacement mapping",
-    "tessellation": 50,
+    "heightfield texture": "parallax mapping",
+    params: {
+        "tessellation": 50,
+        "offset limiting": true,
+    },
 };
 
 const gui = new dat.GUI({ autoPlace: false, width: 350 });
@@ -40,28 +44,42 @@ let paramsFolder = null;
 document.getElementById('div-gui').appendChild(gui.domElement);
 onHeightfieldMethodChanged();
 
+const stats = new Stats();
+stats.showPanel(0);
+document.body.appendChild(stats.dom);
+
 requestAnimationFrame(render);
 
 function render() {
-    requestAnimationFrame(render);
+    stats.begin();
     renderer.render(scene, camera);
+    stats.end();
+
+    requestAnimationFrame(render);
 }
 
 function updateMesh() {
+    const PLANE_SIZE = 2.0;
+    const PLANE_DEPTH = 0.2;
+
     let tess = 1;
     if (guiOptions["heightfield texture"] == "displacement mapping")
-        tess = guiOptions["tessellation"];
+        tess = guiOptions.params["tessellation"];
 
-    const geo = new THREE.PlaneBufferGeometry(2, 2, tess, tess);
+    const geo = new THREE.PlaneBufferGeometry(PLANE_SIZE, PLANE_SIZE, tess, tess);
     plane.geometry = geo;
 
     const mtl = new THREE.ShaderMaterial({ vertexShader: vert, fragmentShader: frag });
-    mtl.uniforms.u_diffTex = { type: "t", value: diffTex };
-    mtl.uniforms.u_normalTex = { type: "t", value: normalTex };
-    mtl.uniforms.u_heightfieldTex = { type: "t", value: heightfieldTex };
+    mtl.uniforms.u_depth = { value: PLANE_DEPTH };
+    mtl.uniforms.u_diffTex = { value: diffTex };
+    mtl.uniforms.u_normalTex = { value: normalTex };
+    mtl.uniforms.u_heightfieldTex = { value: heightfieldTex };
     mtl.uniforms.u_enableDiff = { value: guiOptions["diffuse texture"] };
     mtl.uniforms.u_enableNormal = { value: guiOptions["normal texture"] };
     mtl.uniforms.u_enableDisplacement = { value: guiOptions["heightfield texture"] == "displacement mapping" };
+    mtl.uniforms.u_enableParallax = { value: guiOptions["heightfield texture"] == "parallax mapping" };
+    mtl.uniforms.u_ratioTexPerWorld = { value: 1 / PLANE_SIZE };
+    mtl.uniforms.u_offsetLimiting = { value: guiOptions.params["offset limiting"] };
     plane.material = mtl;
 }
 
@@ -73,7 +91,11 @@ function onHeightfieldMethodChanged() {
 
     switch (guiOptions["heightfield texture"]) {
         case "displacement mapping":
-            paramsFolder.add(guiOptions, "tessellation").min(1).max(100).onChange(updateMesh);
+            paramsFolder.add(guiOptions.params, "tessellation").min(1).max(100).onChange(updateMesh);
+            break;
+        case "parallax mapping":
+            paramsFolder.add(guiOptions.params, "offset limiting").onChange(updateMesh);
+            break;
     }
 
     updateMesh();
