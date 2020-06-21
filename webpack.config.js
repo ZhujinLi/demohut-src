@@ -9,6 +9,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const MAIN_TITLE = "DemoHut";
 
 const subjs = [
+    { name: "subj-bump-mapping", title: "Bump mapping" },
     { name: "subj-basic-shading", title: "Basic shading" },
     { name: "subj-log-scaling", title: "Logarithmic scaling" },
     { name: "subj-a-star", title: "A*" },
@@ -62,6 +63,10 @@ module.exports = {
             {
                 test: /\.(woff|woff2|eot|ttf|otf)$/,
                 use: ['file-loader',],
+            },
+            {
+                test: /\.(vert|frag)/i,
+                use: ['raw-loader',],
             },
         ]
     },
