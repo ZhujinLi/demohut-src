@@ -3,12 +3,34 @@ extends ../../layout
 block content
     p Bump mapping is a family of techniques that utilize special textures to present more details on the object surface, in addition to the plain diffuse color. Here I'll implement the most common ones with a simple set of assets. Note that some of them can be combined to achieve better results.
 
-    p Since the terminologies might be used differently in other contexts, I'll give some basic clarifications here.
+    p Here I simply implement the algorithms and would not explain much of these concepts. But as the terminologies might be used differently in other contexts, I'll give some basic clarifications here.
+
+    .sub-title Assets
+
+    ul
+        li Diffuse texture: rgb is its intrinsic diffuse color
+        li Normal texture: rgb is the surface normal vector
+        li Heightfield texture: r/g/b is the height value (in this example they are depth value)
+
+    .sub-title Mapping methods
+
+    ul
+        li Normal mapping: read the normal value from the normal texture in fragment shader
+        li Displacement mapping: read the heightfield texture in vertex shader and displace the z values of object geometry
+        li Parallax mapping: offset the texture coordinate in fragment shader with simple trigonometry
+        li Relief mapping (a generic term for parallax relief mapping, <b>parallax occlusion mapping</b> and steep parallax mapping): offset the texture coordinate in fragment shader, with offset calculated by approximation of the intersection between view ray and surface using multi-layer samples along the ray
 
     .row
         .col
             canvas#canvas-main
         .col
             div#div-gui
+
+    .sub-title References
+
+    ul
+        i
+            li Real-Time Rendering 3rd edition Chpts. 6.7
+            li #[a(href="https://learnopengl.com/Advanced-Lighting/Parallax-Mapping") LearnOpenGL - Parallax Mapping]
 
     script(src="./subj-bump-mapping.js" type="module")
