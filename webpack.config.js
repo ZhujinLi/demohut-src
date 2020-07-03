@@ -9,6 +9,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const MAIN_TITLE = "DemoHut";
 
 const subjs = [
+    { name: "subj-sudoku-gen", title: "Sudoku generator" },
     { name: "subj-bump-mapping", title: "Bump mapping" },
     { name: "subj-basic-shading", title: "Basic shading" },
     { name: "subj-log-scaling", title: "Logarithmic scaling" },
