@@ -100,7 +100,7 @@ module.exports = {
                     to: 'libs/'
                 },
                 {
-                    from: 'src/**/*.+(jpg|png|mp4|html|obj|gltf|mtl|bin)',
+                    from: 'src/**/*.+(jpg|png|mp4|html|obj|gltf|mtl|bin|json)',
                     to: '[1]',
                     test: /src\/(.*)/,
                 },

@@ -5,9 +5,10 @@ html
     link(rel="stylesheet", href="/main.css")
   body
     div#jumbotron.jumbotron.jumbotron-fluid.text-monospace
-      div.container
+      div.container(style="position: relative")
         h1
           a(href="/") DemoHut
+        a.text-secondary(href="/about_me.json", target="_blank", style="position: absolute; right: 15px; bottom: 0px;") About me
 
     div.container
       if backLink

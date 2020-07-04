@@ -1,0 +1,20 @@
+{
+    "name": "黎柱金/Zhujin Li",
+    "sex": "M",
+    "orientation": "heterosexual",
+    "location": "Beijing",
+    "education": "B. Eng., BUAA",
+    "occupation": "Graphics Software Engineer",
+    "programmingLanguages": [
+        "C++",
+        "Javascript",
+        "Python"
+    ],
+    "fieldsOfInterest": [
+        "Computer Graphics",
+        "Computer Vision"
+    ],
+    "academicPublications": "https://dblp.uni-trier.de/pers/hd/l/Li:Zhujin",
+    "homepage": "https://zhujinli.github.io",
+    "contact": "zhujin_li AT outlook DOT com"
+}

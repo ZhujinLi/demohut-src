@@ -5,6 +5,7 @@
   "license": "ISC",
   "repository": {},
   "scripts": {
+    "compile": "webpack",
     "start": "webpack-dev-server",
     "deploy": "webpack && rm -rf ../ZhujinLi.github.io/* && cp -R ./dist/* ../ZhujinLi.github.io/ && cd ../ZhujinLi.github.io/ && git add . && git commit --all --amend --no-edit && git push --force"
   },
