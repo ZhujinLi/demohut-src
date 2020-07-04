@@ -3,7 +3,9 @@
     "sex": "M",
     "orientation": "heterosexual",
     "location": "Beijing",
-    "education": "B. Eng., BUAA",
+    "education": [
+        "B.Eng., BUAA, 2016"
+    ],
     "occupation": "Graphics Software Engineer",
     "programmingLanguages": [
         "C++",
