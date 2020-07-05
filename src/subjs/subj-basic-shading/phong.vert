@@ -1,5 +1,3 @@
-export default /* glsl */`
-
 varying vec3 v_normal;
 varying vec3 v_position;
 
@@ -9,4 +7,3 @@ void main() {
 	v_normal = normalize(normal);
 	v_position = position;
 }
-`;

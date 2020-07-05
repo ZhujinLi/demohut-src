@@ -80,6 +80,8 @@ function render() {
     gouraudScene.add(new THREE.Mesh(globeGeo, gouraudMtl));
     renderer.setScissor(300, 0, 300, 300);
     renderer.setViewport(300, 0, 300, 300);
+    console.log(gouraudVert);
+    console.log(gouraudFrag);
     renderer.render(gouraudScene, camera);
 
     // Phong

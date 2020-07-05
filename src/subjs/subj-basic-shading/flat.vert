@@ -1,5 +1,3 @@
-export default /* glsl */`
-
 uniform vec3 u_lightIntensity;
 uniform vec3 u_lightPos;
 uniform vec3 u_diffColor;
@@ -26,4 +24,3 @@ void main() {
 
 	v_color = diff + spec;
 }
-`;
