@@ -1,12 +1,12 @@
 {
     "name": "黎柱金/Zhujin Li",
     "sex": "M",
-    "sexuality": "heterosexual",
+    "sexuality": "straight",
     "location": "Beijing",
     "education": [
-        "B.Eng., BUAA, 2016"
+        "BS in computer science, BUAA, 2016"
     ],
-    "occupation": "graphics software engineer",
+    "profession": "graphics software engineer",
     "programmingLanguages": [
         "C++",
         "Javascript",
