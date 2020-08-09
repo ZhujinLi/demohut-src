@@ -1,5 +1,3 @@
-const { avogadroDependencies } = require("mathjs");
-
 /** @type {HTMLCanvasElement} */
 const canvas = document.getElementById("canvas-under");
 
