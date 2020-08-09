@@ -9,6 +9,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const MAIN_TITLE = "DemoHut";
 
 const subjs = [
+    { name: "subj-wangzai", title: "旺仔与巨像" },
     { name: "subj-sudoku-gen", title: "Sudoku generator" },
     { name: "subj-bump-mapping", title: "Bump mapping" },
     { name: "subj-basic-shading", title: "Basic shading" },
@@ -129,5 +130,9 @@ module.exports = {
             three$: 'three/build/three.min.js',
             'three/.*$': 'three',
         },
+    },
+    devServer: {
+        https: true,
+        host: '0.0.0.0',
     },
 };

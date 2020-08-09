@@ -1,0 +1,10 @@
+extends ../../layout
+
+block content
+    div(style="position: relative; padding-bottom: 600px")
+        canvas#canvas-under(width="600px" height="600px" style="position: absolute")
+        img#img-pic(src="./pic.png" width="600px" height="600px" style="position: absolute")
+
+    p.text-secondary （素材版权归原作者所有，如有侵权请及时联系）
+
+    script(src="./subj-wangzai.js" type="module")
