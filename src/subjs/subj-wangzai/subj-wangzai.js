@@ -12,19 +12,17 @@ window.onmousemove = onmousemove;
 
 // For mobile, interact with gyroscope (requiring HTTPS)
 if (window.DeviceMotionEvent) {
+    window.ondevicemotion = ondevicemotion;
+
     // Permission prompt needs to be activated by user input on iPhone
-    window.ontouchmove = window.onclick = () => {
-        DeviceMotionEvent.requestPermission();
-        window.addEventListener('devicemotion', devicemotion);
-        window.ontouchmove = null;
-    };
+    window.onclick = () => DeviceMotionEvent.requestPermission();
 }
 
 /**
  * 
  * @param {DeviceMotionEvent} ev 
  */
-function devicemotion(ev) {
+function ondevicemotion(ev) {
     const x = -ev.accelerationIncludingGravity.x / 9.8 * 0.5 + 0.5;
     const y = ev.accelerationIncludingGravity.y / 9.8 * 0.5 + 0.5;
     drawEyeBalls(x, y);
