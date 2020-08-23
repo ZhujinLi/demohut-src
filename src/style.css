@@ -3,7 +3,7 @@
     src: url('./OpenSans-Regular.ttf');
 }
 
-body {
+html {
     font-family: OpenSans, Helvetica, Simsun;
 }
 

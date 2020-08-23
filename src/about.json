@@ -4,12 +4,12 @@
     "sexuality": "straight",
     "location": "Beijing",
     "education": [
-        "BS in computer science, BUAA, 2016"
+        "BS in computer science at BUAA, 2016"
     ],
     "profession": "graphics software engineer",
-    "programmingLanguages": [
+    "codingLanguages": [
         "C++",
-        "Javascript",
+        "JavaScript",
         "Python"
     ],
     "fieldsOfInterest": [
