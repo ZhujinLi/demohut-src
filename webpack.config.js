@@ -81,7 +81,7 @@ module.exports = {
                 subj_title: subj.title,
                 head_title: subj.title + " - " + MAIN_TITLE,
                 backLink: '/',
-                srcLink: 'https://gitee.com/xyuv/xyuv/tree/master/_source_code/src/subjs/' + subj.name,
+                srcLink: 'https://gitee.com/zj_li/zj_li/tree/master/_source_code/src/subjs/' + subj.name,
             }
         }))].concat([
             new HtmlWebpackPlugin({
