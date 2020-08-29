@@ -7,7 +7,7 @@
   "scripts": {
     "compile": "webpack",
     "start": "webpack-dev-server",
-    "deploy": "webpack && rm -rf ../ZhujinLi.github.io/* && cp -R ./dist/* ../ZhujinLi.github.io/ && cd ../ZhujinLi.github.io/ && git add . && git commit --all -m \"Update\" && git push"
+    "deploy": "webpack && rm -rf ../zj-li.gitee.io/* && cp -R ./dist/* ../zj-li.gitee.io/ && cd ../zj-li.gitee.io/ && git add . && git commit --all -m \"Update\" && git push --force"
   },
   "author": "zjli",
   "devDependencies": {
