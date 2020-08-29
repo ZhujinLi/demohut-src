@@ -31,7 +31,7 @@ cv['onRuntimeInitialized'] = () => {
         }
     });
 
-    setupVideo("https://zhujinli.github.io/subjs/subj-anim-curve/example.mp4", { l: 20, t: 150, r: 630, b: 1100 }, 0.6, 1.5);
+    setupVideo("https://zhujinli.github.io/hosting/anim-curve-example.mp4", { l: 20, t: 150, r: 630, b: 1100 }, 0.6, 1.5);
 };
 
 function setupVideo(path, roi, startTime, endTime) {
