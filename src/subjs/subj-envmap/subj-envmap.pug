@@ -1,0 +1,31 @@
+extends ../../layout
+
+block content
+    p Environment mapping is a texture-based technique that simulates reflections on objects' surfaces, or used directly to show surroundings like skybox.
+
+    p In order to access the environment map, the texture coordinates needs to be calculated, given the reflected view vector r in the map's space. Following are three common environment mapping approaches, each with its unique form of storage, and unique way of texture access calculation. From top to bottom they are:
+
+    dl
+        dt Cube mapping
+            dd
+                p This is the most popular one and has direct hardware supports on modern GPUs. A cube map consists of six square textures, each coresponding to one face of a box. The texture coordinate is the same as r. The underlying implementation is simple as well: the component with the maximum magnitude (say z) decides the face to be used, and the rest two components (xy) divided by z is the 2D texture coordinate on that face.
+        dt Latitude-Longitude Mapping (Blinn and Newell' Method)
+            dd
+                p As its name implies, this method flatten the imaginary globe of constellations onto a rectangle image. It's commonly used in panorama applications, due to its simplicity in storage. However, special treatment is needed if you are using this as proper environment map and the primitive of the object surface overlaps the left/right edge of the map, or texture coordinate interpolation would go wrong.
+        dt Sphere mapping
+            dd
+                p This method captures the full scene (yes, of all directions) into a single circle. It's very much view-dependent and doesn't fully utilize the storage.
+
+    canvas#canvas-main
+
+    p Note that I didn't use these environment maps after generating them, but the point should be clear (hopefully).
+
+    p The model used in the scene was obtained from #[a(href="https://poly.google.com/view/9RnzNvZgtDv") here].
+
+    .sub-title References
+
+    ul
+        i
+            li Real-Time Rendering 3rd edition Chpts. 8.4
+
+    script(src="./subj-envmap.js" type="module")
