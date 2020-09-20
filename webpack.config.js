@@ -9,6 +9,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const MAIN_TITLE = "DemoHut";
 
 const subjs = [
+    { name: "subj-envmap", title: "Environment mapping" },
     { name: "subj-wangzai", title: "旺仔与巨像" },
     { name: "subj-sudoku-gen", title: "Sudoku generator" },
     { name: "subj-bump-mapping", title: "Bump mapping" },
