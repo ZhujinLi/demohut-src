@@ -26,13 +26,13 @@ void main() {
     float absX = abs(ray.x);
     float absY = abs(ray.y);
     float absZ = abs(ray.z);
-    if (absX > absY && absX > absZ) {
+    if (absX >= absY && absX >= absZ) {
         if (ray.x > 0.) {
             gl_FragColor = texture2D(u_texPosX, vec2(ray.z, ray.y)/ray.x * 0.5 + 0.5);
         } else {
             gl_FragColor = texture2D(u_texNegX, vec2(-ray.z, ray.y)/-ray.x * 0.5 + 0.5);
         }
-    } else if (absY > absX && absY > absZ) {
+    } else if (absY >= absX && absY >= absZ) {
         if (ray.y > 0.) {
             gl_FragColor = texture2D(u_texPosY, vec2(ray.x, ray.z)/ray.y * 0.5 + 0.5);
         } else {

@@ -10,6 +10,7 @@ const W = 1024;
 const H = 1152;
 const CUBE_SIZE = W / 8;
 const SCENE_CENTER = new THREE.Vector3(-0.5, 1.2, 0);
+const CUBEMAP_RTT_SIZE = 1024;
 
 const renderer = new THREE.WebGLRenderer({ antialias: true, canvas: document.getElementById("canvas-main") });
 renderer.setPixelRatio(window.devicePixelRatio);
@@ -74,6 +75,18 @@ loader.load(
     (error) => { console.log(error); }
 );
 
+// Allocate render buffers for RTT
+const cubemapRenderTargets = [];
+const cubemapTextures = [];
+for (let i = 0; i < 6; i++) {
+    const cubemapRenderTarget = new THREE.WebGLRenderTarget(CUBEMAP_RTT_SIZE, CUBEMAP_RTT_SIZE, {
+        anisotropy: 16, minFilter: THREE.LinearMipMapLinearFilter, magFilter: THREE.LinearFilter, generateMipmaps: true,
+        wrapS: THREE.ClampToEdgeWrapping, wrapT: THREE.ClampToEdgeWrapping,
+    });
+    cubemapRenderTargets.push(cubemapRenderTarget);
+    cubemapTextures.push(cubemapRenderTarget.texture);
+}
+
 //
 
 animate(0);
@@ -81,7 +94,7 @@ animate(0);
 function animate(now) {
     requestAnimationFrame(animate);
 
-    // Oscillate the sphere
+    // Make oscillation movement of the ball
     ballMesh.position.setY(0.1 * Math.cos(now * 0.002) + SCENE_CENTER.y);
 
     // Render real scene on the left
@@ -89,84 +102,93 @@ function animate(now) {
     renderer.setViewport(0, 0, W / 2, H);
     renderer.render(scene, camera);
 
-    // First, render to screen cubemap's six faces at the top on the right side.
+    // Render to textures of the cubemap.
     // The order of six faces are: +x, -x, +y, -y, +z, -z,
     // where x-y plane is on the screen.
     const cubeAxes = calcCubeAxes();
     const cubeUps = calcCubeUps();
-    const cubeScreenAreas = calcCubeScreenAreas();
     const cubemapCamera = new THREE.PerspectiveCamera(90, 1, 0.01, 100);
     for (let i = 0; i < 6; i++) {
-        renderer.setScissor(cubeScreenAreas[i]);
-        renderer.setViewport(cubeScreenAreas[i]);
+        renderer.setScissor(0, 0, CUBEMAP_RTT_SIZE, CUBEMAP_RTT_SIZE);
+        renderer.setViewport(0, 0, CUBEMAP_RTT_SIZE, CUBEMAP_RTT_SIZE);
         cubemapCamera.position.copy(camera.position);
         cubemapCamera.up.copy(cubeUps[i]);
         cubemapCamera.lookAt(camera.position.clone().add(cubeAxes[i]));
+        renderer.setRenderTarget(cubemapRenderTargets[i]);
         renderer.render(scene, cubemapCamera);
     }
+    renderer.setRenderTarget(null);
 
-    // Save cubemap's textures for later use
-    const cubemapTextures = [];
-    for (let i = 0; i < 6; i++) {
-        const texSize = CUBE_SIZE * window.devicePixelRatio;
-        const tex = new THREE.DataTexture(
-            new Uint8Array(texSize * texSize * 3),
-            texSize, texSize, THREE.RGBFormat
-        );
-        const fbScreenPos = new THREE.Vector2(
-            cubeScreenAreas[i].x * window.devicePixelRatio,
-            cubeScreenAreas[i].y * window.devicePixelRatio);
-        renderer.copyFramebufferToTexture(fbScreenPos, tex);
-        cubemapTextures.push(tex);
+    // Show cubemap on the screen
+    {
+        const orthoCamera = new THREE.OrthographicCamera(-1, 1, 1, -1, -1, 1);
+        const orthoScene = new THREE.Scene();
+
+        const planeGeo = new THREE.PlaneBufferGeometry(2, 2);
+        const planeMtl = new THREE.MeshBasicMaterial();
+        const planeMesh = new THREE.Mesh(planeGeo, planeMtl);
+        orthoScene.add(planeMesh);
+
+        const screenAreas = calcCubeScreenAreas();
+        for (let i = 0; i < 6; i++) {
+            planeMtl.map = cubemapTextures[i];
+            renderer.setViewport(screenAreas[i]);
+            renderer.setScissor(screenAreas[i]);
+            renderer.render(orthoScene, orthoCamera);
+        }
     }
 
     // Render lat-lon map from cubemap textures
-    const latLonCamera = new THREE.OrthographicCamera(-2, 2, 1, -1, -1, 1);
-    const latLonScene = new THREE.Scene();
+    {
+        const orthoCamera = new THREE.OrthographicCamera(-2, 2, 1, -1, -1, 1);
+        const orthoScene = new THREE.Scene();
 
-    const latLonGeo = new THREE.PlaneBufferGeometry(4, 2);
-    const latLonMtl = new THREE.ShaderMaterial({
-        vertexShader: latLonVert,
-        fragmentShader: latLonFrag,
-        uniforms: {
-            u_texPosX: { value: cubemapTextures[0] },
-            u_texNegX: { value: cubemapTextures[1] },
-            u_texPosY: { value: cubemapTextures[2] },
-            u_texNegY: { value: cubemapTextures[3] },
-            u_texPosZ: { value: cubemapTextures[4] },
-            u_texNegZ: { value: cubemapTextures[5] },
-        }
-    });
-    const latLonMesh = new THREE.Mesh(latLonGeo, latLonMtl);
-    latLonScene.add(latLonMesh);
+        const planeGeo = new THREE.PlaneBufferGeometry(4, 2);
+        const planeMtl = new THREE.ShaderMaterial({
+            vertexShader: latLonVert,
+            fragmentShader: latLonFrag,
+            uniforms: {
+                u_texPosX: { value: cubemapTextures[0] },
+                u_texNegX: { value: cubemapTextures[1] },
+                u_texPosY: { value: cubemapTextures[2] },
+                u_texNegY: { value: cubemapTextures[3] },
+                u_texPosZ: { value: cubemapTextures[4] },
+                u_texNegZ: { value: cubemapTextures[5] },
+            }
+        });
+        const planeMesh = new THREE.Mesh(planeGeo, planeMtl);
+        orthoScene.add(planeMesh);
 
-    renderer.setViewport(W / 2, W / 2, W / 2, W / 4);
-    renderer.setScissor(W / 2, W / 2, W / 2, W / 4);
-    renderer.render(latLonScene, latLonCamera);
+        renderer.setViewport(W / 2, W / 2, W / 2, W / 4);
+        renderer.setScissor(W / 2, W / 2, W / 2, W / 4);
+        renderer.render(orthoScene, orthoCamera);
+    }
 
     // Render sphere map from cubemap textures
-    const sphereCamera = new THREE.OrthographicCamera(-1, 1, 1, -1, -1, 1);
-    const sphereScene = new THREE.Scene();
+    {
+        const orthoCamera = new THREE.OrthographicCamera(-1, 1, 1, -1, -1, 1);
+        const orthoScene = new THREE.Scene();
 
-    const sphereGeo = new THREE.PlaneBufferGeometry(4, 2);
-    const sphereMtl = new THREE.ShaderMaterial({
-        vertexShader: sphereVert,
-        fragmentShader: sphereFrag,
-        uniforms: {
-            u_texPosX: { value: cubemapTextures[0] },
-            u_texNegX: { value: cubemapTextures[1] },
-            u_texPosY: { value: cubemapTextures[2] },
-            u_texNegY: { value: cubemapTextures[3] },
-            u_texPosZ: { value: cubemapTextures[4] },
-            u_texNegZ: { value: cubemapTextures[5] },
-        }
-    });
-    const sphereMesh = new THREE.Mesh(sphereGeo, sphereMtl);
-    sphereScene.add(sphereMesh);
+        const planeGeo = new THREE.PlaneBufferGeometry(4, 2);
+        const planeMtl = new THREE.ShaderMaterial({
+            vertexShader: sphereVert,
+            fragmentShader: sphereFrag,
+            uniforms: {
+                u_texPosX: { value: cubemapTextures[0] },
+                u_texNegX: { value: cubemapTextures[1] },
+                u_texPosY: { value: cubemapTextures[2] },
+                u_texNegY: { value: cubemapTextures[3] },
+                u_texPosZ: { value: cubemapTextures[4] },
+                u_texNegZ: { value: cubemapTextures[5] },
+            }
+        });
+        const planeMesh = new THREE.Mesh(planeGeo, planeMtl);
+        orthoScene.add(planeMesh);
 
-    renderer.setViewport(W / 2, 0, W / 2, W / 2);
-    renderer.setScissor(W / 2, 0, W / 2, W / 2);
-    renderer.render(sphereScene, sphereCamera);
+        renderer.setViewport(W / 2, 0, W / 2, W / 2);
+        renderer.setScissor(W / 2, 0, W / 2, W / 2);
+        renderer.render(orthoScene, orthoCamera);
+    }
 }
 
 function calcCubeAxes() {
