@@ -82,7 +82,7 @@ module.exports = {
                 subj_title: subj.title,
                 head_title: subj.title + " - " + MAIN_TITLE,
                 backLink: '/',
-                srcLink: 'https://gitee.com/zj-li/zj-li/tree/master/_source_code/src/subjs/' + subj.name,
+                srcLink: 'https://github.com/ZhujinLi/demohut/tree/master/src/subjs/' + subj.name,
             }
         }))].concat([
             new HtmlWebpackPlugin({
@@ -91,7 +91,8 @@ module.exports = {
                 template: './src/index.pug',
                 templateParameters: {
                     subjs: subjs,
-                    head_title: MAIN_TITLE
+                    head_title: MAIN_TITLE,
+                    srcLink: "https://github.com/ZhujinLi/demohut",
                 },
             }),
             new MiniCssExtractPlugin(),
@@ -105,15 +106,6 @@ module.exports = {
                     from: 'src/**/*.+(jpg|png|mp4|html|obj|gltf|mtl|bin|json)',
                     to: '[1]',
                     test: /src\/(.*)/,
-                },
-                // Copy source code
-                {
-                    from: '+(webpack.config.js|package.json)',
-                    to: '_source_code/',
-                },
-                {
-                    from: 'src/**',
-                    to: '_source_code/',
                 },
             ]),
             new webpack.ProvidePlugin({

@@ -21,24 +21,13 @@ html
       div#content
         block content
 
-      if srcLink
-        a.text-right(href= srcLink, target='_blank')
-          p → view src
-
       .hr-theme-slash-2
         .hr-line.l
         .hr-icon
-          a(href='https://www.cnblogs.com/xrst')
-            img(src='/links/cnblogs.png' height='32px')
-        .hr-icon
-          a(href='http://jsrun.net/u/zjli')
-            img(src='/links/jsrun.png' height='32px')
-        .hr-icon
-          a(href='https://github.com/ZhujinLi')
-            img(src='/links/github.png' height='32px')
-        .hr-icon
-          a(href='https://www.shadertoy.com/user/zjli')
-            img(src='/links/shadertoy.png' height='32px')
+          a(href="https://zj-li.gitee.io")
+            img(src='/res/home.png' height='32px')
         .hr-line.r
+
+      p.text-center.text-secondary(style="font-size: 15px") The source code is hosted on #[a(href= srcLink, target="_blank") Github].
 
     script(src="/main.js" type="module")
