@@ -2,13 +2,13 @@ doctype html
 html
   head
     title= head_title
-    link(rel="stylesheet" href="/main.css")
+    link(rel="stylesheet" href="/demohut/main.css")
     meta(charset="UTF-8")
   body
     div#jumbotron.jumbotron.jumbotron-fluid.text-monospace
       div.container(style="position: relative")
         h1
-          a(href="/") DemoHut
+          a(href="/demohut/") DemoHut
 
     div.container
       if backLink
@@ -25,9 +25,9 @@ html
         .hr-line.l
         .hr-icon
           a(href="https://zj-li.gitee.io")
-            img(src='/res/home.png' height='32px')
+            img(src='/demohut/res/home.png' height='32px')
         .hr-line.r
 
       p.text-center.text-secondary(style="font-size: 15px") The source code is hosted on #[a(href= srcLink, target="_blank") Github].
 
-    script(src="/main.js" type="module")
+    script(src="/demohut/main.js" type="module")

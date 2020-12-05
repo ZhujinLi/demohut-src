@@ -81,7 +81,7 @@ module.exports = {
             templateParameters: {
                 subj_title: subj.title,
                 head_title: subj.title + " - " + MAIN_TITLE,
-                backLink: '/',
+                backLink: '/demohut/',
                 srcLink: 'https://github.com/ZhujinLi/demohut/tree/master/src/subjs/' + subj.name,
             }
         }))].concat([
@@ -127,5 +127,6 @@ module.exports = {
     devServer: {
         https: true,
         host: '0.0.0.0',
+        publicPath: '/demohut'
     },
 };
