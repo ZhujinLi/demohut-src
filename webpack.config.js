@@ -104,8 +104,10 @@ module.exports = {
                 },
                 {
                     from: 'src/**/*.+(jpg|png|mp4|html|obj|gltf|mtl|bin|json)',
-                    to: '[1]',
-                    test: /src\/(.*)/,
+                    to: './',
+                    transformPath: (targetPath) => {
+                        return path.relative('src/', targetPath);
+                    }
                 },
             ]),
             new webpack.ProvidePlugin({
