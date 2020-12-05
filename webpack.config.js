@@ -94,11 +94,6 @@ module.exports = {
                     head_title: MAIN_TITLE
                 },
             }),
-            new HtmlWebpackPlugin({
-                inject: false,
-                filename: 'about.html',
-                template: './src/about.pug',
-            }),
             new MiniCssExtractPlugin(),
             new CleanWebpackPlugin(),
             new CopyPlugin([
