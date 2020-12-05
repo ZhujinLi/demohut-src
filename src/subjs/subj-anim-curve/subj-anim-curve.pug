@@ -2,14 +2,14 @@ extends ../../layout
 
 block content
     p Animations do not have to be linear. With the help of Bezier curve, we can create more vibrant transitions like this one from #[a(href="https://material.io/design/motion/speed.html" target="_blank") Google Material Design]:
-    
+
     video.video-fluid.z-depth-1(autoplay loop muted height="300")
         source(src="https://zhujinli.github.io/hosting/material_standard_curve.mp4" type="video/mp4")
 
     p Modern Web languages have built-in support for these curves. Try it out #[a(href="https://cubic-bezier.com/" target="_blank") here].
-    
+
     p Recently a sudden thought came to me: how commonly are these curve used in real world UI designs? To find out, I have to 1) make some screen recordings, and then 2) reverse-engineer the original animation curve out.
-    
+
     p The first step is easy, since most mobile phones have embedded screen recording function. For the second part, which is a bit tricky, I'll seek a little help from OpenCV's object tracking algorithms.
 
     hr
@@ -21,40 +21,40 @@ block content
     #opencv-content(style="display: none")
         .row
             .col-lg
-                h6 File: (I'm using #[a(href="https://zhujinli.github.io/hosting/anim-curve-example.mp4", target="_blank") this] as an example)
+                h6 File: (I'm using #[a(href="https://zhujinli.github.io/hosting/anim-curve-example.mp4" target="_blank") this] as an example)
                 input#input-video-file.form-control-file(type="file")
                 br
 
                 h6 ROI:
                 div.row
                     div.col-md
-                        input.custom-range#slider-roi-l(type="range", min="0", max="1", step="0.01")
+                        input.custom-range#slider-roi-l(type="range" min="0" max="1" step="0.01")
                     div.col-md#label-roi-l
                 div.row
                     div.col-md
-                        input.custom-range#slider-roi-t(type="range", min="0", max="1", step="0.01")
+                        input.custom-range#slider-roi-t(type="range" min="0" max="1" step="0.01")
                     div.col-md#label-roi-t
                 div.row
                     div.col-md
-                        input.custom-range#slider-roi-r(type="range", min="0", max="1", step="0.01")
+                        input.custom-range#slider-roi-r(type="range" min="0" max="1" step="0.01")
                     div.col-md#label-roi-r
                 div.row
                     div.col-md
-                        input.custom-range#slider-roi-b(type="range", min="0", max="1", step="0.01")
+                        input.custom-range#slider-roi-b(type="range" min="0" max="1" step="0.01")
                     div.col-md#label-roi-b
                 br
 
                 h6 Start time:
                 div.row
                     div.col-md
-                        input.custom-range#slider-start-time(type="range", min="0", max="1", step="0.02")
+                        input.custom-range#slider-start-time(type="range" min="0" max="1" step="0.02")
                     div.col-md#label-start-time
                 br
 
                 h6 End time:
                 div.row
                     div.col-md
-                        input.custom-range#slider-end-time(type="range", min="0", max="1", step="0.02")
+                        input.custom-range#slider-end-time(type="range" min="0" max="1" step="0.02")
                     div.col-md#label-end-time
                 br
 
@@ -74,8 +74,8 @@ block content
     p All the codes are run on the browser, so it might take a while before OpenCV.js is loaded.
 
     p The idea is quite simple. For every pair of consecutive frames, <strong>cv.findTransformECC()</strong> is called to evaluate a 2*3 affine transformation matrix. I then extract the translation, rotation and scaling components from it, independently.
-    
+
     p The default example works well on my Opera/MacOS, and the result shows the translation animation curve is indeed a Bezier one. You can try with your own recording videos (only your browser can see the content).
 
-    script(src='/libs/opencv.2a52e44bc6.js')
+    script(src='/demohut/libs/opencv.2a52e44bc6.js')
     script(src="./subj-anim-curve.js" type="module")
