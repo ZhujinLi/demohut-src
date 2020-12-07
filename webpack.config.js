@@ -103,7 +103,7 @@ module.exports = {
                     to: 'libs/'
                 },
                 {
-                    from: 'src/**/*.+(jpg|png|mp4|html|obj|gltf|mtl|bin|json)',
+                    from: 'src/**/*.+(jpg|ico|png|mp4|html|obj|gltf|mtl|bin|json)',
                     to: './',
                     transformPath: (targetPath) => {
                         return path.relative('src/', targetPath);
