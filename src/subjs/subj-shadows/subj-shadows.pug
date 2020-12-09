@@ -1,18 +1,18 @@
 extends ../../layout
 
 block content
-    p Shadows are important elements in creating realistic images and in providing the user with visual cues about object placement. Here I'll present three real-time shadow techniques from distinct aspects, which can be combined, to show how shadows can make a significant difference to rendering quality. As for implementation, I'm going with three.js's built-in functions rather than crafting them from the ground up, since shadows in three.js are so handy to use and very powerful.
+    p Shadows are important elements in creating realistic images and in providing the user with visual cues about object placement. Here I'll present three real-time shadow techniques from different aspects, which can be combined together, to show how shadows can make a significant difference to rendering quality.
 
     dl
-        dt Shadow mapping
+        dt Hard shadows: shadow mapping
             dd
-                p It is the mainstream technique for implementing hard shadows. Compared to another technique called <i>Shadow Volume</i>, it has the benefit of more predictable rendering cost, but suffers from aliasing due to resolution limitations. Both methods have been vastly explored over the years, and I'm choosing shadow mapping here because it's the default option in three.js. Basically, the scene is first rendered to a shadow map, which is a depth texture from the camera's point of view, then in the ordinary pass, each pixel is tested against the shadow map to determine whether it's occluded or not.
-        dt Percentage-closer filtering (PCF)
+                p Shadow mapping is the mainstream method for implementing hard shadows. Compared to another technique called <i>Shadow Volume</i>, it has the benefit of more predictable rendering cost, but suffers from aliasing issues due to resolution limitations. Both methods have been vastly explored over the years, and I'm choosing shadow mapping here because it's the default option in three.js. Basically, the scene is first rendered to a shadow map, which is a depth texture from the camera's point of view, then in the ordinary pass, each pixel is tested against the shadow map to determine whether it's occluded or not.
+        dt Soft shadows: percentage-closer soft shadows (PCSS)
             dd
-                p If the light source has an area (in contrast to ideal point light or directional light), the shadows appear soft, i.e., sharper as objects contact each other and more blurry (softer) the further they are apart. A simple solution is to approximate the area light by using a number of point lights, but it is very computation intensive. Percentage-closer filtering, an extension of shadow mapping, is proposed to provide fast pseudo-soft shadows. Instead of representing occlusion of each pixel in binary form, it tries to estimate the percentage in its neighborhood that is visible to the light. This technique is also used to ameliorate aliasing artifacts of shadow mapping.
-        dt Screen-space ambient occlusion (SSAO)
+                p If the light source has an area (in contrast to ideal point light or directional light), the shadows appear soft, i.e., sharper as objects contact each other and more blurry (softer) the further they are apart. A simple solution to get soft shadows is to approximate the area light by using a number of point lights, however it is very computation intensive. Percentage-closer soft shadows, a technique based on shadow mapping and percentage-closer filtering (PCF), has been proposed to provide fast and high quality pseudo-soft shadows. Instead of representing occlusion of each pixel in binary form, it tries to estimate the percentage in its neighborhood that is visible to the light, thus can produce gradient around shadow edges.
+        dt Ambient occlusion: screen-space ambient occlusion (SSAO)
             dd
-                p Ambient occlusion is a special kind of shadow effect with respect to ambient lights. Consider a fully illuminated room: even without explicit occluders, a pixel on the floor in the middle of room is much more brighter than, say, a pixel in the corner. This is because the walls can also be seen as implicit occluders. Such effects cannot be realized by above two shadow techniques, but with ambient occlusion only. Among the others, SSAO is the most popular ambient occlusion algorithm, since its first use in <i>Crysis</i>. It is efficient in its independency of scene complexity and that each pixel's occlusion is evaluated by making use of readily available screen z-buffer.
+                p Ambient occlusion is a special kind of shadow effect when there are ambient lights. Consider a fully illuminated room: even without explicit occluders, a pixel on the floor in the middle of room looks much more brighter than, say, a pixel in the corner. This is because the former is more exposed to lights (180 degrees in contrast to 90 degrees in the latter case). Such effects can be achieved by a family of techniques called ambient occlusion. Among the others, SSAO has become the most popular one since its first use in <i>Crysis</i>. It is notable for its efficiency due to its independency of scene complexity and that each pixel's occlusion is evaluated using readily available screen z-buffer.
 
     div(style={"position": "relative"})
         canvas#canvas-main
@@ -24,10 +24,8 @@ block content
         li
             i Real-Time Rendering 3rd edition Chpts. 9
         li
-            a(href="https://threejsfundamentals.org/threejs/lessons/threejs-shadows.html") Three.js Shadows
+            a(href="https://threejsfundamentals.org/threejs/lessons/threejs-shadows.html") Three.js Shadows Tutorial
         li
             a(href="https://developer.download.nvidia.cn/shaderlibrary/docs/shadow_PCSS.pdf") Percentage-Closer Soft Shadows 
-        li
-            a(href="http://www.ogldev.org/www/tutorial45/tutorial45.html") Screen Space Ambient Occlusion
 
     script(src="./subj-shadows.js" type="module")

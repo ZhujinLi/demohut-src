@@ -1,5 +1,5 @@
 
-				#define LIGHT_WORLD_SIZE 0.03
+				#define LIGHT_WORLD_SIZE 0.02
 				#define LIGHT_FRUSTUM_WIDTH 20.0
 				#define LIGHT_SIZE_UV (LIGHT_WORLD_SIZE / LIGHT_FRUSTUM_WIDTH)
 				#define NEAR_PLANE 9.5

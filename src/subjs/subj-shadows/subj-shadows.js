@@ -16,18 +16,18 @@ const renderer = new THREE.WebGLRenderer({ antialias: true, canvas: document.get
 renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(W, H);
 renderer.shadowMap.enabled = true;
+renderer.shadowMap.autoUpdate = true;
 
 const camera = new THREE.PerspectiveCamera(30, W / H);
 camera.position.set(1.7, 18, -1.6);
 camera.up.set(0, 1, 0);
 
 const scene = new THREE.Scene();
-scene.add(new THREE.AxesHelper(10));
 
-const ambientLight = new THREE.AmbientLight(0xffffff, 0.1);
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
 scene.add(ambientLight);
 
-const light = new THREE.DirectionalLight(0xffffff, 0.9);
+const light = new THREE.DirectionalLight(0xffffff, 0.8);
 light.position.set(2, 8, 4);
 light.lookAt(-100, -100, 100);
 light.castShadow = true;
@@ -36,7 +36,6 @@ light.shadow.camera.top = light.shadow.camera.right = 10;
 light.shadow.camera.left = light.shadow.camera.bottom = -10;
 light.shadow.camera.far = 20;
 scene.add(light);
-scene.add(new THREE.CameraHelper(light.shadow.camera));
 
 const ballGeo = new THREE.SphereBufferGeometry(0.5, 30, 30);
 const ballMtl = new THREE.MeshPhongMaterial({ color: "#e07000" });
@@ -85,18 +84,19 @@ wall2.rotateY(Math.PI / 2);
 scene.add(wall2);
 
 // overwrite shadowmap code
+const defaultShadowShader = THREE.ShaderChunk.shadowmap_pars_fragment;
+let pcssShadowShader;
 {
-    let shader = THREE.ShaderChunk.shadowmap_pars_fragment;
-    shader = shader.replace(
+    pcssShadowShader = THREE.ShaderChunk.shadowmap_pars_fragment;
+    pcssShadowShader = pcssShadowShader.replace(
         '#ifdef USE_SHADOWMAP',
         '#ifdef USE_SHADOWMAP' + pcss
     );
-    shader = shader.replace(
+    pcssShadowShader = pcssShadowShader.replace(
         '#if defined( SHADOWMAP_TYPE_PCF )',
         '\nreturn PCSS( shadowMap, shadowCoord );\n' +
         '#if defined( SHADOWMAP_TYPE_PCF )'
     );
-    THREE.ShaderChunk.shadowmap_pars_fragment = shader;
 }
 
 const ctrl = new OrbitControls(camera, renderer.domElement);
@@ -111,18 +111,24 @@ const ssaoPass = new SSAOPass(scene, camera, W, H);
 ssaoPass.kernelRadius = 0.3;
 ssaoPass.minDistance = 0.00003;
 ssaoPass.maxDistance = 0.02;
-// ssaoPass.output = SSAOPass.OUTPUT.SSAO;
 composer.addPass(ssaoPass);
 
 const guiOptions = {
-    "shadow mapping": true
+    "shadow mapping": true,
+    "PCSS": true,
+    "SSAO": true,
 };
 
 const gui = new dat.GUI({ autoPlace: false });
 document.getElementById("gui").appendChild(gui.domElement);
 gui.add(guiOptions, "shadow mapping").onChange(enableShadowMapping);
+gui.add(guiOptions, "PCSS").onChange(enablePCSS);
+gui.add(guiOptions, "SSAO");
+
+let needsTurnOnShadowMapping = false;
 
 enableShadowMapping(guiOptions["shadow mapping"]);
+enablePCSS(guiOptions["PCSS"]);
 
 animate(0);
 
@@ -130,9 +136,34 @@ function enableShadowMapping(enabled) {
     light.castShadow = enabled;
 }
 
+function enablePCSS(enabled) {
+    if (enabled) {
+        THREE.ShaderChunk.shadowmap_pars_fragment = pcssShadowShader;
+    } else {
+        THREE.ShaderChunk.shadowmap_pars_fragment = defaultShadowShader;
+    }
+
+    // I haven't figured out how to make hot update work. The only way so far is to
+    // turn off the shadow and turn on again.
+    if (light.castShadow) {
+        light.castShadow = false;
+        needsTurnOnShadowMapping = true;
+    }
+}
+
 function animate(time) {
     ball.position.setY(3 + 2.5 * Math.cos(time * 0.002));
-    composer.render();
-    // renderer.render(scene, camera);
+
+    if (guiOptions.SSAO) {
+        composer.render();
+    } else {
+        renderer.render(scene, camera);
+    }
+
+    if (needsTurnOnShadowMapping) {
+        needsTurnOnShadowMapping = false;
+        light.castShadow = true;
+    }
+
     requestAnimationFrame(animate);
 }
