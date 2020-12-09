@@ -1,6 +1,11 @@
+// After extensive research, I've found that core three.js doesn't provide high quality soft shadows,
+// even with PCFSoftShadowMap (it uses PCF for anti-aliasing purpose). So I refer to this third-party
+// PCSS implementation with customized shader: https://threejs.org/examples/webgl_shadowmap_pcss.html
+
 import * as THREE from "three";
-import * as dat from "dat.gui";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+import * as dat from "dat.gui";
+import pcss from "./pcss.inject.frag";
 
 const W = 800;
 const H = 600;
@@ -10,54 +15,66 @@ renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(W, H);
 renderer.shadowMap.enabled = true;
 
-const camera = new THREE.PerspectiveCamera(70, W / H);
-camera.position.set(-1.2, 1.2, 1.2);
+const camera = new THREE.PerspectiveCamera(30, W / H);
+camera.position.set(12, 12, 12);
 camera.lookAt(0, 0, 0);
-camera.up.set(0, 0, 1);
+camera.up.set(0, 1, 0);
 
 const scene = new THREE.Scene();
+scene.add(new THREE.AxesHelper(10));
 
-scene.add(new THREE.AxesHelper());
-
-const ambientLight = new THREE.AmbientLight("white", 0.7);
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
 scene.add(ambientLight);
 
-const pointLight = new THREE.PointLight("white", 0.3);
-pointLight.position.set(1.8, 1.4, 1.2);
-pointLight.lookAt(0, 0, 0);
-pointLight.castShadow = true;
-pointLight.shadow.mapSize.set(1024, 1024);
-scene.add(pointLight);
+const light = new THREE.DirectionalLight(0xffffff, 0.8);
+light.position.set(2, 8, 4);
+light.castShadow = true;
+light.shadow.mapSize.set(1024, 1024);
+light.shadow.camera.far = 20;
+scene.add(light);
+scene.add(new THREE.CameraHelper(light.shadow.camera));
 
-// const spotLight = new THREE.SpotLight("white", 0.3);
-// spotLight.decay = 2;
-// console.log(spotLight.decay);
-// spotLight.position.set(1.8, 1.4, 1.2);
-// spotLight.castShadow = true;
-// spotLight.shadow.camera.fov = 90;
-// spotLight.shadow.mapSize.set(2048, 2048);
-// scene.add(spotLight);
+const ballGeo = new THREE.SphereBufferGeometry(0.5, 30, 30);
+const ballMtl = new THREE.MeshPhongMaterial({ color: "#e07000" });
+const ball = new THREE.Mesh(ballGeo, ballMtl);
+ball.position.set(1.5, 0, -3.5);
+ball.castShadow = true;
+scene.add(ball);
 
-const roomGeo = new THREE.BoxBufferGeometry(4, 4, 4);
-const roomMtl = new THREE.MeshPhongMaterial({ color: "#fffff0", side: THREE.DoubleSide });
-const roomMesh = new THREE.Mesh(roomGeo, roomMtl);
-roomMesh.receiveShadow = true;
-scene.add(roomMesh);
+const loader = new THREE.TextureLoader();
+const texture = loader.load('./checker.png');
+texture.wrapS = THREE.RepeatWrapping;
+texture.wrapT = THREE.RepeatWrapping;
+texture.magFilter = THREE.NearestFilter;
+texture.repeat.set(10000, 10000);
 
-const cubeGeo = new THREE.BoxBufferGeometry(0.5, 0.5, 2);
-const cubeMtl = new THREE.MeshPhongMaterial({ color: "#80c0f0" });
-const cubeMesh = new THREE.Mesh(cubeGeo, cubeMtl);
-cubeMesh.position.z = -1;
-cubeMesh.castShadow = true;
-cubeMesh.receiveShadow = true;
-scene.add(cubeMesh);
+const groundGeo = new THREE.PlaneBufferGeometry(20000, 20000, 8, 8);
+const groundMtl = new THREE.MeshPhongMaterial({ specular: 0x222222, map: texture });
+const ground = new THREE.Mesh(groundGeo, groundMtl);
+ground.rotation.x = - Math.PI / 2;
+ground.receiveShadow = true;
+scene.add(ground);
 
-const ballGeo = new THREE.SphereBufferGeometry(0.3, 30, 30);
-const ballMtl = new THREE.MeshPhongMaterial({ color: "#c05000" });
-const ballMesh = new THREE.Mesh(ballGeo, ballMtl);
-ballMesh.position.set(0.5, 0.8, -1.5);
-ballMesh.castShadow = true;
-scene.add(ballMesh);
+const columnGeo = new THREE.BoxBufferGeometry(1, 4, 1);
+const columnMtl = new THREE.MeshPhongMaterial({ color: 0x4080c0 });
+const column = new THREE.Mesh(columnGeo, columnMtl);
+column.position.y = 2;
+column.castShadow = true;
+column.receiveShadow = true;
+scene.add(column);
+
+// overwrite shadowmap code
+let shader = THREE.ShaderChunk.shadowmap_pars_fragment;
+shader = shader.replace(
+    '#ifdef USE_SHADOWMAP',
+    '#ifdef USE_SHADOWMAP' + pcss
+);
+shader = shader.replace(
+    '#if defined( SHADOWMAP_TYPE_PCF )',
+    '\nreturn PCSS( shadowMap, shadowCoord );\n' +
+    '#if defined( SHADOWMAP_TYPE_PCF )'
+);
+THREE.ShaderChunk.shadowmap_pars_fragment = shader;
 
 const ctrl = new OrbitControls(camera, renderer.domElement);
 ctrl.enableZoom = false;
@@ -75,11 +92,11 @@ enableShadowMapping(guiOptions["shadow mapping"]);
 animate(0);
 
 function enableShadowMapping(enabled) {
-    pointLight.castShadow = enabled;
+    light.castShadow = enabled;
 }
 
 function animate(time) {
-    ballMesh.position.setZ(-1.5 + 0.5 * Math.cos(time * 0.002));
+    ball.position.setY(2 + 1.5 * Math.cos(time * 0.002));
     renderer.render(scene, camera);
     requestAnimationFrame(animate);
 }
