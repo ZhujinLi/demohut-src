@@ -4,6 +4,8 @@
 
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
+import { SSAOPass } from 'three/examples/jsm/postprocessing/SSAOPass';
 import * as dat from "dat.gui";
 import pcss from "./pcss.inject.frag";
 
@@ -103,6 +105,15 @@ ctrl.update();
 ctrl.enableZoom = false;
 ctrl.maxPolarAngle = Math.PI / 2 - 0.01;
 
+const composer = new EffectComposer(renderer);
+
+const ssaoPass = new SSAOPass(scene, camera, W, H);
+ssaoPass.kernelRadius = 0.3;
+ssaoPass.minDistance = 0.00003;
+ssaoPass.maxDistance = 0.02;
+// ssaoPass.output = SSAOPass.OUTPUT.SSAO;
+composer.addPass(ssaoPass);
+
 const guiOptions = {
     "shadow mapping": true
 };
@@ -121,6 +132,7 @@ function enableShadowMapping(enabled) {
 
 function animate(time) {
     ball.position.setY(3 + 2.5 * Math.cos(time * 0.002));
-    renderer.render(scene, camera);
+    composer.render();
+    // renderer.render(scene, camera);
     requestAnimationFrame(animate);
 }
