@@ -18,7 +18,7 @@ renderer.setSize(W, H);
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.autoUpdate = true;
 
-const camera = new THREE.PerspectiveCamera(30, W / H);
+const camera = new THREE.PerspectiveCamera(30, W / H, 0.1, 100);
 camera.position.set(1.7, 18, -1.6);
 camera.up.set(0, 1, 0);
 
@@ -45,14 +45,14 @@ ball.castShadow = true;
 scene.add(ball);
 
 const loader = new THREE.TextureLoader();
-const texture = loader.load('./checker.png');
+const texture = new THREE.TextureLoader().load('./grass.jpg');
 texture.wrapS = THREE.RepeatWrapping;
 texture.wrapT = THREE.RepeatWrapping;
-texture.magFilter = THREE.NearestFilter;
-texture.repeat.set(10000, 10000);
+texture.anisotropy = 16;
+texture.repeat.set(100, 100);
 
-const groundGeo = new THREE.PlaneBufferGeometry(20000, 20000, 8, 8);
-const groundMtl = new THREE.MeshPhongMaterial({ specular: 0x222222, map: texture });
+const groundGeo = new THREE.PlaneBufferGeometry(1000, 1000);
+const groundMtl = new THREE.MeshPhongMaterial({ map: texture });
 const ground = new THREE.Mesh(groundGeo, groundMtl);
 ground.rotation.x = - Math.PI / 2;
 ground.receiveShadow = true;
@@ -108,9 +108,9 @@ ctrl.maxPolarAngle = Math.PI / 2 - 0.01;
 const composer = new EffectComposer(renderer);
 
 const ssaoPass = new SSAOPass(scene, camera, W, H);
-ssaoPass.kernelRadius = 0.3;
-ssaoPass.minDistance = 0.00003;
-ssaoPass.maxDistance = 0.02;
+ssaoPass.kernelRadius = 0.4;
+ssaoPass.minDistance = 0.0005;
+ssaoPass.maxDistance = 0.01;
 composer.addPass(ssaoPass);
 
 const guiOptions = {
