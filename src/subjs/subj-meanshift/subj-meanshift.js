@@ -17,6 +17,7 @@ const rect = two.makeRectangle(300, 200, 200, 100);
 rect.fill = GREEN;
 rect.opacity = 0.3;
 rect.noStroke();
+rect.visible = false;
 
 let points = [];
 for (let i = 0; i < 1000; i++) {
@@ -27,26 +28,91 @@ for (let i = 0; i < 1000; i++) {
 }
 
 const rectCenter = makeCross(GREEN);
+rectCenter.visible = false;
 
 const meanPoint = makeCross(ORANGE);
+meanPoint.visible = false;
 
-two.bind('update', animate).play();
+const text = new Two.Text("Initialize an area", W / 2, H / 2);
+text.size = 32;
+text.fill = '#000000';
+two.add(text);
 
-function animate() {
-    const mean = calcMean();
-    const delta = { x: mean.x - rect.position.x, y: mean.y - rect.position.y };
+let running = false;
 
-    meanPoint.position.x = mean.x;
-    meanPoint.position.y = mean.y;
+let areaStartX = 0;
+let areaStartY = 0;
 
-    rect.position.x += delta.x / 50;
-    rect.position.y += delta.y / 50;
+let dragging = false;
+
+document.getElementById('div-main').onmousedown = (e) => {
+    running = false;
+    dragging = true;
+
+    text.visible = false;
+    rect.visible = true;
+    rectCenter.visible = true;
+    meanPoint.visible = false;
+
+    areaStartX = e.offsetX;
+    areaStartY = e.offsetY;
+
+    rect.position.x = areaStartX;
+    rect.position.y = areaStartY;
+    rect.width = 0;
+    rect.height = 0;
+}
+
+document.getElementById('div-main').onmousemove = (e) => {
+    if (dragging) {
+        const areaLeft = Math.min(e.offsetX, areaStartX);
+        const areaTop = Math.min(e.offsetY, areaStartY);
+        const areaRight = Math.max(e.offsetX, areaStartX);
+        const areaBottom = Math.max(e.offsetY, areaStartY);
+
+        rect.position.x = (areaLeft + areaRight) / 2;
+        rect.position.y = (areaTop + areaBottom) / 2;
+        rect.width = (areaRight - areaLeft);
+        rect.height = (areaBottom - areaTop);
+    }
+}
+
+document.getElementById('div-main').onmouseup = () => {
+    meanPoint.visible = true;
+    running = true;
+    dragging = false;
+}
+
+two.bind('update', animate);
+two.play();
+
+///
+
+function animate(frameCount) {
+    if (running) {
+        const mean = calcMean();
+        if (mean != null) {
+            const delta = { x: mean.x - rect.position.x, y: mean.y - rect.position.y };
+
+            meanPoint.position.x = mean.x;
+            meanPoint.position.y = mean.y;
+
+            rect.position.x += delta.x / 50;
+            rect.position.y += delta.y / 50;
+        }
+    }
 
     rectCenter.position.x = rect.position.x;
     rectCenter.position.y = rect.position.y;
 
-    for (let i = 0; i < points.length; i++) {
-        enablePointHighlight(points[i], inside(points[i], rect));
+    if (rect.visible) {
+        for (let i = 0; i < points.length; i++) {
+            enablePointHighlight(points[i], inside(points[i], rect));
+        }
+    }
+
+    if (text.visible) {
+        text.opacity = Math.sin(frameCount * 0.05) + 1;
     }
 }
 
@@ -60,14 +126,17 @@ function calcMean() {
             y += points[i].position.y;
         }
     }
-    return { x: x / cnt, y: y / cnt };
+    if (cnt > 0)
+        return { x: x / cnt, y: y / cnt };
+    else
+        return null;
 }
 
 function makeCross(color) {
-    const hor = two.makeLine(-5, 0, 5, 0);
+    const hor = two.makeLine(-10, 0, 10, 0);
     hor.stroke = color;
 
-    const ver = two.makeLine(0, -5, 0, 5);
+    const ver = two.makeLine(0, -10, 0, 10);
     ver.stroke = color;
 
     const group = two.makeGroup(hor, ver);
