@@ -33,9 +33,9 @@ rectCenter.visible = false;
 const meanPoint = makeCross(ORANGE);
 meanPoint.visible = false;
 
-const text = new Two.Text("Initialize an area", W / 2, H / 2);
-text.size = 32;
-text.fill = '#000000';
+const text = new Two.Text("Initialize an area with mouse", W / 2, H / 2);
+text.size = 28;
+text.fill = '#505050';
 two.add(text);
 
 let running = false;
