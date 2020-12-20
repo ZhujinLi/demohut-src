@@ -14,9 +14,8 @@ const two = new Two({
 two.appendTo(document.getElementById('div-main'));
 
 const rect = two.makeRectangle(300, 200, 200, 100);
-rect.fill = GREEN;
-rect.opacity = 0.3;
-rect.noStroke();
+rect.fill = GREEN + '10';
+rect.stroke = GREEN;
 rect.visible = false;
 
 let points = [];
