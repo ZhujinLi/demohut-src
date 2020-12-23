@@ -1,6 +1,8 @@
 extends ../../layout
 
 block content
+    p.alert-info 本篇为《思考的乐趣》复现系列の第六弹
+
     a(href='./buffon.jpg' target="_blank")
         img.img-thumbnail.img-fluid(src="./buffon.jpg" style="height: 150px")
 
@@ -18,7 +20,7 @@ block content
     p
 
     p 计算机的生成的都是伪随机数，但这是否意味着达到某个精度后就不再收敛了呢？我也不知道。上面的实验需要跑上大半天的时间，才能到达3.14159的精度。
-    
+
     p #[a(href='https://www.wikihow.com/Calculate-Pi' target='_blank') 这里]提供了更多脑洞大开的PI求解方法。
 
-    script(src="./subj-skdlq-buffon.js", type="module")
+    script(src="./subj-skdlq-buffon.js" type="module")

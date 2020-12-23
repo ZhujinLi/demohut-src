@@ -1,6 +1,8 @@
 extends ../../layout
 
 block content
+    p.alert-info 本篇为《思考的乐趣》复现系列の第二弹
+
     a(href='./ekg.jpg' target="_blank")
         img.img-thumbnail.img-fluid(src="./ekg.jpg" style="height: 150px")
 
@@ -13,7 +15,7 @@ block content
         canvas#plot-ekg
         div.col-md-12.text-center
             button.btn.btn-primary#button-restart-ekg 重来
-    
+
     p 就是有点心律不齐……
 
-    script(src="./subj-skdlq-ekg.js", type="module")
+    script(src="./subj-skdlq-ekg.js" type="module")
