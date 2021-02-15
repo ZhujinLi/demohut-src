@@ -1,0 +1,75 @@
+extends ../../layout
+
+block content
+    p Panning gesture is an important kind of camera interaction in map applications. While we are all accustomed to using it every day, it might not be so easy to implement from a programmer's perspective...
+
+    .sub-title Problem formulation
+
+    p A panning touch gesture starts at a certain screen position \(s_0\) with initial camera state \(c_0\). Each time (\(t\)) the touch position changes to \(s_t=s_0+\Delta_t\), the camera \(c_t\) needs to be updated accordingly.
+
+    .sub-title I. A naive screen-space approach
+
+    p We can simply apply some offset in x- and y- directions in camera space, that is, camera's right- and up- directions in world space, to camera's position:
+
+    p $$c_t[pos]=c_0[pos] - \lambda(\Delta_t[x] c_0[right] + \Delta_t[y] c_0[up])$$
+
+    p while maintaining the camera's look direction.
+
+    div(style={"position": "relative"})
+        div#gui-1(style={"position": "absolute", "top": "10px", "left": "10px"})
+        canvas#canvas-1
+
+    p Try to adjust \(\lambda\) and see what happens. Apparently too small or too large the value results in unnatural experience, and a fixed value would never suit all zoom levels.
+
+    p We can make it better by calculating \(\lambda\) precisely.
+
+    .sub-title II. Calibrated screen-space panning
+
+    p We want the world moving consistently with touch movement on the screen, no more, no less. This can be achieved by calibrating \(\lambda\) adaptively:
+
+    p $$\lambda=\frac{2 dist(c_0[pos], c_0[target]) tan(\frac{c_0[fovy]}{2})} {viewport[height]}$$
+
+    p Despite its complex form, the idea behind is quite simple: making the connection between world-space length and screen-space length. Note that \(target\) could either be the world position of screen center on the ground, or touching position, depending on your need. Here I'll go with the former one since it's simpler.
+
+    canvas#canvas-2
+
+    .sub-title III. World-space panning
+
+    p According to my experience, screen-space panning is primarily used in CAD applications or debug tools but not games or maps, since it's not friendly for end-users who want to view the scene. Most map apps adopt another control fashion - world-space panning, where the camera moves on a hypothetical plane parallel to the ground during panning:
+
+    canvas#canvas-3
+
+    p As for the implementation, well, it's not something brand new. On the foundation of the previous method, all we need to do is project the y- movement on the plane, by replacing the camera's up by the product of ground's up and camera's right.
+
+    p $$c_t[pos]=c_0[pos] + \lambda(\Delta_t[x] c_0[right] + \Delta_t[y] ((0, 0, 1) \times c_0[right]))$$
+
+    .sub-title IV. Tracing world-space panning
+
+    p If our goal is to make the starting world position always stay with the touch, then we need some extra work, for above algorithm only works when there's no tilting. The reason lies in perspective foreshortening: the \(\lambda\) in y- direction should actually be variant; the further the touching position is, the larger.
+
+    p Although there might exist some closed-form solution to this problem, we can take a much more elegant approach, which is completely different from the above ones.
+
+    p Initially the world coordinate at touching position \(s_0\) is \(w_0\). At the moment \(t\) the touch moves to a new position, while the camera remains its last state. As a result, the touching world position becomes \(w_t\) but not \(w_0\). To correct it, we have to move the camera target in the opposite direction:
+
+    p $$c_t[target]=c_t[target]+(w_0-w_t)$$
+
+    p There remains only one problem to solve: how to calculate the world position corresponding to a screen coordinate? Note the world position is always on the ground, the problem can be transformed to solving of the intersection between a ray and a plane with \(z=0\), which has pretty efficient solution in real-time.
+
+    canvas#canvas-4
+
+    p This method has its own downsides though. For one, the world position must be computable, so map applications that render the world as an virtual globe would have problems when the touch lies outside the globe. Another problem is that while the world position follows the touch faithfully, it can be moving too fast and annoys users if the touch is near the horizon. So map apps generally prefer the non-tracing approach in practice.
+
+    .sub-title V. 3D tracing world-space panning
+
+    p The best place to apply tracing approach is scenes with 3D terrain. If the touch points to the side of a mountain, it is generally expected that position stays with the touch.
+
+    p The major challenge of it, compared to the 2D version, is that the touching position is not on the ground. Yet there's a simple workaround: after the initial position \(w_0\) is determined (through ray-object intersection solving), we can treat the plane \(z=w_0[z]\) as the ground, and perform subsequence operations as before.
+
+    canvas#canvas-5
+
+    p
+        i 3D Model courtesy of Google from #[a(href="https://poly.google.com/view/3NvfPMBZrBQ") Poly]
+
+    script(src="https://polyfill.io/v3/polyfill.min.js?features=es6")
+    script(src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async)
+    script(src="./subj-pan.js" type="module")
