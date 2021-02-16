@@ -35,7 +35,7 @@ block content
 
     .sub-title III. World-space panning
 
-    p According to my experience, screen-space panning is primarily used in CAD applications or debug tools but not games or maps, since it's not friendly for end-users who want to view the scene. Most map apps adopt another control fashion - world-space panning, where the camera moves on a hypothetical plane parallel to the ground during panning:
+    p In my experience, screen-space panning is primarily used in CAD applications or debug tools but not games or maps, since it's not friendly for end-users who want to view the scene. Most map apps adopt another control fashion - world-space panning, where the camera moves on a hypothetical plane parallel to the ground during panning:
 
     canvas#canvas-3
 
@@ -49,9 +49,9 @@ block content
 
     p Although there might exist some closed-form solution to this problem, we can take a much more elegant approach, which is completely different from the above ones.
 
-    p Initially the world coordinate at touching position \(s_0\) is \(w_0\). At the moment \(t\) the touch moves to a new position, while the camera remains its last state. As a result, the touching world position becomes \(w_t\) but not \(w_0\). To correct it, we have to move the camera target in the opposite direction:
+    p Initially the world coordinate at touching position \(s_0\) is \(w_0\). At the moment \(t\) the touch moves to a new position, while the camera remains its last state. As a result, the touching world position becomes \(w_t\) but not \(w_0\). To correct it, we have to translate the camera in the opposite direction:
 
-    p $$c_t[target]=c_t[target]+(w_0-w_t)$$
+    p $$c_t[pos, target]=c_t[pos, target]+(w_0-w_t)$$
 
     p There remains only one problem to solve: how to calculate the world position corresponding to a screen coordinate? Note the world position is always on the ground, the problem can be transformed to solving of the intersection between a ray and a plane with \(z=0\), which has pretty efficient solution in real-time.
 
