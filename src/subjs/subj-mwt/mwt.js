@@ -3,7 +3,7 @@ import { sqrt } from "mathjs";
 /**
  * @param {Array} contour 
  */
-export function mwt(contour) {
+export function mwt(contour, random) {
     let n = contour.length;
     const L = Array(n).fill(0).map(x => Array(n).fill(Infinity));
     const S = Array(n).fill(0).map(x => Array(n).fill(0));
@@ -22,8 +22,10 @@ export function mwt(contour) {
             for (let k = i + 1; k < j; k++) {
                 const x = L[i][k] + L[k][j] + u(i, j, k);
                 if (x < L[i][j]) {
-                    L[i][j] = x;
-                    S[i][j] = k;
+                    if (!random || (L[i][j] == Infinity || Math.random() < 0.5)) {
+                        L[i][j] = x;
+                        S[i][j] = k;
+                    }
                 }
             }
         }

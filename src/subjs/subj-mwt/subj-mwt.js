@@ -1,6 +1,5 @@
 import 'two.js/build/two';
 import { mwt } from './mwt';
-import { random } from './random';
 
 const W = 800;
 const H = 400;
@@ -16,7 +15,7 @@ let mode = 'show';
 
 let contour = [
     [50, 200],
-    [100, 200],
+    [120, 220],
     [400, 100],
     [600, 90],
     [700, 110],
@@ -37,7 +36,7 @@ for (let i = 0; i < contour.length; i++) {
     point.fill = '#000';
     twoObjects.points.push(point);
 }
-showResult(mwt(contour));
+showResult(mwt(contour, false));
 
 document.getElementById('div-main').onpointerup = (e) => {
     if (mode != 'edit') {
@@ -63,12 +62,12 @@ document.getElementById('btn-new-shape').onclick = () => {
 
 document.getElementById('btn-mwt').onclick = () => {
     mode = 'show';
-    showResult(mwt(contour));
+    showResult(mwt(contour, false));
 };
 
 document.getElementById('btn-random').onclick = () => {
     mode = 'show';
-    showResult(random(contour));
+    showResult(mwt(contour, true));
 };
 
 two.play();
