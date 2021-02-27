@@ -15,13 +15,15 @@ two.appendTo(document.getElementById('div-main'));
 let mode = 'show';
 
 let contour = [
+    [50, 200],
     [100, 200],
     [400, 100],
     [600, 90],
     [700, 110],
     [700, 200],
-    [400, 200],
+    [400, 210],
     [150, 300],
+    [20, 300],
 ];
 
 const twoObjects = {
