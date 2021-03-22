@@ -31,7 +31,6 @@ const subjs = [
     { name: "subj-skdlq-eulerline", title: "欧拉线" },
     { name: "subj-skdlq-ekg", title: "心电图数列" },
     { name: "subj-skdlq-golden", title: "黄金分割" },
-    { name: "subj-fib", title: "Fibonacci number" },
     { name: "subj-oblique-text", title: "斜着看的文字" },
     { name: "subj-persp-vs-ortho", title: "透视与正交" },
     { name: "subj-ndc", title: "NDC curve" },
