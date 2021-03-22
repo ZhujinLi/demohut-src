@@ -79,6 +79,7 @@ const H = 360;
     let startY;
     let startCamPos;
     let lambda;
+    let u;
 
 
     PanView("canvas-3", W, H,
@@ -91,6 +92,7 @@ const H = 360;
             const target = _calcTargetOnGround(camera);
             const dist = target.clone().sub(camera.position).length();
             lambda = 2 * dist * Math.tan(fov / 2) / H;
+            u = 1 / camera.position.clone().normalize().dot(new THREE.Vector3(0, 0, 1));
         },
         (x, y, camera) => {
             const deltaX = x - startX;
@@ -101,7 +103,7 @@ const H = 360;
             const bearing = new THREE.Vector3(0, 0, 1).cross(right);
 
             const offset = right.clone().multiplyScalar(lambda * deltaX)
-                .add(bearing.clone().multiplyScalar(lambda * deltaY));
+                .add(bearing.clone().multiplyScalar(lambda * u * deltaY));
             camera.position.copy(startCamPos.clone().sub(offset));
             camera.lookAt(camera.position.clone().add(look));
         },

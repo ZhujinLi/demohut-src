@@ -41,15 +41,19 @@ block content
 
     p As for the implementation, well, it's not something brand new. On the foundation of the previous method, all we need to do is project the y- movement on the plane, by replacing the camera's up by the product of ground's up and camera's right.
 
-    p $$c_t[pos]=c_0[pos] + \lambda(\Delta_t[x] c_0[right] + \Delta_t[y] ((0, 0, 1) \times c_0[right]))$$
+    p Also note that a compensation term \(u\) regarding the camera tilting is usually needed, or the panning would be too slow with large tilt angles due to perspective foreshortening.
+
+    p $$u=\frac{1}{cos(c_0[tilt])}$$
+
+    p And the solution turns out to be:
+
+    p $$c_t[pos]=c_0[pos] + \lambda(\Delta_t[x] c_0[right] + u\Delta_t[y] ((0, 0, 1) \times c_0[right]))$$
 
     .sub-title IV. Tracing world-space panning
 
-    p If our goal is to make the starting world position always stay with the touch, then we need some extra work, for above algorithm only works when there's no tilting. The reason lies in perspective foreshortening: the \(\lambda\) in y- direction should actually be variant; the further the touching position is, the larger.
+    p If our goal is to make the starting world position always stay with the touch, then we need some extra work, for the above algorithm assumes a fixed \(\lambda\) during panning where it should actually be be variant: the further the touching position is, the larger.
 
-    p Although there might exist some closed-form solution to this problem, we can take a much more elegant approach, which is completely different from the above ones.
-
-    p Initially the world coordinate at touching position \(s_0\) is \(w_0\). At the moment \(t\) the touch moves to a new position, while the camera remains its last state. As a result, the touching world position becomes \(w_t\) but not \(w_0\). To correct it, we have to translate the camera in the opposite direction:
+    p We can take a different approach that solves this problem elegantly. Initially the world coordinate at touching position \(s_0\) is \(w_0\). At the moment \(t\) the touch moves to a new position, while the camera remains its last state. As a result, the touching world position becomes \(w_t\) but not \(w_0\). To correct it, we have to translate the camera in the opposite direction:
 
     p $$c_t[pos, target]=c_t[pos, target]+(w_0-w_t)$$
 
