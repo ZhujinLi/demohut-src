@@ -1,4 +1,3 @@
-/* Compute time used by a function f that takes two integer args */
 #include "measure.h"
 
 #include <stdio.h>
@@ -29,6 +28,10 @@ static void init_sampler(int k, int maxsamples) {
 
 /* Add new sample.  */
 void add_sample(double val, int k) {
+  if (val == 0) {
+    return;
+  }
+
   int pos = 0;
   if (samplecount < k) {
     pos = samplecount;

@@ -86,18 +86,14 @@ double run(int size, int stride) {
   int elems = size / sizeof(double);
   double time;
 
-  /* As we are measuring time instead of CPU clocks,
-   * we need to repeat the iteration for small sizes
-   * to ensure the accuracy.
+  /* The measured time precision is inexplicably low after compiled as
+     WebAssembly, so I have to repeat a large amount of times to get a
+     satisfying precision.
    */
-  int repeat;
-  if (size <= 128 * 1024) {
-    repeat = 100;
-  } else {
-    repeat = 1;
-  }
+  int repeat = MAXBYTES / size * 50;
 
-  test(elems, stride, repeat); /* Warm up the cache */
+  test(elems, stride,
+       repeat); /* Warm up the cache (might be unnecessary now) */
   time = measure_time(test, elems, stride, repeat);
   return ((double)size / stride * repeat / (1 << 20)) / time;
 }
