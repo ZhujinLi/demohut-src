@@ -1,11 +1,9 @@
 /* Compute time used by a function f that takes two integer args */
-#include "fcyc2.h"
+#include "measure.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/times.h>
-
-#include "clock.h"
 
 static double *values = NULL;
 int samplecount = 0;
@@ -85,66 +83,14 @@ static void clear() {
   sink = x;
 }
 
-double fcyc2_full(test_funct f, int param1, int param2, int clear_cache, int k,
-                  double epsilon, int maxsamples, int compensate) {
-  double result;
-  init_sampler(k, maxsamples);
-  if (compensate) {
-    do {
-      double cyc;
-      if (clear_cache) clear();
-      f(param1, param2); /* warm cache */
-      start_comp_counter();
-      f(param1, param2);
-      cyc = get_comp_counter();
-      add_sample(cyc, k);
-    } while (!has_converged(k, epsilon, maxsamples) &&
-             samplecount < maxsamples);
-  } else {
-    do {
-      double cyc;
-      if (clear_cache) clear();
-      f(param1, param2); /* warm cache */
-      start_counter();
-      f(param1, param2);
-      cyc = get_counter();
-      add_sample(cyc, k);
-    } while (!has_converged(k, epsilon, maxsamples) &&
-             samplecount < maxsamples);
-  }
-#ifdef DEBUG
-  {
-    int i;
-    printf(" %d smallest values: [", k);
-    for (i = 0; i < k; i++)
-      printf("%.0f%s", values[i], i == k - 1 ? "]\n" : ", ");
-  }
-#endif
-  result = values[0];
-#if !KEEP_VALS
-  free(values);
-  values = NULL;
-#endif
-  return result;
-}
-
-double fcyc2(test_funct f, int param1, int param2, int clear_cache) {
-  return fcyc2_full(f, param1, param2, clear_cache, 3, 0.01, 500, 0);
-}
-
 /******************* Version that uses gettimeofday *************/
-
-static double Mhz = 0.0;
 
 #include <sys/time.h>
 
 static struct timeval tstart;
 
 /* Record current time */
-void start_counter_tod() {
-  if (Mhz == 0) Mhz = mhz_full(0, 10);
-  gettimeofday(&tstart, NULL);
-}
+void start_counter_tod() { gettimeofday(&tstart, NULL); }
 
 /* Get number of seconds since last call to start_timer */
 double get_counter_tod() {
@@ -153,7 +99,7 @@ double get_counter_tod() {
   gettimeofday(&tfinish, NULL);
   sec = tfinish.tv_sec - tstart.tv_sec;
   usec = tfinish.tv_usec - tstart.tv_usec;
-  return (1e6 * sec + usec) * Mhz;
+  return (sec + usec / (double)1e6);
 }
 
 /** Special counters that compensate for timer interrupt overhead */
@@ -223,8 +169,15 @@ double get_comp_counter_tod() {
   return ctime;
 }
 
-double fcyc2_full_tod(test_funct f, int param1, int param2, int clear_cache,
-                      int k, double epsilon, int maxsamples, int compensate) {
+/* Parameters:
+     k:             How many samples must be within epsilon for convergence
+     epsilon:       What is tolerance
+     maxsamples:    How many samples until give up?
+*/
+static double measure_time_full(test_funct f, int param1, int param2,
+                                int param3, int clear_cache, int k,
+                                double epsilon, int maxsamples,
+                                int compensate) {
   double result;
   init_sampler(k, maxsamples);
   if (compensate) {
@@ -232,7 +185,7 @@ double fcyc2_full_tod(test_funct f, int param1, int param2, int clear_cache,
       double cyc;
       if (clear_cache) clear();
       start_comp_counter_tod();
-      f(param1, param2);
+      f(param1, param2, param3);
       cyc = get_comp_counter_tod();
       add_sample(cyc, k);
     } while (!has_converged(k, epsilon, maxsamples) &&
@@ -242,7 +195,7 @@ double fcyc2_full_tod(test_funct f, int param1, int param2, int clear_cache,
       double cyc;
       if (clear_cache) clear();
       start_counter_tod();
-      f(param1, param2);
+      f(param1, param2, param3);
       cyc = get_counter_tod();
       add_sample(cyc, k);
     } while (!has_converged(k, epsilon, maxsamples) &&
@@ -264,6 +217,6 @@ double fcyc2_full_tod(test_funct f, int param1, int param2, int clear_cache,
   return result;
 }
 
-double fcyc2_tod(test_funct f, int param1, int param2, int clear_cache) {
-  return fcyc2_full_tod(f, param1, param2, clear_cache, 3, 0.01, 20, 0);
+double measure_time(test_funct f, int param1, int param2, int param3) {
+  return measure_time_full(f, param1, param2, param3, 0, 3, 0.01, 20, 0);
 }
