@@ -9,6 +9,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const MAIN_TITLE = "DemoHut";
 
 const subjs = [
+    { name: "subj-mem", title: "Memory mountain" },
     { name: "subj-mwt", title: "Minimum weight triangulation" },
     { name: "subj-pan", title: "Panning gesture" },
     { name: "subj-meanshift", title: "Meanshift" },
@@ -104,6 +105,10 @@ module.exports = {
                 {
                     from: 'src/libs',
                     to: 'libs/'
+                },
+                {
+                    from: 'src/subjs/subj-mem/core',
+                    to: 'subjs/subj-mem/core/'
                 },
                 {
                     from: 'src/**/*.+(jpg|ico|png|mp4|html|obj|gltf|mtl|bin|json)',

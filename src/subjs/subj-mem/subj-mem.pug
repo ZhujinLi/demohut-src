@@ -1,0 +1,15 @@
+extends ../../layout
+
+block content
+    p A live demo of #[a(href='http://csappbook.blogspot.com/2017/05/a-gallery-of-memory-mountains.html' target='_blank') memory mountain] implemented with WebAssembly framework.
+
+    .sub-title Implementation notes
+
+    ul
+        li
+            p Compiler optimization (-O3) must be enabled or there would be great deviations in the result, presumably because of non memory access operation overheads. So it's hard to reproduce using JavaScript alone, for we have no control over JS code optimizations. In the end I turned to Emscripten that compiles C code into WebAssembly, a low level yet portable assembly language that can be bound to JS and effectively executed by browsers.
+        li
+            p The original C implementation defaults to a CPU clock measurement using x86 Time Stamp Counter (TSC) accessed by <i>rdtsc</i> instruction, which is heavily hardward-dependant. Here I take an alternative approach based on time measurement for better cross platform support. But for some unknown reasons, the measured time becomes way less precise when run in WebAssembly than in native environments. To obtain satisfactory time precision, the memory traversal is repeated a great amount of times, and that's why the demo is running so slow.
+
+    script(src='./core/core.js')
+    script(src='./subj-mem.js' type='module')

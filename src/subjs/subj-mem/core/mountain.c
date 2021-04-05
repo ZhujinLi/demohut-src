@@ -1,65 +1,46 @@
 /* mountain.c - Generate the memory mountain. */
+#include <emscripten/emscripten.h>
 #include <stdio.h>
 #include <stdlib.h>
 
 #include "measure.h"
 
+#define ELEMTYPE long long
+
 #define MINBYTES (1 << 14) /* First working set size */
 #define MAXBYTES (1 << 27) /* Last working set size */
 #define MAXSTRIDE 15       /* Stride x8 bytes */
-#define MAXELEMS MAXBYTES / sizeof(long)
+#define MAXELEMS MAXBYTES / sizeof(ELEMTYPE)
 
-long *data; /* The array we'll be traversing. */
+ELEMTYPE *data; /* The array we'll be traversing. */
 
 void init_data();
-void free_data();
 int test(int elems, int stride, int repeat);
 double run(int size, int stride);
 
 int main() {
-  int size;   /* Working set size (in bytes) */
-  int stride; /* Stride (in array elements) */
-
   init_data(); /* Initialize each element in data */
-  printf("Memory mountain (MB/sec)\n");
-
-  printf("\t");
-  for (stride = 1; stride <= MAXSTRIDE; stride++) printf("s%d\t", stride);
-  printf("\n");
-
-  for (size = MAXBYTES; size >= MINBYTES; size >>= 1) {
-    if (size > (1 << 20))
-      printf("%dm\t", size / (1 << 20));
-    else
-      printf("%dk\t", size / 1024);
-
-    for (stride = 1; stride <= MAXSTRIDE; stride++) {
-      printf("%.0f\t", run(size, stride));
-    }
-    printf("\n");
-  }
-
-  free_data();
   return 0;
 }
 
 void init_data() {
   int i;
-  data = (long *)malloc(MAXBYTES);
-  for (i = 0; i < MAXELEMS; i++) data[i] = i;
-}
 
-void free_data() { free(data); }
+  printf("Initializing data with element size %d...", (int)sizeof(ELEMTYPE));
+  data = (ELEMTYPE *)malloc(MAXBYTES);
+  for (i = 0; i < MAXELEMS; i++) data[i] = i;
+  printf("Done.\n");
+}
 
 /* test - Iterate over first "elems" elements of array "data" with
  *        stride of "stride", using 4x4 loop unrolling.
  */
 int test(int elems, int stride, int repeat) {
   int r;
-  long i, sx2 = stride * 2, sx3 = stride * 3, sx4 = stride * 4;
-  long acc0 = 0, acc1 = 0, acc2 = 0, acc3 = 0;
-  long length = elems;
-  long limit = length - sx4;
+  ELEMTYPE i, sx2 = stride * 2, sx3 = stride * 3, sx4 = stride * 4;
+  ELEMTYPE acc0 = 0, acc1 = 0, acc2 = 0, acc3 = 0;
+  ELEMTYPE length = elems;
+  ELEMTYPE limit = length - sx4;
 
   for (r = 0; r < repeat; r++) {
     /* Combine 4 elements at a time */
@@ -76,14 +57,14 @@ int test(int elems, int stride, int repeat) {
     }
   }
 
-  return ((acc0 + acc1) + (acc2 + acc3));
+  return (int)((acc0 + acc1) + (acc2 + acc3));
 }
 
 /* run - Run test() and return read throughput (MB/s).
  *       "size" is in bytes, "stride" is in array elements.
  */
-double run(int size, int stride) {
-  int elems = size / sizeof(double);
+EMSCRIPTEN_KEEPALIVE double run(int size, int stride) {
+  int elems = size / sizeof(ELEMTYPE);
   double time;
 
   /* The measured time precision is inexplicably low after compiled as
