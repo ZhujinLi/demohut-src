@@ -5,6 +5,8 @@ const MAXSTRIDE = 15;       /* Stride x8 bytes */
 
 const SAMPLE_COUNT = (Math.log2(MAXBYTES / MINBYTES) + 1) * MAXSTRIDE;
 
+console.time("Evaluation");
+
 let iSample = 0;
 for (let size = MAXBYTES; size >= MINBYTES; size /= 2) {
     const label = size > (1 << 20) ? (size / (1 << 20)) + "m" : (size / 1024) + "k";
@@ -16,3 +18,5 @@ for (let size = MAXBYTES; size >= MINBYTES; size /= 2) {
     }
     console.log(row);
 }
+
+console.timeEnd("Evaluation");

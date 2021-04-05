@@ -221,5 +221,8 @@ static double measure_time_full(test_funct f, int param1, int param2,
 }
 
 double measure_time(test_funct f, int param1, int param2, int param3) {
-  return measure_time_full(f, param1, param2, param3, 0, 3, 0.01, 20, 0);
+  // Since we have repeated a lot of times for WebAssembly version,
+  // only one shot is needed.
+  return measure_time_full(f, param1, param2, param3, 0, 1, 100000000, 1, 0);
+  // return measure_time_full(f, param1, param2, param3, 0, 3, 0.01, 20, 0);
 }

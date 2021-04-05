@@ -71,7 +71,7 @@ EMSCRIPTEN_KEEPALIVE double run(int size, int stride) {
      WebAssembly, so I have to repeat a large amount of times to get a
      satisfying precision.
    */
-  int repeat = MAXBYTES / size * 50;
+  int repeat = MAXBYTES / size * stride * 10;
 
   test(elems, stride,
        repeat); /* Warm up the cache (might be unnecessary now) */
