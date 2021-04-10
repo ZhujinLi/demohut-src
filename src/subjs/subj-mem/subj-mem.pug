@@ -1,0 +1,19 @@
+extends ../../layout
+
+block content
+    p A live demo of #[a(href='http://csappbook.blogspot.com/2017/05/a-gallery-of-memory-mountains.html' target='_blank') memory mountain].
+
+    #plot
+
+    .sub-title Implementation notes
+
+    ul
+        li
+            p The result is heavily dependant on the browser's JavaScript engine, unlike the original C implementation, where in-depth optimization is guaranteed. I obtained the best result with Chrome on my Mac, from which L1-L2-L3-DRAM hierarchy can be seen distinctly:
+
+            img(src='./chrome_mac.png' width='400')
+        li
+            p The original C implementation defaults to a CPU clock measurement using x86 Time Stamp Counter (TSC), which again is not possible on the browser (even with WebAssembly). So I take an alternative approach based on time measurement function <i>performance.now()</i>, which claims to provide sub-milliseconds resolution. Unfortunately, most browsers nowadays have reduced the time precision by a large margin, in order to prevent timing attacks and fingerprinting. I have no other options but to repeat multiple times for a decent result, and that's why it's running so slow.
+
+    script(src='/demohut/libs/plotly-1.58.4.min.js')
+    script(src='./subj-mem.js' type='module')

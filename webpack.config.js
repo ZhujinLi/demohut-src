@@ -9,6 +9,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const MAIN_TITLE = "DemoHut";
 
 const subjs = [
+    { name: "subj-mem", title: "Memory mountain" },
     { name: "subj-mwt", title: "Minimum weight triangulation" },
     { name: "subj-pan", title: "Panning gesture" },
     { name: "subj-meanshift", title: "Meanshift" },
@@ -112,6 +113,14 @@ module.exports = {
                         return path.relative('src/', targetPath);
                     }
                 },
+                // There's something wrong with path when using worker-loader...
+                {
+                    from: 'src/**/*.worker.js',
+                    to: './',
+                    transformPath: (targetPath) => {
+                        return path.relative('src/', targetPath);
+                    }
+                }
             ]),
             new webpack.ProvidePlugin({
                 THREE: 'three',
