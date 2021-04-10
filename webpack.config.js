@@ -107,16 +107,20 @@ module.exports = {
                     to: 'libs/'
                 },
                 {
-                    from: 'src/subjs/subj-mem/core',
-                    to: 'subjs/subj-mem/core/'
-                },
-                {
                     from: 'src/**/*.+(jpg|ico|png|mp4|html|obj|gltf|mtl|bin|json)',
                     to: './',
                     transformPath: (targetPath) => {
                         return path.relative('src/', targetPath);
                     }
                 },
+                // There's something wrong with path when using worker-loader...
+                {
+                    from: 'src/**/*.worker.js',
+                    to: './',
+                    transformPath: (targetPath) => {
+                        return path.relative('src/', targetPath);
+                    }
+                }
             ]),
             new webpack.ProvidePlugin({
                 THREE: 'three',

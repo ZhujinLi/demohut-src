@@ -1,22 +1,30 @@
-// Make sure these constants match the C code
-const MINBYTES = 1 << 14;   /* First working set size */
-const MAXBYTES = 1 << 27;   /* Last working set size */
-const MAXSTRIDE = 15;       /* Stride x8 bytes */
+let mbpsSamples = [];
 
-const SAMPLE_COUNT = (Math.log2(MAXBYTES / MINBYTES) + 1) * MAXSTRIDE;
+const plotdata = [{
+    y: ["128m", "64m", "32m", "16m", "8m", "4m", "2m", "1024k", "512k", "256k", "128k", "64k", "32k", "16k"],
+    z: mbpsSamples,
+    type: 'surface'
+}];
 
-console.time("Evaluation");
+const layout = {
+    autosize: false,
+    width: 800,
+    height: 600,
+    scene: {
+        xaxis: { title: 'stride', },
+        yaxis: { title: 'size', },
+        zaxis: { title: 'MB/s', },
+        camera: {
+            eye: { x: 1.5, y: -1.5, z: 1.5, },
+        }
+    },
+    margin: { l: 0, r: 0, b: 0, t: 0, pad: 0 },
+    showlegend: false,
+};
+Plotly.newPlot('plot', plotdata, layout);
 
-let iSample = 0;
-for (let size = MAXBYTES; size >= MINBYTES; size /= 2) {
-    const label = size > (1 << 20) ? (size / (1 << 20)) + "m" : (size / 1024) + "k";
-    let row = label;
-    for (let stride = 1; stride <= MAXSTRIDE; stride++) {
-        const mbps = Module.ccall('run', 'number', ['number', 'number'], [size, stride]);
-        row += "\t" + mbps;
-        iSample++;
-    }
-    console.log(row);
-}
-
-console.timeEnd("Evaluation");
+const worker = new Worker('./core.worker.js');
+worker.onmessage = ({ data: { row } }) => {
+    mbpsSamples.push(row);
+    Plotly.redraw('plot');
+};
