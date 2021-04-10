@@ -2,9 +2,9 @@ const MINBYTES = 1 << 14;   /* First working set size */
 const MAXBYTES = 1 << 27;   /* Last working set size */
 const MAXSTRIDE = 15;       /* Stride x8 bytes */
 
-// The original C implementation uses data type long which is 64-bit on Linux,
-// but unfortunately not all browsers support 64-bit integer buffer array.
-const data = new Float32Array(new ArrayBuffer(MAXBYTES));
+// Note that the original C implementation uses data type long which is 64-bit on 64-bit Linux.
+// Since JavaScript represents numbers in double, I'll go with it.
+const data = new Float64Array(new ArrayBuffer(MAXBYTES));
 for (let i = 0; i < data.length; i++) {
     data[i] = i;
 }
@@ -12,13 +12,13 @@ for (let i = 0; i < data.length; i++) {
 function test(elems, stride) {
     let acc0 = 0;
     for (let i = 0; i < elems; i += stride) {
-        acc0 = data[i]; // It seems JS runtime engines never optimize this...
+        acc0 = data[i];
     }
     return acc0;
 }
 
 function run(size, stride) {
-    let elems = size / 4;
+    let elems = size / 8;
 
     // Due to browsers' limit on time resolution, I have no option but to repeat lots of times.
     let repeat = MAXBYTES / size * stride;
