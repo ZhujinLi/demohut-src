@@ -19,9 +19,8 @@ const layout = {
         }
     },
     margin: { l: 0, r: 0, b: 0, t: 0, pad: 0 },
-    showlegend: false,
 };
-Plotly.newPlot('plot', plotdata, layout);
+Plotly.newPlot('plot', plotdata, layout, { scrollZoom: false });
 
 const worker = new Worker('./core.worker.js');
 worker.onmessage = ({ data: { row } }) => {
