@@ -12,7 +12,7 @@ import gouraudFrag from './gouraud.frag';
 // Here I try to use the minimal features of three.js and calculate the shading by myself.
 
 if (WEBGL.isWebGL2Available() === false) {
-    alert("Your browser does not support WebGL 2. Flat shading would not display properly.");
+    alert("Your browser does not support WebGL 2. Flat shading example would not be displayed properly.");
 }
 
 const canvas = document.getElementById("canvas-cmp");
@@ -49,6 +49,8 @@ document.getElementById('gui-cmp').appendChild(gui.domElement);
 requestAnimationFrame(render);
 
 function render() {
+    requestAnimationFrame(render);
+
     const globeMtl = new THREE.ShaderMaterial();
     globeMtl.uniforms.u_lightPos = { value: new THREE.Vector3(1, 1, -1) };
     globeMtl.uniforms.u_lightIntensity = { value: vec3FromRGBArray(guiOptions["light intensity"]) };
@@ -59,8 +61,6 @@ function render() {
 
     const tess = guiOptions["tessellation"];
     const globeGeo = new THREE.SphereBufferGeometry(1, tess, tess);
-
-    requestAnimationFrame(render);
 
     // Flat
     const flatMtl = globeMtl.clone();
@@ -80,8 +80,6 @@ function render() {
     gouraudScene.add(new THREE.Mesh(globeGeo, gouraudMtl));
     renderer.setScissor(300, 0, 300, 300);
     renderer.setViewport(300, 0, 300, 300);
-    console.log(gouraudVert);
-    console.log(gouraudFrag);
     renderer.render(gouraudScene, camera);
 
     // Phong

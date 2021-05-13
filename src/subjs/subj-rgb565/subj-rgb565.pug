@@ -1,0 +1,10 @@
+extends ../../layout
+
+block content
+    p Early rendering systems make use of RGB565 16-bit color representation (also known as high color) to save storage/bandwidth. The reason that green channel is given an extra bit is that it has the largest luminance effect on the eye and thus requires greater precision. To justify (or to refute?) this decision, here's a demo to show what would happen if RGB are equally apportioned.
+
+    div(style={"position": "relative"})
+        div#main-gui(style={"position": "absolute", "top": "10px", "left": "10px"})
+        canvas#main-canvas
+
+    script(src="./subj-rgb565.js" type="module")
