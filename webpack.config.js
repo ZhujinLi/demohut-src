@@ -9,6 +9,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const MAIN_TITLE = "DemoHut";
 
 const subjs = [
+    { name: "subj-z-prepass", title: "z-prepass", year: 2021 },
     { name: "subj-rgb565", title: "RGB565", year: 2021 },
     { name: "subj-mem", title: "Memory mountain", year: 2021 },
     { name: "subj-mwt", title: "Minimum weight triangulation", year: 2021 },

@@ -1,0 +1,14 @@
+extends ../../layout
+
+block content
+    p z-prepass is an optimization technique used in conjunction with early-z to reduce overdraws. The idea is that we first render the scene while writing only depth, disabling pixel shading, and writing to the color buffer. When rendering subsequent passes, an “equal” test is used, meaning that only the frontmost surfaces will be shaded since the z-buffer already has been initialized.
+
+    p Put aside its controversial optimization value, this technique serves another purpose in maps applications. When buildings are rendered as semi-transparent, the scene can be too messy if all faces are shown. It is often more desirable that only frontmost parts are rendered, which can be easily achieved by introducing a z-prepass. Following is a comparison of the two approaches.
+
+    div(style={"position": "relative"})
+        div#main-gui(style={"position": "absolute", "top": "10px", "left": "10px"})
+        canvas#main-canvas
+
+    i Side notes: it's not easy to get transparency rendering right. The "sorted alpha blending" method in the demo attempts to sort buildings in back-to-front order to get a proper result. But it fails in some view angles, because three.js sorts objects using distances of their positions to the camera, which is not always correct. A more robust approach would be to sort primitives (triangles), but it could be too wasted and also have problems dealing with intersecting triangles. There are also order independent transparency (OIT) algorithms for situations where sorting is prohibitive, like depth peeling and weighted blended (approximate) OIT. In this example, proper transparency is not what we want, thus efforts are saved.
+
+    script(src="./subj-z-prepass.js" type="module")
