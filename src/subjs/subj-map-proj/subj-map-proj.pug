@@ -1,0 +1,16 @@
+extends ../../layout
+
+block content
+    .btn-group.btn-group-toggle(data-toggle="buttons")
+        label.btn.btn-primary.active Globe
+            input(type="radio" id="globe" checked)
+        label.btn.btn-primary Equirectangular
+            input(type="radio" id="equirectangular")
+        label.btn.btn-primary Web Mercator
+            input(type="radio" id="mercator")
+
+    p
+
+    canvas#main-canvas
+
+    script(src="./subj-map-proj.js" type="module")
