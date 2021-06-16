@@ -44,8 +44,11 @@ camera.lookAt(0, 0, 0);
 
 const scene = new THREE.Scene();
 
+const tex = new THREE.TextureLoader().load("./world.jpg");
+tex.anisotropy = 16;
+
 const geo = new THREE.PlaneBufferGeometry(360, 180, 360, 180);
-const mtl = new THREE.ShaderMaterial({ vertexShader: vert, fragmentShader: frag, side: THREE.DoubleSide, uniforms: { u_tex: { value: new THREE.TextureLoader().load("./world.jpg") } } });
+const mtl = new THREE.ShaderMaterial({ vertexShader: vert, fragmentShader: frag, side: THREE.DoubleSide, uniforms: { u_tex: { value: tex } } });
 const mesh = new THREE.Mesh(geo, mtl);
 scene.add(mesh);
 
