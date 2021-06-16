@@ -7,4 +7,4 @@ Build steps:
     npm install
     npm run start
 
-Then enter https://localhost:8080/demohut/ in the browser.
+Then your browser should start and navigate to the webpage automatically.
