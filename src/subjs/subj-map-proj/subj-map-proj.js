@@ -3,9 +3,9 @@ import "three/examples/js/controls/OrbitControls.js";
 import vert from "./proj.vert";
 import frag from "./proj.frag";
 
-const W = 800;
-const H = 800;
-const ANIMATION_DURATION_SECONDS = 1.5;
+const W = 600;
+const H = 600;
+const ANIMATION_DURATION_SECONDS = 1.0;
 const ANIMATION_INTERVAL_SECONDS = 0.01;
 const ANIMATION_FRAME_COUNT = ANIMATION_DURATION_SECONDS / ANIMATION_INTERVAL_SECONDS;
 
@@ -37,8 +37,8 @@ renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(W, H);
 renderer.setClearColor("#fff");
 
-const camera = new THREE.PerspectiveCamera(60, 1);
-camera.position.set(0, -5, 0);
+const camera = new THREE.PerspectiveCamera(30, 1);
+camera.position.set(0, -10, 0);
 camera.up.set(0, 0, 1);
 camera.lookAt(0, 0, 0);
 
@@ -53,6 +53,8 @@ const mesh = new THREE.Mesh(geo, mtl);
 scene.add(mesh);
 
 const ctrl = new THREE.OrbitControls(camera, renderer.domElement);
+ctrl.enableDamping = true;
+ctrl.dampingFactor = 0.1;
 ctrl.enableZoom = false;
 
 animate();
@@ -61,6 +63,8 @@ animate();
 
 function animate() {
     requestAnimationFrame(animate);
+
+    ctrl.update();
 
     mtl.uniforms.u_ratioGlobe = { value: curRatios[0] };
     mtl.uniforms.u_ratioEquirectangular = { value: curRatios[1] };
