@@ -5,9 +5,8 @@
   "license": "ISC",
   "repository": {},
   "scripts": {
-    "compile": "webpack",
-    "start": "webpack-dev-server --open",
-    "deploy": "webpack && rm -rf ../demohut_deploy/* && cp -R ./dist/* ../demohut_deploy/ && cd ../demohut_deploy/ && git add . && git commit --all -m \"Update\" && git push --force"
+    "start": "webpack-dev-server --open --mode=development",
+    "deploy": "webpack --mode=production --no-devtool && rm -rf ../demohut_deploy/* && cp -R ./dist/* ../demohut_deploy/ && cd ../demohut_deploy/ && git add . && git commit --all -m \"Update\" && git push --force"
   },
   "author": "zjli",
   "devDependencies": {

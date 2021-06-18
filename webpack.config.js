@@ -57,7 +57,6 @@ function gen_entry() {
 }
 
 module.exports = {
-    mode: 'development',
     entry: gen_entry(),
     devtool: 'inline-source-map',
     module: {
