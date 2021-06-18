@@ -3,6 +3,7 @@ uniform float u_ratioGlobe;
 uniform float u_ratioEquirectangular;
 uniform float u_ratioMercator;
 uniform float u_ratioWinkelIII;
+uniform float u_ratioBonne;
 
 varying vec2 v_uv;
 
@@ -13,6 +14,10 @@ const float GLOBE_RADIUS = 2.0 / PI;	// To make the globe's equatorial circumfer
 
 float sinc(float x) {
 	return sin(x) / x;
+}
+
+float cot(float x) {
+	return 1.0 / tan(x);
 }
 
 vec3 globe(float lon, float lat) {
@@ -67,6 +72,35 @@ vec3 winkeliii(float lon, float lat) {
 	return p;
 }
 
+vec3 _bonneStd(float lon, float lat) {
+	// Adopting wiki's notations...
+	float lambda = lon * DEG2RAD;
+	float phi = lat * DEG2RAD;
+	float lambda0 = 0.0;
+	float phi1 = 45.0 * DEG2RAD;
+	float rho = cot(phi1) + phi1 - phi;
+	float E = (lambda - lambda0) * cos(phi) / rho;
+
+	float x = rho * sin(E);
+	float z = cot(phi1) - rho * cos(E);
+	
+	return vec3(x, -GLOBE_RADIUS, z);
+}
+
+vec3 bonne(float lon, float lat) {
+	vec3 p = _bonneStd(lon, lat);
+
+	// Normalize for display
+	float zmax = _bonneStd(0.0, 90.0).z;
+	float zmin = _bonneStd(0.0, -90.0).z;
+
+	float scale = 2.0 / (zmax - zmin);
+	p.z = (p.z - (zmax + zmin) / 2.0) * scale;
+	p.x *= scale;
+	
+	return p;
+}
+
 void main() {
 	float lon = position.x;
 	float lat = position.y;
@@ -78,6 +112,7 @@ void main() {
 	vec3 pos = u_ratioGlobe * globe(lon, lat)
 		+ u_ratioEquirectangular * equirectangular(lon, lat)
 		+ u_ratioMercator * mercator(lon, lat)
-		+ u_ratioWinkelIII * winkeliii(lon, lat);
+		+ u_ratioWinkelIII * winkeliii(lon, lat)
+		+ u_ratioBonne * bonne(lon, lat);
 	gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
 }
