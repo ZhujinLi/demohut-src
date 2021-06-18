@@ -60,9 +60,9 @@ vec3 winkeliii(float lon, float lat) {
 
 	// Normalize for display
 	float xmax = _winkeliiiStd(180.0, 0.0).x;
-	float zmax = _winkeliiiStd(0.0, 90.0).z;
-	p.x = p.x / xmax * 2.0;
-	p.z /= zmax;
+	float ratio = 2.0 / xmax;
+	p.x *= ratio;
+	p.z *= ratio;
 	
 	return p;
 }
