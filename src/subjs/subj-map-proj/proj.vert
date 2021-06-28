@@ -5,6 +5,7 @@ uniform float u_ratioMercator;
 uniform float u_ratioTransverseMercator;
 uniform float u_ratioWinkelIII;
 uniform float u_ratioBonne;
+uniform float u_ratioDonut;
 
 varying vec2 v_uv;
 
@@ -110,6 +111,17 @@ vec3 bonne(float lambda, float phi) {
 	return p;
 }
 
+vec3 donut(float lambda, float phi) {
+	float centerX = GLOBE_RADIUS * cos((lambda - 0.5 * PI));
+	float centerY = GLOBE_RADIUS * sin((lambda - 0.5 * PI));
+
+	vec3 basisX = vec3(centerX * 0.5, centerY * 0.5, 0.0);
+	vec3 basisY = vec3(0.0, 0.0, GLOBE_RADIUS * 0.5);
+
+	vec3 local = cos(phi * 2.0) * basisX + sin(phi * 2.0) * basisY;
+	return local + vec3(centerX, centerY, 0.0);
+}
+
 void main() {
 	float lon = position.x;
 	float lat = position.y;
@@ -127,6 +139,7 @@ void main() {
 		+ u_ratioMercator * mercator(lambda, phi)
 		+ u_ratioTransverseMercator * tmercator(lambda, phi)
 		+ u_ratioWinkelIII * winkeliii(lambda, phi)
-		+ u_ratioBonne * bonne(lambda, phi);
+		+ u_ratioBonne * bonne(lambda, phi)
+		+ u_ratioDonut * donut(lambda, phi);
 	gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
 }
