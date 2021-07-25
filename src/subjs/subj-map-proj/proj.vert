@@ -2,7 +2,6 @@
 uniform float u_ratioGlobe;
 uniform float u_ratioEquirectangular;
 uniform float u_ratioMercator;
-uniform float u_ratioTransverseMercator;
 uniform float u_ratioWinkelIII;
 uniform float u_ratioBonne;
 uniform float u_ratioDonut;
@@ -43,24 +42,6 @@ vec3 mercator(float lambda, float phi) {
 	z = (0.5 - z) * 4.0;
 
 	return vec3(x, -GLOBE_RADIUS, z);
-}
-
-vec3 tmercator(float lambda, float phi) {
-	float x = 0.5 * log((1.0 + sin(lambda) * cos(phi)) / (1.0 - sin(lambda) * cos(phi)));
-	float z = atan(sec(lambda) * tan(phi));
-	if (sec(lambda) < 0.0) {
-		z -= PI * sign(z);
-	}
-
-	// Normalize to [-2, +2] for display
-	float a = 2.0 / PI;
-	x = clamp(a * x, -2.0, 2.0);
-	z *= a;
-
-	// Lerp to allieviate z-fighting caused by precision error
-	float y = mix(-GLOBE_RADIUS, globe(lambda, phi).y, 0.1);
-
-	return vec3(x, y, z);
 }
 
 vec3 _winkeliiiStd(float lambda, float phi) {
@@ -137,7 +118,6 @@ void main() {
 	vec3 pos = u_ratioGlobe * globe(lambda, phi)
 		+ u_ratioEquirectangular * equirectangular(lambda, phi)
 		+ u_ratioMercator * mercator(lambda, phi)
-		+ u_ratioTransverseMercator * tmercator(lambda, phi)
 		+ u_ratioWinkelIII * winkeliii(lambda, phi)
 		+ u_ratioBonne * bonne(lambda, phi)
 		+ u_ratioDonut * donut(lambda, phi);

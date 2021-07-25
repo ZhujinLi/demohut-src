@@ -10,8 +10,8 @@ const ANIMATION_INTERVAL_SECONDS = 0.01;
 const ANIMATION_FRAME_COUNT = ANIMATION_DURATION_SECONDS / ANIMATION_INTERVAL_SECONDS;
 
 // The ratios of projection methods. Their sum should always be 1.
-let curRatios = [1, 0, 0, 0, 0, 0, 0];
-let ratioStep = [0, 0, 0, 0, 0, 0, 0];
+let curRatios = [1, 0, 0, 0, 0, 0];
+let ratioStep = [0, 0, 0, 0, 0, 0];
 
 // Ever running animation timer
 setInterval(() => {
@@ -26,13 +26,12 @@ function setTarget(target) {
     }
 }
 
-document.getElementById("globe").onclick = () => setTarget([1, 0, 0, 0, 0, 0, 0]);
-document.getElementById("equirectangular").onclick = () => setTarget([0, 1, 0, 0, 0, 0, 0]);
-document.getElementById("mercator").onclick = () => setTarget([0, 0, 1, 0, 0, 0, 0]);
-document.getElementById("tMercator").onclick = () => setTarget([0, 0, 0, 1, 0, 0, 0]);
-document.getElementById("winkeliii").onclick = () => setTarget([0, 0, 0, 0, 1, 0, 0]);
-document.getElementById("bonne").onclick = () => setTarget([0, 0, 0, 0, 0, 1, 0]);
-document.getElementById("donut").onclick = () => setTarget([0, 0, 0, 0, 0, 0, 1]);
+document.getElementById("globe").onclick = () => setTarget([1, 0, 0, 0, 0, 0]);
+document.getElementById("equirectangular").onclick = () => setTarget([0, 1, 0, 0, 0, 0]);
+document.getElementById("mercator").onclick = () => setTarget([0, 0, 1, 0, 0, 0]);
+document.getElementById("winkeliii").onclick = () => setTarget([0, 0, 0, 1, 0, 0]);
+document.getElementById("bonne").onclick = () => setTarget([0, 0, 0, 0, 1, 0]);
+document.getElementById("donut").onclick = () => setTarget([0, 0, 0, 0, 0, 1]);
 
 //
 
@@ -73,10 +72,9 @@ function animate() {
     mtl.uniforms.u_ratioGlobe = { value: curRatios[0] };
     mtl.uniforms.u_ratioEquirectangular = { value: curRatios[1] };
     mtl.uniforms.u_ratioMercator = { value: curRatios[2] };
-    mtl.uniforms.u_ratioTransverseMercator = { value: curRatios[3] };
-    mtl.uniforms.u_ratioWinkelIII = { value: curRatios[4] };
-    mtl.uniforms.u_ratioBonne = { value: curRatios[5] };
-    mtl.uniforms.u_ratioDonut = { value: curRatios[6] };
+    mtl.uniforms.u_ratioWinkelIII = { value: curRatios[3] };
+    mtl.uniforms.u_ratioBonne = { value: curRatios[4] };
+    mtl.uniforms.u_ratioDonut = { value: curRatios[5] };
 
     renderer.render(scene, camera);
 }
