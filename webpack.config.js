@@ -145,6 +145,7 @@ module.exports = {
     devServer: {
         https: true,
         host: '0.0.0.0',
+        public: 'localhost:8080',
         publicPath: '/demohut',
         openPage: 'demohut/',
     },
