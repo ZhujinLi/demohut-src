@@ -22,7 +22,7 @@ block content
 
     p.text-center.text-monospace 0.5*(1,0,0,1) + 0.5*(0,0,0,0) = (0.5,0,0,0.5)
 
-    p Now we are clear where the black comes from—those transparent, invisible texels! Their color matters. Blending a red color and transparent ought to produce a translucent 'proper red', like (1,0,0,0.5), but the pipeline gives a translucent 'dark red' (0.5,0,0,0.5). This is wrong.
+    p Now we are clear where the black comes from—those transparent, invisible texels! Their colors matter. Blending a red color and transparent ought to produce a translucent 'proper red', like (1,0,0,0.5), but the pipeline gives a translucent 'dark red' (0.5,0,0,0.5). This is wrong.
 
     p And this "black fringing" artifact is very common in real time rendering. Here's one another:
 
@@ -95,17 +95,22 @@ block content
 
     p Perfect. Dark fringes disappeared.
 
+    p
+        i Note that WebGL behaves differently from OpenGL in some aspects. For example, the canvas is composited over the HTML page assuming premultiplied alpha by default. Hence, in the demos above, I turn off the alpha channel writing mask for a clearer elaboration. See the code for details.
+
     p All in all, the premultiplied alpha approach involves two key operations:
 
     ol
         li Premultiply texels in the texture file (or loading process)
         li Change the rendering pipeline blend function
 
-    .sub-title Notes
+    .sub-title Further reading
 
     ul
-        li WebGL behaves differently from OpenGL in some aspects. For example, the canvas is composited over the HTML page assuming premultiplied alpha by default. Hence, in the demos above, I turn off the alpha channel writing mask for a clearer elaboration. See the code for details.
-        li There are more discussions in #[a(href='http://www.realtimerendering.com/blog/gpus-prefer-premultiplication/' target='_blank') GPUs prefer premultiplication] and #[a(href="https://developer.nvidia.com/content/alpha-blending-pre-or-not-pre") Alpha Blending: To Pre or Not To Pre].
+        li #[a(href='http://www.realtimerendering.com/blog/gpus-prefer-premultiplication/' target='_blank') GPUs prefer premultiplication]
+        li #[a(href="https://developer.nvidia.com/content/alpha-blending-pre-or-not-pre") Alpha Blending: To Pre or Not To Pre]
+        li #[a(href="https://limnu.com/webgl-blending-youre-probably-wrong/") WebGL, blending, and why you're probably doing it wrong]
+
 
 
     script(src='./subj-transparent-color.js' type='module')

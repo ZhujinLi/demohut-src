@@ -26,7 +26,7 @@ const subjs = [
     { name: "subj-a-star", title: "A*", year: 2020 },
     { name: "subj-compression", title: "Compression 101", year: 2020 },
     { name: "subj-anim-curve", title: "Reverse-engineer animation curve", year: 2020 },
-    { name: "subj-transparent-color", title: "Transparent color matters", year: 2020 },
+    { name: "subj-transparent-color", title: "Transparent colors matter", year: 2020 },
     { name: "subj-frame-sync", title: "Frame synchronization issues", year: 2020 },
     { name: "subj-skdlq-linkage", title: "连杆系统", year: 2019 },
     { name: "subj-skdlq-buffon", title: "蒲丰投针实验", year: 2019 },
