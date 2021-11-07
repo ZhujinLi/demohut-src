@@ -1,0 +1,17 @@
+extends ../../layout
+
+block content
+    p This is my small experiment with #[a(href="https://cwe.mitre.org/data/definitions/385.html") Covert Timing Channel] attack.
+
+    ul 
+        li You may not want to try your real passwords although it's safe to do so ;)
+        li The last character is harder to guess by timing channel - not a surprise. But it's not needed anymore.
+        li Longer passwords are always safer.
+
+    .row.justify-content-center
+        input.col-md-4.form-control.mx-sm-1#input-pw
+        button.btn.btn-primary#button-hack Hack
+
+    p.text-center.font-weight-light.mt-2#log
+
+    script(src="./subj-covert-timing-channel.js" type="module")
