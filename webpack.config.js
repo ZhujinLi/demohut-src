@@ -89,7 +89,7 @@ module.exports = {
                 subj_title: subj.title,
                 head_title: subj.title + " - " + MAIN_TITLE,
                 backLink: '/demohut/',
-                srcLink: 'https://github.com/ZhujinLi/demohut/tree/master/src/subjs/' + subj.name,
+                srcLink: 'https://github.com/ZhujinLi/demohut-src/tree/master/src/subjs/' + subj.name,
             }
         }))].concat([
             new HtmlWebpackPlugin({
@@ -101,7 +101,7 @@ module.exports = {
                     subjs_2020: subjs.filter(subj => subj.year == 2020),
                     subjs_2019: subjs.filter(subj => subj.year == 2019),
                     head_title: MAIN_TITLE,
-                    srcLink: "https://github.com/ZhujinLi/demohut",
+                    srcLink: "https://github.com/ZhujinLi/demohut-src",
                 },
             }),
             new MiniCssExtractPlugin(),
