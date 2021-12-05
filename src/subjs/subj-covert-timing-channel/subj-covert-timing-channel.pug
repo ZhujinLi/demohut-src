@@ -1,12 +1,13 @@
 extends ../../layout
 
 block content
-    p This is my small experiment with #[a(href="https://cwe.mitre.org/data/definitions/385.html") Covert Timing Channel] attack.
+    p This is my small experiment of #[a(href="https://cwe.mitre.org/data/definitions/385.html") Covert Timing Channel] attack using the simple example there.
 
     ul 
         li You may not want to try your real passwords although it's safe to do so ;)
-        li The last character is harder to guess by timing channel - not a surprise. But it's not needed anymore.
+        li The last character is harder to guess by timing channel - not a surprise. Fortunately it's not needed there.
         li Longer passwords are always safer.
+        li As of the time of writing, this attack doesn't work on Mozilla Firefox browser for it reduces time measurement precision by default. Good job Firefox!
 
     .row.justify-content-center
         input.col-md-4.form-control.mx-sm-1#input-pw
